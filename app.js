@@ -49,9 +49,9 @@ if (savedBookings) bookings = JSON.parse(savedBookings);
 if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
 
 function isTimeBooked(time) {
-        if (!selectedService || !selectedDate) return false;
-        return bookings.some(b => b.serviceId === selectedService.id && b.date === selectedDate && b.time === time);
-    }
+    if (!selectedService || !selectedDate) return false;
+    return bookings.some(b => b.serviceId === selectedService.id && b.date === selectedDate && b.time === time);
+}
 function saveToLocalStorage() {
     localStorage.setItem('agendamento_users', JSON.stringify(users));
     localStorage.setItem('agendamento_bookings', JSON.stringify(bookings));
@@ -204,6 +204,20 @@ function renderClientDashboard() {
 
     const userBookings = bookings.filter(b => b.clientId === currentUser.id);
 
+    window.confirmBooking = function () {
+        handleBooking();
+    };
+
+    window.closeBookingForm = function () {
+        showBookingForm = false;
+        selectedService = null;
+        selectedDate = null;
+        selectedTime = null;
+
+        document.body.style.overflow = 'auto';
+
+        render();
+    };
     function handleBooking() {
         if (!selectedService || !selectedDate || !selectedTime) {
             showToast('Selecione serviço, data e horário', 'error');
@@ -234,6 +248,15 @@ function renderClientDashboard() {
         bookings.push(newBooking);
         saveToLocalStorage();
         showToast('Agendamento confirmado!', 'success');
+
+        //FECHA O MODAL
+        showBookingForm = false;
+        selectedService = null;
+        selectedDate = null;
+        selectedTime = null;
+
+        document.body.style.overflow = 'auto';
+
         render();
     }
 
@@ -289,36 +312,36 @@ function renderClientDashboard() {
                 `;
     }
     function updateTimeSelection() {
-    document.querySelectorAll('.time-slot').forEach(el => {
-        el.classList.remove('selected');
-        if (el.innerText === selectedTime) {
-            el.classList.add('selected');
-        }
-    });
-}
-function updateCalendarAndTimes() {
-    // atualiza dias
-    document.querySelectorAll('.calendar-day').forEach(el => {
-        el.classList.remove('selected');
-        if (el.innerText == new Date(selectedDate).getDate()) {
-            el.classList.add('selected');
-        }
-    });
-}
+        document.querySelectorAll('.time-slot').forEach(el => {
+            el.classList.remove('selected');
+            if (el.innerText === selectedTime) {
+                el.classList.add('selected');
+            }
+        });
+    }
+    function updateCalendarAndTimes() {
+        // atualiza dias
+        document.querySelectorAll('.calendar-day').forEach(el => {
+            el.classList.remove('selected');
+            if (el.innerText == new Date(selectedDate).getDate()) {
+                el.classList.add('selected');
+            }
+        });
+    }
 
     window.selectDate = function (dateStr) {
         selectedDate = dateStr;
-selectedTime = null;
+        selectedTime = null;
 
-// atualiza só calendário + horários
-updateCalendarAndTimes();
+        // atualiza só calendário + horários
+        updateCalendarAndTimes();
     };
 
     window.selectTime = function (time) {
         selectedTime = time;
 
-// atualiza só os horários
-updateTimeSelection();
+        // atualiza só os horários
+        updateTimeSelection();
     };
 
     window.openCancelModal = function (booking) {
@@ -338,9 +361,8 @@ updateTimeSelection();
         render();
     };
     window.confirmCancel = function () {
-        if (bookingToCancel) cancelBooking(bookingToCancel.id);
         showCancelModal = false;
-        render();
+        if (bookingToCancel) cancelBooking(bookingToCancel);
     };
     window.logout = function () {
         currentUser = null;
@@ -400,7 +422,9 @@ updateTimeSelection();
     <label style="display: block; margin-bottom: 8px; font-weight: 500;">
         Selecione o horário
     </label>
-    <div class="time-slots-grid"></div>
+    <div class="time-slots-grid">
+    ${timeSlotsHtml}
+</div>
 </div>
                             <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
                                 <button onclick="window.closeBookingForm()" style="padding: 10px 20px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
@@ -457,12 +481,12 @@ updateTimeSelection();
             `;
 
     const modal = document.querySelector('.modal-content');
-const scrollPosition = modal ? modal.scrollTop : 0;
+    const scrollPosition = modal ? modal.scrollTop : 0;
 
-root.innerHTML = html;
+    root.innerHTML = html;
 
-const newModal = document.querySelector('.modal-content');
-if (newModal) newModal.scrollTop = scrollPosition;
+    const newModal = document.querySelector('.modal-content');
+    if (newModal) newModal.scrollTop = scrollPosition;
 }
 
 // ============================================
