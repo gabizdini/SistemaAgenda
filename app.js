@@ -417,15 +417,16 @@ function renderClientDashboard() {
       saveToLocalStorage();
       showToast("Agendamento cancelado", "success");
     }
+    showBookingsModal = true; // reabre lista após cancelamento
     render();
   }
   window.cancelAllBookings = function () {
-    bookingToCancel = "__all__";
-    showBookingsModal = false; // fecha lista antes de abrir confirmação
-    showCancelModal = true;
-    document.body.style.overflow = "hidden";
-    render();
-  };
+  bookingToCancel = "__all__";
+  showBookingsModal = false; // fecha lista
+  showCancelModal = true;    // abre confirmação
+  document.body.style.overflow = "hidden";
+  render();
+};
   function openBookingForm(service) {
     selectedService = service;
     selectedDate = null;
@@ -530,23 +531,24 @@ function renderClientDashboard() {
   };
 
   // 3) GARANTA que exista só UMA confirmCancel (substitua pela abaixo):
-  window.confirmCancel = function () {
-    const target = bookingToCancel;
-    showCancelModal = false;
-    bookingToCancel = null;
+window.confirmCancel = function () {
+  const target = bookingToCancel;
+  showCancelModal = false;
+  bookingToCancel = null;
 
-    if (target === "__all__") {
-      bookings = bookings.filter((b) => b.clientId !== currentUser.id);
-      showBookingsModal = false;
-      saveToLocalStorage();
-      showToast("Todos os agendamentos foram cancelados", "success");
-      document.body.style.overflow = "auto";
-      render();
-      return;
-    }
+  if (target === "__all__") {
+    bookings = bookings.filter((b) => b.clientId !== currentUser.id);
+    saveToLocalStorage();
+    showToast("Todos os agendamentos foram cancelados", "success");
 
-    if (target) cancelBooking(target);
-  };
+    showBookingsModal = true; // reabre lista DEPOIS de confirmar
+    document.body.style.overflow = "hidden";
+    render();
+    return;
+  }
+
+  if (target) cancelBooking(target);
+};
 
   window.logout = function () {
     currentUser = null;
@@ -771,6 +773,7 @@ window.closeMyServicesModal = function () {
 };
 window.openDeleteServiceModal = function (serviceId) {
   serviceToDelete = serviceId;
+  showMyServicesModal = false; // fecha "Meus Serviços"
   showDeleteServiceModal = true;
   document.body.style.overflow = "hidden";
   render();
@@ -779,7 +782,8 @@ window.openDeleteServiceModal = function (serviceId) {
 window.closeDeleteServiceModal = function () {
   showDeleteServiceModal = false;
   serviceToDelete = null;
-  document.body.style.overflow = "auto";
+  showMyServicesModal = true; // reabre lista
+  document.body.style.overflow = "hidden";
   render();
 };
 
