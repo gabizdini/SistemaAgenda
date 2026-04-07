@@ -374,10 +374,7 @@ window.cancelAllBookings = function () {
                     const dateStr = date.toDateString();
                     const isSelected = selectedDate === dateStr;
                     const isPast = date < today && date.getDate() !== today.getDate();
-                    const allTimesBooked = selectedService && TIME_SLOTS.every(time => 
-                        bookings.some(b => b.serviceId === selectedService.id && b.date === dateStr && b.time === time)
-                    );
-                    const isDisabled = isPast || allTimesBooked;
+                    const isDisabled = isPast;
                     
                     return `<div class="calendar-day ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}" onclick="${!isDisabled ? `window.selectDate('${dateStr}')` : ''}" style="${isDisabled ? 'background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.5;' : ''}">${date.getDate()}</div>`;
                 }).join('')}
@@ -423,6 +420,7 @@ window.confirmCancel = function () {
         selectedDate = dateStr;
         selectedTime = null;
         updateCalendarAndTimes();
+        render();
     };
 
     window.selectTime = function (time) {
@@ -508,11 +506,22 @@ if (showBookingsModal) {
 }
     let bookingModalHtml = '';
     if (showBookingForm && selectedService) {
-        let timeSlotsHtml = TIME_SLOTS.map(time => `
-            <div class="time-slot ${selectedTime === time ? 'selected' : ''} ${isTimeBooked(time) ? 'booked' : ''}" onclick="window.selectTime('${time}')">
-                ${time}
-            </div>
-        `).join('');
+        let timeSlotsHtml = TIME_SLOTS.map(time => {
+    const isBooked = selectedDate && selectedService && bookings.some(
+        b => b.serviceId === selectedService.id &&
+             b.date === selectedDate &&
+             b.time === time
+    );
+
+    return `
+        <div
+            class="time-slot ${selectedTime === time ? 'selected' : ''} ${isBooked ? 'booked' : ''}"
+            onclick="${(!isBooked && selectedDate) ? `window.selectTime('${time}')` : ''}"
+            style="${isBooked ? 'background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;' : (!selectedDate ? 'opacity:0.5;cursor:not-allowed;' : '')}">
+            ${time}
+        </div>
+    `;
+}).join('');
 
         bookingModalHtml = `
             <div class="modal-overlay" onclick="window.closeBookingForm()">
