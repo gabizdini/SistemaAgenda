@@ -417,12 +417,6 @@ window.confirmCancel = function () {
         updateTimeSelection();
     };
 
-    window.openCancelModal = function (booking) {
-        bookingToCancel = booking;
-        showCancelModal = true;
-        document.body.style.overflow = 'hidden';
-        render();
-    };
 
     window.closeCancelModal = function () {
         showCancelModal = false;
