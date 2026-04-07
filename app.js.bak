@@ -8,7 +8,6 @@ let showBookingForm = false;
 let showCancelModal = false;
 let bookingToCancel = null;
 let services = [];
-let showBookingsModal = false;
 
 const savedServices = localStorage.getItem('agendamento_services');
 
@@ -264,16 +263,6 @@ function renderClientDashboard() {
     window.confirmBooking = function () {
         handleBooking();
     };
-    window.openBookingsModal = function () {
-    showBookingsModal = true;
-    document.body.style.overflow = 'hidden';
-    render();
-};
-window.closeBookingsModal = function () {
-    showBookingsModal = false;
-    document.body.style.overflow = 'auto';
-    render();
-};
 
     window.closeBookingForm = function () {
         showBookingForm = false;
@@ -391,21 +380,6 @@ window.closeBookingsModal = function () {
         });
     }
 
-    window.openCancelModal = function (bookingId) {
-    bookingToCancel = bookingId;
-    showBookingsModal = false; // fecha modal de lista antes
-    showCancelModal = true;
-    document.body.style.overflow = 'hidden';
-    render();
-};
-
-window.confirmCancel = function () {
-    const id = bookingToCancel;
-    showCancelModal = false;
-    bookingToCancel = null;
-    if (id !== null && id !== undefined) cancelBooking(id);
-};
-
     window.selectDate = function (dateStr) {
         selectedDate = dateStr;
         selectedTime = null;
@@ -472,20 +446,7 @@ window.confirmCancel = function () {
             </div>
         `).join('');
     }
-let bookingsModalHtml = '';
-if (showBookingsModal) {
-    bookingsModalHtml = `
-        <div class="modal-overlay" onclick="window.closeBookingsModal()">
-            <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h3>Meus Agendamentos</h3>
-                    <button onclick="window.closeBookingsModal()" style="padding: 8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
-                </div>
-                ${bookingsHtml}
-            </div>
-        </div>
-    `;
-}
+
     let bookingModalHtml = '';
     if (showBookingForm && selectedService) {
         let timeSlotsHtml = TIME_SLOTS.map(time => `
@@ -532,39 +493,33 @@ if (showBookingsModal) {
     }
 
     const html = `
-    <div style="display:flex; min-height:100vh;">
-        <aside style="width:240px; background:#111827; color:white; padding:20px;">
-            <h2 style="margin-bottom:20px;">AgendaFácil</h2>
-            <button onclick="window.openBookingsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
-                📅 Agendamentos Marcados
-            </button>
-            <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
-                Sair
-            </button>
-        </aside>
-
-        <main style="flex:1;">
-            <div class="nav-bar">
-                <div class="container" style="display:flex; justify-content:space-between; align-items:center; padding:0;">
-                    <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AgendaFácil</h1>
-                    <span style="color:#6b7280;">👤 Cliente: ${currentUser.name}</span>
+        <div class="nav-bar">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 0;">
+                <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AgendaFácil</h1>
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <span style="color: #6b7280;">👤 Cliente: ${currentUser.name}</span>
+                    <button onclick="window.logout()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Sair</button>
                 </div>
             </div>
-
-            <div class="container">
-                <h2 style="margin-bottom:24px;">Olá, ${currentUser.name}!</h2>
-                <div style="margin-bottom:40px;">
-                    <h3 style="margin-bottom:16px;">Serviços Disponíveis</h3>
-                    <div class="services-grid">${servicesHtml}</div>
+        </div>
+        <div class="container">
+            <h2 style="margin-bottom: 24px;">Olá, ${currentUser.name}!</h2>
+            
+            <div style="margin-bottom: 40px;">
+                <h3 style="margin-bottom: 16px;">Serviços Disponíveis</h3>
+                <div class="services-grid">
+                    ${servicesHtml}
                 </div>
             </div>
-        </main>
-    </div>
-
-    ${bookingModalHtml}
-    ${cancelModalHtml}
-    ${bookingsModalHtml}
-`;
+            
+            <div>
+                <h3 style="margin-bottom: 16px;">Meus Agendamentos</h3>
+                ${bookingsHtml}
+            </div>
+        </div>
+        ${bookingModalHtml}
+        ${cancelModalHtml}
+    `;
 
     root.innerHTML = html;
 }
@@ -690,11 +645,11 @@ function render() {
             renderProviderDashboard();
         }
 
-        if (showBookingForm || showCancelModal || showBookingsModal) {
-    document.body.style.overflow = 'hidden';
-} else {
-    document.body.style.overflow = 'auto';
-}
+        if (showBookingForm || showCancelModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
     };
 
     // só mostra loader na primeira carga ou login/logout
