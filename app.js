@@ -817,6 +817,19 @@ function renderProviderDashboard() {
     document.body.style.overflow = "auto";
     render();
   };
+  window.changeDuration = function (delta) {
+  const input = document.getElementById("serviceDuration");
+  const label = document.getElementById("serviceDurationLabel");
+  if (!input) return;
+
+  let value = parseInt(input.value, 10);
+  if (Number.isNaN(value)) value = 60;
+
+  value = Math.max(15, Math.min(240, value + delta)); // 15min até 4h
+  input.value = String(value);
+
+  if (label) label.textContent = formatDuration(value);
+};
 
   const createServiceModalHtml = showCreateServiceModal
   ? `
@@ -832,14 +845,31 @@ function renderProviderDashboard() {
 
         <div style="margin-bottom: 12px;">
   <label style="display:block; margin-bottom: 6px; font-weight: 500;">Duração</label>
-  <select id="serviceDuration" style="width:100%; padding:10px; border:2px solid #e5e7eb; border-radius:8px;">
-    <option value="">Selecione</option>
-    <option value="30">30 min</option>
-    <option value="45">45 min</option>
-    <option value="60">1h</option>
-    <option value="90">1h 30min</option>
-    <option value="120">2h</option>
-  </select>
+
+  <div style="display:flex; align-items:center; gap:8px;">
+    <button
+      type="button"
+      onclick="event.stopPropagation(); window.changeDuration(-15)"
+      style="width:36px; height:36px; border:none; border-radius:8px; background:#e5e7eb; cursor:pointer; font-size:20px; line-height:1;">
+      −
+    </button>
+
+    <input
+      id="serviceDuration"
+      type="text"
+      value="60"
+      readonly
+      style="flex:1; text-align:center; padding:10px; border:2px solid #e5e7eb; border-radius:8px; font-weight:600;" />
+
+    <button
+      type="button"
+      onclick="event.stopPropagation(); window.changeDuration(15)"
+      style="width:36px; height:36px; border:none; border-radius:8px; background:#e5e7eb; cursor:pointer; font-size:20px; line-height:1;">
+      +
+    </button>
+  </div>
+
+  <small id="serviceDurationLabel" style="display:block; margin-top:6px; color:#6b7280;">1h</small>
 </div>
 
         <div style="margin-bottom: 16px;">
