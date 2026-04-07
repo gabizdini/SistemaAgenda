@@ -536,7 +536,7 @@ if (showBookingsModal) {
         <aside style="width:240px; background:#111827; color:white; padding:20px;">
             <h2 style="margin-bottom:20px;">AgendaFácil</h2>
             <button onclick="window.openBookingsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
-                📅 Agendamentos Marcados
+            Agendamentos
             </button>
             <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
                 Sair
@@ -544,17 +544,11 @@ if (showBookingsModal) {
         </aside>
 
         <main style="flex:1;">
-            <div class="nav-bar">
-                <div class="container" style="display:flex; justify-content:space-between; align-items:center; padding:0;">
-                    <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AgendaFácil</h1>
-                    <span style="color:#6b7280;">👤 Cliente: ${currentUser.name}</span>
-                </div>
-            </div>
 
             <div class="container">
-                <h2 style="margin-bottom:24px;">Olá, ${currentUser.name}!</h2>
+                <h2 style="margin-bottom:24px; color:#ffffff;">Olá, ${currentUser.name}!</h2>
                 <div style="margin-bottom:40px;">
-                    <h3 style="margin-bottom:16px;">Serviços Disponíveis</h3>
+                    <h3 style="margin-bottom:16px; color:#ffffff;">Serviços Disponíveis</h3>
                     <div class="services-grid">${servicesHtml}</div>
                 </div>
             </div>
