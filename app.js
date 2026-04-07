@@ -12,6 +12,8 @@ let services = [];
 let showBookingsModal = false;
 let selectedWorkDays = [];
 let showMyServicesModal = false;
+let showDeleteServiceModal = false;
+let serviceToDelete = null;
 
 const savedServices = localStorage.getItem("agendamento_services");
 
@@ -440,14 +442,6 @@ function renderClientDashboard() {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const days = [];
-    const dayOfWeek = date.getDay();
-const isWorkingDay =
-  !selectedService?.workDays || selectedService.workDays.length === 0
-    ? true
-    : selectedService.workDays.includes(dayOfWeek);
-
-const isPast = date < today && date.getDate() !== today.getDate();
-const isDisabled = isPast || !isWorkingDay;
 
     for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
     for (let i = 1; i <= lastDay.getDate(); i++)
@@ -775,7 +769,34 @@ window.closeMyServicesModal = function () {
   document.body.style.overflow = "auto";
   render();
 };
+window.openDeleteServiceModal = function (serviceId) {
+  serviceToDelete = serviceId;
+  showDeleteServiceModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
 
+window.closeDeleteServiceModal = function () {
+  showDeleteServiceModal = false;
+  serviceToDelete = null;
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window.confirmDeleteService = function () {
+  if (!serviceToDelete) return;
+
+  services = services.filter((s) => s.id !== serviceToDelete);
+  bookings = bookings.filter((b) => b.serviceId !== serviceToDelete);
+
+  saveToLocalStorage();
+  showToast("Serviço removido com sucesso!", "success");
+
+  showDeleteServiceModal = false;
+  serviceToDelete = null;
+  document.body.style.overflow = "auto";
+  render();
+};
   window.toggleWorkDay = function (day, el) {
   const index = selectedWorkDays.indexOf(day);
 
@@ -955,9 +976,16 @@ if (showMyServicesModal) {
                           <p style="color:#6b7280; font-size:14px;">Duração: ${formatDuration(service.duration)}</p>
                           <p style="color:#6b7280; font-size:14px;">Dias: ${Array.isArray(service.workDays) ? service.workDays.map((d) => WEEK_DAYS.find((w) => w.value === d)?.short).filter(Boolean).join(", ") : "-"}</p>
                         </div>
-                        <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
-                          R$ ${service.price}
-                        </span>
+                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+  <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
+    R$ ${service.price}
+  </span>
+  <button
+    onclick="window.openDeleteServiceModal(${service.id})"
+    style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
+    Remover
+  </button>
+</div>
                       </div>
                     `,
                   )
@@ -968,7 +996,27 @@ if (showMyServicesModal) {
     </div>
   `;
 }
-
+let deleteServiceModalHtml = "";
+if (showDeleteServiceModal && serviceToDelete) {
+  deleteServiceModalHtml = `
+    <div class="modal-overlay" onclick="window.closeDeleteServiceModal()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 style="margin-bottom: 12px;">Remover Serviço</h3>
+        <p style="margin-bottom: 24px; color: #6b7280;">
+          Tem certeza que deseja remover este serviço? Esta ação não pode ser desfeita.
+        </p>
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="window.closeDeleteServiceModal()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+            Cancelar
+          </button>
+          <button onclick="window.confirmDeleteService()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
   const html = `
     <div style="display:flex; min-height:100vh;">
       <aside style="width:240px; background:#111827; color:white; padding:20px;">
@@ -1036,6 +1084,7 @@ if (showMyServicesModal) {
 
     ${createServiceModalHtml} 
     ${myServicesModalHtml}
+    ${deleteServiceModalHtml}
   `;
 
   root.innerHTML = html;
@@ -1058,7 +1107,9 @@ function render() {
   showBookingForm ||
   showCancelModal ||
   showBookingsModal ||
-  showCreateServiceModal
+  showCreateServiceModal ||
+  showMyServicesModal ||
+  showDeleteServiceModal
 ) {
   document.body.style.overflow = "hidden";
 } else {
