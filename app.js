@@ -11,6 +11,7 @@ let showCreateServiceModal = false;
 let services = [];
 let showBookingsModal = false;
 let selectedWorkDays = [];
+let showMyServicesModal = false;
 
 const savedServices = localStorage.getItem("agendamento_services");
 
@@ -603,7 +604,7 @@ const isDisabled = isPast || !isWorkingDay;
     bookingsModalHtml = `
         <div class="modal-overlay" onclick="window.closeBookingsModal()">
             <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
     <h3>Meus Agendamentos</h3>
     <div style="display:flex; gap:8px;">
         ${
@@ -750,18 +751,30 @@ function renderProviderDashboard() {
   };
 
   window.openCreateServiceModal = function () {
-    selectedWorkDays = [];
-    showCreateServiceModal = true;
-    document.body.style.overflow = "hidden";
-    render();
-  };
+  selectedWorkDays = [];
+  showCreateServiceModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
 
-  window.closeCreateServiceModal = function () {
-    showCreateServiceModal = false;
-    selectedWorkDays = [];
-    document.body.style.overflow = "auto";
-    render();
-  };
+window.closeCreateServiceModal = function () {
+  showCreateServiceModal = false;
+  selectedWorkDays = [];
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window.openMyServicesModal = function () {
+  showMyServicesModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeMyServicesModal = function () {
+  showMyServicesModal = false;
+  document.body.style.overflow = "auto";
+  render();
+};
 
   window.toggleWorkDay = function (day, el) {
   const index = selectedWorkDays.indexOf(day);
@@ -919,6 +932,43 @@ function renderProviderDashboard() {
   `
   : "";
 
+  let myServicesModalHtml = "";
+if (showMyServicesModal) {
+  myServicesModalHtml = `
+    <div class="modal-overlay" onclick="window.closeMyServicesModal()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3>Meus Serviços</h3>
+          <button onclick="window.closeMyServicesModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+        </div>
+
+        ${
+          providerServices.length === 0
+            ? '<div class="empty-state"><div class="empty-state-icon">📦</div><p>Nenhum serviço criado ainda</p></div>'
+            : `<div style="display:flex; flex-direction:column; gap:10px;">
+                ${providerServices
+                  .map(
+                    (service) => `
+                      <div class="booking-item">
+                        <div>
+                          <h4 style="margin-bottom:4px;">${service.name}</h4>
+                          <p style="color:#6b7280; font-size:14px;">Duração: ${formatDuration(service.duration)}</p>
+                          <p style="color:#6b7280; font-size:14px;">Dias: ${Array.isArray(service.workDays) ? service.workDays.map((d) => WEEK_DAYS.find((w) => w.value === d)?.short).filter(Boolean).join(", ") : "-"}</p>
+                        </div>
+                        <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
+                          R$ ${service.price}
+                        </span>
+                      </div>
+                    `,
+                  )
+                  .join("")}
+              </div>`
+        }
+      </div>
+    </div>
+  `;
+}
+
   const html = `
     <div style="display:flex; min-height:100vh;">
       <aside style="width:240px; background:#111827; color:white; padding:20px;">
@@ -947,37 +997,12 @@ function renderProviderDashboard() {
               <p style="font-size:30px; font-weight:700; color:#667eea;">${providerBookings.length}</p>
             </div>
 
-            <div style="background:white; border-radius:12px; padding:20px; text-align:center;">
-              <div style="font-size:28px; margin-bottom:8px;">🛠️</div>
-              <h3>Meus Serviços</h3>
-              <p style="font-size:30px; font-weight:700; color:#10b981;">${providerServices.length}</p>
-            </div>
-          </div>
-
-          <div style="margin-bottom:24px;">
-            <h3 style="margin-bottom:12px; color:#ffffff;">Serviços Criados</h3>
-            ${
-              providerServices.length === 0
-                ? '<div class="empty-state"><div class="empty-state-icon">📦</div><p>Nenhum serviço criado ainda</p></div>'
-                : `<div style="display:flex; flex-direction:column; gap:10px;">
-                    ${providerServices
-                      .map(
-                        (service) => `
-                          <div class="booking-item">
-                            <div>
-                              <h4 style="margin-bottom:4px;">${service.name}</h4>
-                              <p style="color:#6b7280; font-size:14px;">Duração: ${formatDuration(service.duration)}</p>
-                              <p style="color:#6b7280; font-size:14px;">Dias: ${Array.isArray(service.workDays) ? service.workDays.map((d) => WEEK_DAYS.find((w) => w.value === d)?.short).filter(Boolean).join(", ") : "-"}</p>
-                            </div>
-                            <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
-                              R$ ${service.price}
-                            </span>
-                          </div>
-                        `,
-                      )
-                      .join("")}
-                  </div>`
-            }
+            <div onclick="window.openMyServicesModal()" style="background:white; border-radius:12px; padding:20px; text-align:center; cursor:pointer;">
+  <div style="font-size:28px; margin-bottom:8px;">🛠️</div>
+  <h3>Meus Serviços</h3>
+  <p style="font-size:30px; font-weight:700; color:#10b981;">${providerServices.length}</p>
+  <p style="font-size:12px; color:#6b7280; margin-top:6px;">Clique para ver</p>
+</div>
           </div>
 
           <div>
@@ -1009,7 +1034,8 @@ function renderProviderDashboard() {
       </main>
     </div>
 
-    ${createServiceModalHtml}
+    ${createServiceModalHtml} 
+    ${myServicesModalHtml}
   `;
 
   root.innerHTML = html;
@@ -1029,15 +1055,15 @@ function render() {
     }
 
     if (
-      showBookingForm ||
-      showCancelModal ||
-      showBookingsModal ||
-      showCreateServiceModal
-    ) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+  showBookingForm ||
+  showCancelModal ||
+  showBookingsModal ||
+  showCreateServiceModal
+) {
+  document.body.style.overflow = "hidden";
+} else {
+  document.body.style.overflow = "auto";
+}
   };
 
   // só mostra loader na primeira carga ou login/logout
