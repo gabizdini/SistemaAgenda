@@ -332,7 +332,14 @@ window.closeBookingsModal = function () {
         }
         render();
     }
-
+window.cancelAllBookings = function () {
+    bookings = bookings.filter(b => b.clientId !== currentUser.id);
+    showBookingsModal = false;
+    saveToLocalStorage();
+    showToast('Todos os agendamentos foram cancelados', 'success');
+    document.body.style.overflow = 'auto';
+    render();
+};
     function openBookingForm(service) {
         selectedService = service;
         selectedDate = null;
@@ -343,35 +350,41 @@ window.closeBookingsModal = function () {
     }
 
     function generateCalendar() {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth();
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
-        const days = [];
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const days = [];
 
-        for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
-        for (let i = 1; i <= lastDay.getDate(); i++) days.push(new Date(year, month, i));
+    for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
+    for (let i = 1; i <= lastDay.getDate(); i++) days.push(new Date(year, month, i));
 
-        const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-        return `
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h4>${today.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}</h4>
-                </div>
-                <div class="calendar-grid">
-                    ${weekDays.map(day => `<div style="text-align: center; font-weight: bold; font-size: 12px; padding: 8px;">${day}</div>`).join('')}
-                    ${days.map(date => {
-                        if (!date) return '<div></div>';
-                        const dateStr = date.toDateString();
-                        const isSelected = selectedDate === dateStr;
-                        return `<div class="calendar-day ${isSelected ? 'selected' : ''}" onclick="window.selectDate('${dateStr}')">${date.getDate()}</div>`;
-                    }).join('')}
-                </div>
+    return `
+        <div style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h4>${today.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}</h4>
             </div>
-        `;
-    }
+            <div class="calendar-grid">
+                ${weekDays.map(day => `<div style="text-align: center; font-weight: bold; font-size: 12px; padding: 8px;">${day}</div>`).join('')}
+                ${days.map(date => {
+                    if (!date) return '<div></div>';
+                    const dateStr = date.toDateString();
+                    const isSelected = selectedDate === dateStr;
+                    const isPast = date < today && date.getDate() !== today.getDate();
+                    const allTimesBooked = selectedService && TIME_SLOTS.every(time => 
+                        bookings.some(b => b.serviceId === selectedService.id && b.date === dateStr && b.time === time)
+                    );
+                    const isDisabled = isPast || allTimesBooked;
+                    
+                    return `<div class="calendar-day ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}" onclick="${!isDisabled ? `window.selectDate('${dateStr}')` : ''}" style="${isDisabled ? 'background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.5;' : ''}">${date.getDate()}</div>`;
+                }).join('')}
+            </div>
+        </div>
+    `;
+}
 
     function updateTimeSelection() {
         document.querySelectorAll('.time-slot').forEach(el => {
@@ -471,10 +484,23 @@ if (showBookingsModal) {
     bookingsModalHtml = `
         <div class="modal-overlay" onclick="window.closeBookingsModal()">
             <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h3>Meus Agendamentos</h3>
-                    <button onclick="window.closeBookingsModal()" style="padding: 8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
-                </div>
+                <<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <h3>Meus Agendamentos</h3>
+    <div style="display:flex; gap:8px;">
+        ${userBookings.length > 0 ? `
+            <button onclick="window.cancelAllBookings()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; min-width:120px;">
+                Cancelar todos
+            </button>
+        ` : `
+            <button style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; min-width:120px; visibility:hidden; pointer-events:none;">
+                Cancelar todos
+            </button>
+        `}
+        <button onclick="window.closeBookingsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+            Fechar
+        </button>
+    </div>
+</div>
                 ${bookingsHtml}
             </div>
         </div>
