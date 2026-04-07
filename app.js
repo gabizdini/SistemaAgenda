@@ -333,11 +333,10 @@ window.closeBookingsModal = function () {
         render();
     }
 window.cancelAllBookings = function () {
-    bookings = bookings.filter(b => b.clientId !== currentUser.id);
-    showBookingsModal = false;
-    saveToLocalStorage();
-    showToast('Todos os agendamentos foram cancelados', 'success');
-    document.body.style.overflow = 'auto';
+    bookingToCancel = '__all__';
+    showBookingsModal = false; // fecha lista antes de abrir confirmação
+    showCancelModal = true;
+    document.body.style.overflow = 'hidden';
     render();
 };
     function openBookingForm(service) {
@@ -409,13 +408,6 @@ window.cancelAllBookings = function () {
     render();
 };
 
-window.confirmCancel = function () {
-    const id = bookingToCancel;
-    showCancelModal = false;
-    bookingToCancel = null;
-    if (id !== null && id !== undefined) cancelBooking(id);
-};
-
     window.selectDate = function (dateStr) {
         selectedDate = dateStr;
         selectedTime = null;
@@ -430,15 +422,30 @@ window.confirmCancel = function () {
 
 
     window.closeCancelModal = function () {
-        showCancelModal = false;
+    showCancelModal = false;
+    bookingToCancel = null;
+    document.body.style.overflow = 'auto';
+    render();
+};
+
+    // 3) GARANTA que exista só UMA confirmCancel (substitua pela abaixo):
+window.confirmCancel = function () {
+    const target = bookingToCancel;
+    showCancelModal = false;
+    bookingToCancel = null;
+
+    if (target === '__all__') {
+        bookings = bookings.filter(b => b.clientId !== currentUser.id);
+        showBookingsModal = false;
+        saveToLocalStorage();
+        showToast('Todos os agendamentos foram cancelados', 'success');
         document.body.style.overflow = 'auto';
         render();
-    };
+        return;
+    }
 
-    window.confirmCancel = function () {
-        showCancelModal = false;
-        if (bookingToCancel) cancelBooking(bookingToCancel);
-    };
+    if (target) cancelBooking(target);
+};
 
     window.logout = function () {
         currentUser = null;
@@ -550,7 +557,11 @@ if (showBookingsModal) {
             <div class="modal-overlay" onclick="window.closeCancelModal()">
                 <div class="modal-content" onclick="event.stopPropagation()">
                     <h3 style="margin-bottom: 12px;">Cancelar Agendamento</h3>
-                    <p style="margin-bottom: 24px; color: #6b7280;">Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.</p>
+                    <p style="margin-bottom: 24px; color: #6b7280;">
+    ${bookingToCancel === '__all__'
+        ? 'Tem certeza que deseja cancelar TODOS os agendamentos? Esta ação não pode ser desfeita.'
+        : 'Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.'}
+</p>
                     <div style="display: flex; gap: 12px; justify-content: flex-end;">
                         <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
                         <button onclick="window.confirmCancel()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar</button>
