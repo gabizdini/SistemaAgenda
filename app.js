@@ -11,6 +11,10 @@ let showCreateServiceModal = false;
 let services = [];
 let showBookingsModal = false;
 let showProviderBookingsModal = false;
+let showProviderCancelModal = false;
+let showNotificationsModal = false;
+let showClearNotificationsConfirm = false;
+let providerBookingToCancel = null;
 let selectedWorkDays = [];
 let showMyServicesModal = false;
 let showDeleteServiceModal = false;
@@ -20,8 +24,14 @@ let showClientEditProfileModal = false;
 let showClientProfilePhotoPicker = false;
 let selectedProviderId = null;
 let showProviderShop = false;
+let showReopenSlotModal = false;
+let slotToReopen = null;
+let blockedSlots = [];
 
 const savedServices = localStorage.getItem("agendamento_services");
+const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");
+
+if (savedBlockedSlots) blockedSlots = JSON.parse(savedBlockedSlots);
 
 if (savedServices) services = JSON.parse(savedServices);
 const USER_ROLES = { CLIENT: "client", PROVIDER: "provider" };

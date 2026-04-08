@@ -289,10 +289,14 @@ function renderProviderShopScreen() {
       (b) =>
         b.serviceId === selectedService.id &&
         b.date === selectedDate &&
-        b.time === selectedTime,
+        b.time === selectedTime &&
+        b.cancelled !== true,
     );
 
-    if (isBooked) {
+    const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${selectedTime}`;
+    const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
+
+    if (isBooked || isBlocked) {
       showToast("Horário indisponível", "error");
       return;
     }
@@ -391,14 +395,18 @@ function renderProviderShopScreen() {
           (b) =>
             b.serviceId === selectedService.id &&
             b.date === selectedDate &&
-            b.time === time,
+            b.time === time &&
+            b.cancelled !== true,
         );
+
+      const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
+      const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked ? "booked" : ""}"
-            onclick="${!isBooked && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
-            style="${isBooked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
+            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
+            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
             ${time}
         </div>
     `;
@@ -454,14 +462,18 @@ function renderProviderShopScreen() {
           (b) =>
             b.serviceId === selectedService.id &&
             b.date === selectedDate &&
-            b.time === time,
+            b.time === time &&
+            b.cancelled !== true,
         );
+
+      const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
+      const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked ? "booked" : ""}"
-            onclick="${!isBooked && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
-            style="${isBooked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
+            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
+            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
             ${time}
         </div>
     `;
@@ -566,6 +578,45 @@ function renderProvidersListScreen() {
     render();
   };
 
+  window.openNotificationsModal = function () {
+    showNotificationsModal = true;
+    document.body.style.overflow = "hidden";
+    render();
+  };
+
+  window.closeNotificationsModal = function () {
+    showNotificationsModal = false;
+    document.body.style.overflow = "auto";
+    render();
+  };
+
+  window.openClearNotificationsConfirm = function () {
+    showNotificationsModal = false;
+    showClearNotificationsConfirm = true;
+    document.body.style.overflow = "hidden";
+    render();
+  };
+
+  window.closeClearNotificationsConfirm = function () {
+    showClearNotificationsConfirm = false;
+    showNotificationsModal = true;
+    document.body.style.overflow = "hidden";
+    render();
+  };
+
+  window.clearAllNotifications = function () {
+    userBookings.forEach((b) => {
+      if (b.cancelled === true && b.cancelledByProvider === true) {
+        b.notificationRead = true;
+      }
+    });
+    saveToLocalStorage();
+    showToast("Notificações apagadas", "success");
+    showClearNotificationsConfirm = false;
+    showNotificationsModal = true;
+    render();
+  };
+
   window.openMyProfile = function () {
     showClientProfile = true;
     document.body.style.overflow = "hidden";
@@ -606,7 +657,11 @@ function renderProvidersListScreen() {
     bookingToCancel = null;
 
     if (target === "__all__") {
-      bookings = bookings.filter((b) => b.clientId !== currentUser.id);
+      bookings.forEach((b) => {
+        if (b.clientId === currentUser.id) {
+          b.cancelled = true;
+        }
+      });
       saveToLocalStorage();
       showToast("Todos os agendamentos foram cancelados", "success");
       showBookingsModal = true;
@@ -616,9 +671,9 @@ function renderProvidersListScreen() {
     }
 
     if (target) {
-      const index = bookings.findIndex((b) => b.id === target);
-      if (index !== -1) {
-        bookings.splice(index, 1);
+      const booking = bookings.find((b) => b.id === target);
+      if (booking) {
+        booking.cancelled = true;
         saveToLocalStorage();
         showToast("Agendamento cancelado", "success");
       }
@@ -658,20 +713,25 @@ function renderProvidersListScreen() {
   if (userBookings.length === 0) {
     bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
   } else {
-    bookingsHtml = userBookings
-      .map(
-        (booking) => `
-            <div class="booking-item">
-                <div>
-                    <h4 style="margin-bottom: 4px;">${booking.serviceName}</h4>
-                    <p style="color: #6b7280; font-size: 14px;">${booking.provider}</p>
-                    <p style="color: #667eea; font-weight: 500; font-size: 14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
-                </div>
-                <button onclick="window.openCancelModal(${booking.id})" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
-            </div>
-        `,
-      )
-      .join("");
+    const activeBookings = userBookings.filter((b) => !b.cancelled);
+    if (activeBookings.length === 0) {
+      bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
+    } else {
+      bookingsHtml = activeBookings
+        .map(
+          (booking) => `
+              <div class="booking-item">
+                  <div>
+                      <h4 style="margin-bottom: 4px;">${booking.serviceName}</h4>
+                      <p style="color: #6b7280; font-size: 14px;">${booking.provider}</p>
+                      <p style="color: #667eea; font-weight: 500; font-size: 14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
+                  </div>
+                  <button onclick="window.openCancelModal(${booking.id})" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
+              </div>
+          `,
+        )
+        .join("");
+    }
   }
 
   let bookingsModalHtml = "";
@@ -724,6 +784,75 @@ function renderProvidersListScreen() {
         `;
   }
 
+  let notificationsModalHtml = "";
+  if (showNotificationsModal) {
+    const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true);
+    notificationsModalHtml = `
+      <div class="modal-overlay" onclick="window.closeNotificationsModal()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3>🔔 Notificações</h3>
+            <div style="display:flex; gap:8px;">
+              ${
+                cancelledByProvider.length > 0
+                  ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
+                  : ""
+              }
+              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+            </div>
+          </div>
+
+          ${
+            cancelledByProvider.length === 0
+              ? '<div class="empty-state"><div class="empty-state-icon">✓</div><p>Nenhuma notificação</p></div>'
+              : `<div style="display:flex; flex-direction:column; gap:12px;">
+                  ${cancelledByProvider
+                    .map(
+                      (notification) => `
+                        <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:16px; border-radius:8px;">
+                          <div style="margin-bottom:8px;">
+                            <h4 style="margin:0 0 4px 0; color:#856404;">${notification.serviceName}</h4>
+                            <p style="margin:0; color:#856404; font-size:14px;">
+                              <strong>Prestador:</strong> ${notification.provider}
+                            </p>
+                            <p style="margin:4px 0 0 0; color:#856404; font-size:14px;">
+                              📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
+                            </p>
+                          </div>
+                          <div style="border-top:1px solid #ffeaa7; padding-top:8px; margin-top:8px;">
+                            <p style="margin:0; color:#856404; font-size:13px; line-height:1.5;">
+                              <strong>Motivo do cancelamento:</strong> ${notification.cancellationReason}
+                            </p>
+                          </div>
+                        </div>
+                      `,
+                    )
+                    .join("")}
+                </div>`
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  let clearNotificationsConfirmModalHtml = "";
+  if (showClearNotificationsConfirm) {
+    clearNotificationsConfirmModalHtml = `
+      <div class="modal-overlay" onclick="window.closeClearNotificationsConfirm()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width:400px;">
+          <h3 style="margin-bottom:16px;">Confirmar Limpeza de Notificações</h3>
+          <p style="margin-bottom:24px; color:#6b7280;">
+            Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
+          </p>
+          <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Cancelar</button>
+            <button onclick="window.clearAllNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   const html = `
     <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);">
       <aside style="width:240px; background:#111827; color:white; padding:20px; box-shadow:4px 0 24px rgba(0,0,0,0.18);">
@@ -745,8 +874,11 @@ function renderProvidersListScreen() {
             </p>
           </div>
         </div>
+        <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer; position:relative;">
+          🔔 Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
+        </button>
         <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-          📅 Meus Agendamentos (${userBookings.length})
+          📅 Meus Agendamentos (${userBookings.filter((b) => b.cancelled !== true).length})
         </button>
         <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
           👤 Perfil
@@ -802,6 +934,8 @@ function renderProvidersListScreen() {
     </div>
 
     ${bookingsModalHtml}
+    ${notificationsModalHtml}
+    ${clearNotificationsConfirmModalHtml}
     ${cancelModalHtml}
   `;
 
@@ -872,10 +1006,14 @@ function renderClientDashboard() {
       (b) =>
         b.serviceId === selectedService.id &&
         b.date === selectedDate &&
-        b.time === selectedTime,
+        b.time === selectedTime &&
+        b.cancelled !== true,
     );
 
-    if (isBooked) {
+    const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${selectedTime}`;
+    const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
+
+    if (isBooked || isBlocked) {
       showToast("Horário indisponível", "error");
       return;
     }
@@ -905,9 +1043,9 @@ function renderClientDashboard() {
   }
 
   function cancelBooking(bookingId) {
-    const index = bookings.findIndex((b) => b.id === bookingId);
-    if (index !== -1) {
-      bookings.splice(index, 1);
+    const booking = bookings.find((b) => b.id === bookingId);
+    if (booking) {
+      booking.cancelled = true;
       saveToLocalStorage();
       showToast("Agendamento cancelado", "success");
     }
@@ -997,14 +1135,18 @@ function renderClientDashboard() {
           (b) =>
             b.serviceId === selectedService.id &&
             b.date === selectedDate &&
-            b.time === time,
+            b.time === time &&
+            b.cancelled !== true,
         );
+
+      const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
+      const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked ? "booked" : ""}"
-            onclick="${!isBooked && selectedDate ? `window.selectTime('${time}')` : ""}"
-            style="${isBooked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
+            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectTime('${time}')` : ""}"
+            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
             ${time}
         </div>
     `;
@@ -1060,7 +1202,11 @@ window.confirmCancel = function () {
   bookingToCancel = null;
 
   if (target === "__all__") {
-    bookings = bookings.filter((b) => b.clientId !== currentUser.id);
+    bookings.forEach((b) => {
+      if (b.clientId === currentUser.id) {
+        b.cancelled = true;
+      }
+    });
     saveToLocalStorage();
     showToast("Todos os agendamentos foram cancelados", "success");
 
@@ -1096,20 +1242,25 @@ window.confirmCancel = function () {
   if (userBookings.length === 0) {
     bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
   } else {
-    bookingsHtml = userBookings
-      .map(
-        (booking) => `
-            <div class="booking-item">
-                <div>
-                    <h4 style="margin-bottom: 4px;">${booking.serviceName}</h4>
-                    <p style="color: #6b7280; font-size: 14px;">${booking.provider}</p>
-                    <p style="color: #667eea; font-weight: 500; font-size: 14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
-                </div>
-                <button onclick="window.openCancelModal(${booking.id})" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
-            </div>
-        `,
-      )
-      .join("");
+    const activeBookings = userBookings.filter((b) => !b.cancelled);
+    if (activeBookings.length === 0) {
+      bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
+    } else {
+      bookingsHtml = activeBookings
+        .map(
+          (booking) => `
+              <div class="booking-item">
+                  <div>
+                      <h4 style="margin-bottom: 4px;">${booking.serviceName}</h4>
+                      <p style="color: #6b7280; font-size: 14px;">${booking.provider}</p>
+                      <p style="color: #667eea; font-weight: 500; font-size: 14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
+                  </div>
+                  <button onclick="window.openCancelModal(${booking.id})" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
+              </div>
+          `,
+        )
+        .join("");
+    }
   }
   let bookingsModalHtml = "";
   if (showBookingsModal) {
@@ -1120,7 +1271,7 @@ window.confirmCancel = function () {
     <h3>Meus Agendamentos</h3>
     <div style="display:flex; gap:8px;">
         ${
-          userBookings.length >= 2
+          userBookings.filter((b) => b.cancelled !== true).length >= 2
             ? `
             <button onclick="window.cancelAllBookings()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; min-width:120px;">
                 Cancelar todos
@@ -1148,14 +1299,18 @@ window.confirmCancel = function () {
           (b) =>
             b.serviceId === selectedService.id &&
             b.date === selectedDate &&
-            b.time === time,
+            b.time === time &&
+            b.cancelled !== true,
         );
+
+      const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
+      const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked ? "booked" : ""}"
-            onclick="${!isBooked && selectedDate ? `window.selectTime('${time}')` : ""}"
-            style="${isBooked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
+            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectTime('${time}')` : ""}"
+            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
             ${time}
         </div>
     `;
@@ -1204,10 +1359,82 @@ window.confirmCancel = function () {
         `;
   }
 
+  let notificationsModalHtml = "";
+  if (showNotificationsModal) {
+    const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true);
+    notificationsModalHtml = `
+      <div class="modal-overlay" onclick="window.closeNotificationsModal()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3>🔔 Notificações</h3>
+            <div style="display:flex; gap:8px;">
+              ${
+                cancelledByProvider.length > 0
+                  ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
+                  : ""
+              }
+              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+            </div>
+          </div>
+
+          ${
+            cancelledByProvider.length === 0
+              ? '<div class="empty-state"><div class="empty-state-icon">✓</div><p>Nenhuma notificação</p></div>'
+              : `<div style="display:flex; flex-direction:column; gap:12px;">
+                  ${cancelledByProvider
+                    .map(
+                      (notification) => `
+                        <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:16px; border-radius:8px;">
+                          <div style="margin-bottom:8px;">
+                            <h4 style="margin:0 0 4px 0; color:#856404;">${notification.serviceName}</h4>
+                            <p style="margin:0; color:#856404; font-size:14px;">
+                              <strong>Prestador:</strong> ${notification.provider}
+                            </p>
+                            <p style="margin:4px 0 0 0; color:#856404; font-size:14px;">
+                              📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
+                            </p>
+                          </div>
+                          <div style="border-top:1px solid #ffeaa7; padding-top:8px; margin-top:8px;">
+                            <p style="margin:0; color:#856404; font-size:13px; line-height:1.5;">
+                              <strong>Motivo do cancelamento:</strong> ${notification.cancellationReason}
+                            </p>
+                          </div>
+                        </div>
+                      `,
+                    )
+                    .join("")}
+                </div>`
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  let clearNotificationsConfirmModalHtml = "";
+  if (showClearNotificationsConfirm) {
+    clearNotificationsConfirmModalHtml = `
+      <div class="modal-overlay" onclick="window.closeClearNotificationsConfirm()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width:400px;">
+          <h3 style="margin-bottom:16px;">Confirmar Limpeza de Notificações</h3>
+          <p style="margin-bottom:24px; color:#6b7280;">
+            Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
+          </p>
+          <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Cancelar</button>
+            <button onclick="window.clearAllNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   const html = `
     <div style="display:flex; min-height:100vh;">
         <aside style="width:240px; background:#111827; color:white; padding:20px;">
             <h2 style="margin-bottom:20px;">AgendaFácil</h2>
+            <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
+              🔔 Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
+            </button>
             <button onclick="window.openBookingsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
             Meus Agendamentos
             </button>
@@ -1232,6 +1459,8 @@ window.confirmCancel = function () {
     </div>
 
     ${bookingModalHtml}
+    ${notificationsModalHtml}
+    ${clearNotificationsConfirmModalHtml}
     ${cancelModalHtml}
     ${bookingsModalHtml}
 `;

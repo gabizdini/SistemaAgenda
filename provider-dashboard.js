@@ -185,6 +185,7 @@ window.openProviderHome = function () {
   showCreateServiceModal = false;
   showMyServicesModal = false;
   showProviderBookingsModal = false;
+  showProviderCancelModal = false;
   showDeleteServiceModal = false;
   showEditProfileModal = false;
   document.body.style.overflow = "auto";
@@ -304,6 +305,88 @@ window.closeProviderBookingsModal = function () {
   document.body.style.overflow = "auto";
   render();
 };
+
+window.openProviderCancelModal = function (bookingId) {
+  providerBookingToCancel = bookingId;
+  showProviderBookingsModal = false;
+  showProviderCancelModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeProviderCancelModal = function () {
+  showProviderCancelModal = false;
+  providerBookingToCancel = null;
+  showProviderBookingsModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.confirmProviderCancel = function () {
+  const justificativa = document.getElementById("cancelJustificativa")?.value.trim();
+  
+  if (!justificativa) {
+    showToast("Por favor, insira uma justificativa", "error");
+    return;
+  }
+
+  const bookingIndex = bookings.findIndex((b) => b.id === providerBookingToCancel);
+  if (bookingIndex !== -1) {
+    bookings[bookingIndex].cancelled = true;
+    bookings[bookingIndex].cancelledByProvider = true;
+    bookings[bookingIndex].cancellationReason = justificativa;
+    saveToLocalStorage();
+    showToast("Agendamento cancelado com justificativa", "success");
+  }
+
+  showProviderCancelModal = false;
+  slotToReopen = providerBookingToCancel;
+  showReopenSlotModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.confirmReopenSlot = function () {
+  if (slotToReopen) {
+    const booking = bookings.find((b) => b.id === slotToReopen);
+    if (booking) {
+      blockedSlots = blockedSlots.filter(
+        (slot) => !(slot.providerId === currentUser.id && slot.date === booking.date && slot.time === booking.time)
+      );
+      localStorage.setItem("agendamento_blockedSlots", JSON.stringify(blockedSlots));
+    }
+  }
+  slotToReopen = null;
+  showReopenSlotModal = false;
+  showProviderBookingsModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.declineReopenSlot = function () {
+  if (slotToReopen) {
+    const booking = bookings.find((b) => b.id === slotToReopen);
+    if (booking) {
+      const slotKey = `${currentUser.id}_${booking.date}_${booking.time}`;
+      const exists = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
+      if (!exists) {
+        blockedSlots.push({
+          bookingId: booking.id,
+          providerId: currentUser.id,
+          date: booking.date,
+          time: booking.time,
+        });
+        localStorage.setItem("agendamento_blockedSlots", JSON.stringify(blockedSlots));
+      }
+    }
+  }
+  slotToReopen = null;
+  showReopenSlotModal = false;
+  showProviderBookingsModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
 window.openDeleteServiceModal = function (serviceId) {
   serviceToDelete = serviceId;
   showMyServicesModal = false; // fecha "Meus Serviços"
@@ -540,15 +623,16 @@ if (showProviderBookingsModal) {
     <div class="modal-overlay" onclick="window.closeProviderBookingsModal()">
       <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-          <h3>Meus Agendamentos</h3>
+          <h3>Total de Agendamentos</h3>
           <button onclick="window.closeProviderBookingsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
         </div>
 
         ${
-          providerBookings.length === 0
+          providerBookings.filter((b) => !b.cancelled).length === 0
             ? '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhum agendamento encontrado</p></div>'
             : `<div style="display:flex; flex-direction:column; gap:10px;">
                 ${providerBookings
+                  .filter((b) => !b.cancelled)
                   .map(
                     (booking) => `
                       <div class="booking-item">
@@ -557,9 +641,14 @@ if (showProviderBookingsModal) {
                           <p style="color:#6b7280; font-size:14px;">Cliente: <strong>${booking.clientName}</strong></p>
                           <p style="color:#667eea; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
                         </div>
-                        <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
-                          Confirmado
-                        </span>
+                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+                          <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
+                            Confirmado
+                          </span>
+                          <button onclick="window.openProviderCancelModal(${booking.id})" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
+                            Cancelar
+                          </button>
+                        </div>
                       </div>
                     `,
                   )
@@ -570,6 +659,61 @@ if (showProviderBookingsModal) {
     </div>
   `;
 }
+
+let providerCancelModalHtml = "";
+if (showProviderCancelModal && providerBookingToCancel) {
+  providerCancelModalHtml = `
+    <div class="modal-overlay" onclick="window.closeProviderCancelModal()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 450px; width: 90%;">
+        <h3 style="margin-bottom: 12px;">Cancelar Agendamento</h3>
+        <p style="margin-bottom: 16px; color: #6b7280;">
+          Insira uma justificativa para o cancelamento. Esta mensagem será enviada ao cliente.
+        </p>
+        
+        <div style="margin-bottom: 20px;">
+          <textarea 
+            id="cancelJustificativa"
+            placeholder="Motivo do cancelamento..."
+            style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-family: sans-serif; font-size: 14px; resize: vertical; min-height: 100px; box-sizing: border-box;">
+          </textarea>
+        </div>
+        
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="window.closeProviderCancelModal()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+            Voltar
+          </button>
+          <button onclick="window.confirmProviderCancel()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+            Confirmar Cancelamento
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+let reopenSlotModalHtml = "";
+if (showReopenSlotModal && slotToReopen) {
+  reopenSlotModalHtml = `
+    <div class="modal-overlay" onclick="window.declineReopenSlot()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 450px; width: 90%;">
+        <h3 style="margin-bottom: 12px;">Abrir Horário Novamente?</h3>
+        <p style="margin-bottom: 24px; color: #6b7280;">
+          Deseja disponibilizar este horário novamente para agendamentos?
+        </p>
+        
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="window.declineReopenSlot()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+            Não
+          </button>
+          <button onclick="window.confirmReopenSlot()" style="padding:8px 16px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer;">
+            Sim, abrir horário
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 let deleteServiceModalHtml = "";
 if (showDeleteServiceModal && serviceToDelete) {
   deleteServiceModalHtml = `
@@ -671,7 +815,7 @@ if (showEditProfileModal) {
             <div onclick="window.openProviderBookingsModal()" style="background:white; border-radius:12px; padding:20px; text-align:center; cursor:pointer; transition:transform 0.2s; hover:transform scale(1.02);">
               <div style="font-size:28px; margin-bottom:8px;">📅</div>
               <h3>Total de Agendamentos</h3>
-              <p style="font-size:30px; font-weight:700; color:#667eea;">${providerBookings.length}</p>
+              <p style="font-size:30px; font-weight:700; color:#667eea;">${providerBookings.filter((b) => b.cancelled !== true).length}</p>
               <p style="font-size:12px; color:#6b7280; margin-top:6px;">Clique para ver</p>
             </div>
 
@@ -686,27 +830,28 @@ if (showEditProfileModal) {
           <div>
             <h3 style="margin-bottom:12px; color:#ffffff;">Próximos Agendamentos</h3>
             ${
-              providerBookings.length === 0
-                ? '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhum agendamento encontrado</p></div>'
-                : `<div style="display:flex; flex-direction:column; gap:10px;">
-                    ${providerBookings
-                      .map(
-                        (booking) => `
-                          <div class="booking-item">
-                            <div>
-                              <h4 style="margin-bottom:4px;">${booking.serviceName}</h4>
-                              <p style="color:#6b7280; font-size:14px;">Cliente: ${booking.clientName}</p>
-                              <p style="color:#667eea; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
-                            </div>
-                            <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
-                              Confirmado
-                            </span>
-                          </div>
-                        `,
-                      )
-                      .join("")}
-                  </div>`
-            }
+          providerBookings.filter((b) => !b.cancelled).length === 0
+            ? '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhum agendamento encontrado</p></div>'
+            : `<div style="display:flex; flex-direction:column; gap:10px;">
+                ${providerBookings
+                  .filter((b) => !b.cancelled)
+                  .map(
+                    (booking) => `
+                      <div class="booking-item">
+                        <div>
+                          <h4 style="margin-bottom:4px;">${booking.serviceName}</h4>
+                          <p style="color:#6b7280; font-size:14px;">Cliente: <strong>${booking.clientName}</strong></p>
+                          <p style="color:#667eea; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
+                        </div>
+                        <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
+                          Confirmado
+                        </span>
+                      </div>
+                    `,
+                  )
+                  .join("")}
+              </div>`
+        }
           </div>
         </div>
       </main>
@@ -715,6 +860,8 @@ if (showEditProfileModal) {
     ${createServiceModalHtml} 
     ${myServicesModalHtml}
     ${providerBookingsModalHtml}
+    ${providerCancelModalHtml}
+    ${reopenSlotModalHtml}
     ${deleteServiceModalHtml}
     ${editProfileModalHtml}
   `;
