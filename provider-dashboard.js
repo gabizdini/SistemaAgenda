@@ -452,6 +452,19 @@ window.closeDeleteServiceModal = function () {
 window.confirmDeleteService = function () {
   if (!serviceToDelete) return;
 
+  // Verificar se há agendamentos ativos neste serviço
+  const activeBookings = bookings.filter(
+    (b) => b.serviceId === serviceToDelete && b.cancelled !== true
+  );
+
+  if (activeBookings.length > 0) {
+    showToast(
+      `Impossível remover este serviço. Há ${activeBookings.length} agendamento(s) ativo(s). Cancele os agendamentos primeiro.`,
+      "error"
+    );
+    return;
+  }
+
   services = services.filter((s) => s.id !== serviceToDelete);
   bookings = bookings.filter((b) => b.serviceId !== serviceToDelete);
 
@@ -867,20 +880,44 @@ if (showProviderClearNotificationsConfirm) {
 
 let deleteServiceModalHtml = "";
 if (showDeleteServiceModal && serviceToDelete) {
+  // Verificar se há agendamentos ativos neste serviço
+  const activeBookings = bookings.filter(
+    (b) => b.serviceId === serviceToDelete && b.cancelled !== true
+  );
+  const hasActiveBookings = activeBookings.length > 0;
+
+  let warningHtml = "";
+  let confirmButton = "";
+
+  if (hasActiveBookings) {
+    warningHtml = `<div style="padding: 12px; margin-bottom: 16px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; color: #991b1b;">
+      <strong>⚠️ Operação Bloqueada</strong>
+      <p style="margin: 6px 0 0; font-size: 14px;">
+        Este serviço possui ${activeBookings.length} agendamento(s) ativo(s). Você não pode remover um serviço com agendamentos ativos.
+      </p>
+      <p style="margin: 6px 0 0; font-size: 13px; color: #7f1d1d;">
+        Cancele os agendamentos primeiro antes de remover o serviço.
+      </p>
+    </div>`;
+  } else {
+    confirmButton = `<button onclick="window.confirmDeleteService()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+      Confirmar
+    </button>`;
+  }
+
   deleteServiceModalHtml = `
     <div class="modal-overlay" onclick="window.closeDeleteServiceModal()">
       <div class="modal-content" onclick="event.stopPropagation()">
         <h3 style="margin-bottom: 12px;">Remover Serviço</h3>
-        <p style="margin-bottom: 24px; color: #6b7280;">
+        ${warningHtml}
+        ${!hasActiveBookings ? `<p style="margin-bottom: 24px; color: #6b7280;">
           Tem certeza que deseja remover este serviço? Esta ação não pode ser desfeita.
-        </p>
+        </p>` : ""}
         <div style="display:flex; gap:12px; justify-content:flex-end;">
           <button onclick="window.closeDeleteServiceModal()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
-            Cancelar
+            ${hasActiveBookings ? "Fechar" : "Cancelar"}
           </button>
-          <button onclick="window.confirmDeleteService()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
-            Confirmar
-          </button>
+          ${confirmButton}
         </div>
       </div>
     </div>
