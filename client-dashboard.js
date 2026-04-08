@@ -400,13 +400,30 @@ function renderProviderShopScreen() {
   }
 
   function generateTimeSlots() {
-    // Filtrar horários baseado no workHours do serviço
-    let filteredSlots = TIME_SLOTS;
+    // Funções auxiliares para conversão de tempo
+    const timeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const minutesToTime = (minutes) => {
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    };
+
+    // Gerar horários baseado no workHours e duração do serviço
+    let filteredSlots = [];
     
     if (selectedService && selectedService.workHours && selectedService.workHours.start && selectedService.workHours.end) {
-      filteredSlots = TIME_SLOTS.filter((time) => {
-        return time >= selectedService.workHours.start && time <= selectedService.workHours.end;
-      });
+      const startMinutes = timeToMinutes(selectedService.workHours.start);
+      const endMinutes = timeToMinutes(selectedService.workHours.end);
+      const serviceDuration = selectedService.duration || 30;
+      
+      // Gerar slots começando do horário inicial, incrementando pela duração
+      for (let timeMin = startMinutes; (timeMin + serviceDuration) <= endMinutes; timeMin += serviceDuration) {
+        filteredSlots.push(minutesToTime(timeMin));
+      }
     }
 
     let timeSlotsHtml = filteredSlots.map((time) => {
@@ -1172,13 +1189,30 @@ function renderClientDashboard() {
   }
 
   function generateClientTimeSlots() {
-    // Filtrar horários baseado no workHours do serviço
-    let filteredSlots = TIME_SLOTS;
+    // Funções auxiliares para conversão de tempo
+    const timeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const minutesToTime = (minutes) => {
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    };
+
+    // Gerar horários baseado no workHours e duração do serviço
+    let filteredSlots = [];
     
     if (selectedService && selectedService.workHours && selectedService.workHours.start && selectedService.workHours.end) {
-      filteredSlots = TIME_SLOTS.filter((time) => {
-        return time >= selectedService.workHours.start && time <= selectedService.workHours.end;
-      });
+      const startMinutes = timeToMinutes(selectedService.workHours.start);
+      const endMinutes = timeToMinutes(selectedService.workHours.end);
+      const serviceDuration = selectedService.duration || 30;
+      
+      // Gerar slots começando do horário inicial, incrementando pela duração
+      for (let timeMin = startMinutes; (timeMin + serviceDuration) <= endMinutes; timeMin += serviceDuration) {
+        filteredSlots.push(minutesToTime(timeMin));
+      }
     }
 
     let timeSlotsHtml = filteredSlots.map((time) => {
@@ -1345,13 +1379,30 @@ window.confirmCancel = function () {
   }
   let bookingModalHtml = "";
   if (showBookingForm && selectedService) {
-    // Filtrar horários baseado no workHours do serviço
-    let filteredSlots = TIME_SLOTS;
+    // Funções auxiliares para conversão de tempo
+    const timeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const minutesToTime = (minutes) => {
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    };
+
+    // Gerar horários baseado no workHours e duração do serviço
+    let filteredSlots = [];
     
     if (selectedService.workHours && selectedService.workHours.start && selectedService.workHours.end) {
-      filteredSlots = TIME_SLOTS.filter((time) => {
-        return time >= selectedService.workHours.start && time <= selectedService.workHours.end;
-      });
+      const startMinutes = timeToMinutes(selectedService.workHours.start);
+      const endMinutes = timeToMinutes(selectedService.workHours.end);
+      const serviceDuration = selectedService.duration || 30;
+      
+      // Gerar slots começando do horário inicial, incrementando pela duração
+      for (let timeMin = startMinutes; (timeMin + serviceDuration) <= endMinutes; timeMin += serviceDuration) {
+        filteredSlots.push(minutesToTime(timeMin));
+      }
     }
 
     let timeSlotsHtml = filteredSlots.map((time) => {
