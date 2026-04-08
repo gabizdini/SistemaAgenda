@@ -71,6 +71,11 @@ function renderProviderProfileScreen() {
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
           Sair
         </button>
+
+        <button id="themeToggle" class="theme-btn">
+          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+        </button>
+      </aside>
       </aside>
 
       <main style="flex:1; padding:32px;">
@@ -1041,6 +1046,10 @@ if (showEditProfileModal) {
           style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
           Sair
         </button>
+        <button id="themeToggle" class="theme-btn">
+          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+        </button>
+      </aside>
       </aside>
 
       <main style="flex:1;">

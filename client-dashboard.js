@@ -166,6 +166,10 @@ function renderClientProfileScreen() {
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
           Sair
         </button>
+        <button id="themeToggle" class="theme-btn">
+          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+        </button>
+      </aside>
       </aside>
 
       <main style="flex:1; padding:32px;">
@@ -987,7 +991,13 @@ function renderProvidersListScreen() {
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
           Sair
         </button>
+
+        <button id="themeToggle" class="theme-btn">
+          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+        </button>
       </aside>
+
+      
 
       <main style="flex:1; padding:32px;">
         <div class="container">

@@ -168,6 +168,82 @@ function saveToLocalStorage() {
   }
 }
 
+// ============================================
+// TEMA ESCURO / CLARO
+// ============================================
+let isDarkMode = localStorage.getItem("agendamento_darkMode") === "true" || false;
+
+function toggleDarkMode() {
+  isDarkMode = !isDarkMode;
+  localStorage.setItem("agendamento_darkMode", isDarkMode.toString());
+  applyTheme();
+  initThemeButton();
+  render();
+}
+
+function applyTheme() {
+  const htmlElement = document.documentElement;
+  
+  if (isDarkMode) {
+    htmlElement.classList.add("dark-mode");
+  } else {
+    htmlElement.classList.remove("dark-mode");
+  }
+}
+
+function getTheme() {
+  if (isDarkMode) {
+    return {
+      bgMain: "#1E1E2F",
+      bgSecondary: "#2A2A40",
+      bgCard: "#2C2C3E",
+      bgMenu: "#252536",
+      borderColor: "#3A3A4F",
+      primary: "#8E7CFF",
+      secondary: "#B3A9FF",
+      primaryHover: "#6C5CE7",
+      textMain: "#F1F2F6",
+      textSecondary: "#A4B0BE",
+      textMuted: "#747D8C",
+      btnCloseBg: "#3A3A4F",
+      btnCloseHover: "#4B4B63",
+      btnCloseBorder: "#5A5A75",
+      btnCloseText: "#DCDDE1"
+    };
+  }
+  
+  return {
+    bgMain: "linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%)",
+    bgSecondary: "#ffffff",
+    bgCard: "#ffffff",
+    bgMenu: "#ffffff",
+    borderColor: "#d1d5db",
+    primary: "#6C5CE7",
+    secondary: "#8E44AD",
+    primaryHover: "#A29BFE",
+    textMain: "#2D3436",
+    textSecondary: "#6b7280",
+    textMuted: "#9ca3af",
+    btnCloseBg: "#ECEFF1",
+    btnCloseHover: "#DFE6E9",
+    btnCloseBorder: "#B2BEC3",
+    btnCloseText: "#636E72"
+  };
+}
+
+function initThemeButton() {
+  // Inicializar Lucide Icons
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+  
+  const btn = document.getElementById("themeToggle");
+  if (btn) {
+    btn.removeEventListener("click", toggleDarkMode);
+    btn.addEventListener("click", toggleDarkMode);
+  }
+}
+
 //prestador add serviços
 function addService(name, duration, price) {
   const newService = {
@@ -362,6 +438,9 @@ function renderAuthScreen() {
 // ============================================
 
 function render() {
+  applyTheme();
+  window.toggleDarkMode = toggleDarkMode;
+  
   const showPage = () => {
     if (!currentUser) {
   renderAuthScreen();
@@ -404,9 +483,11 @@ function render() {
     setTimeout(() => {
       hideLoader();
       showPage();
+      initThemeButton();
     }, 600);
   } else {
     showPage();
+    initThemeButton();
   }
 }
 

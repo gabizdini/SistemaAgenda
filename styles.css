@@ -424,6 +424,8 @@ body::before {
 aside {
     background: white !important;
     box-shadow: 0 8px 32px rgba(108, 92, 231, 0.15) !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 aside h2 {
@@ -443,7 +445,15 @@ aside button {
     transition: all 0.3s ease !important;
 }
 
-aside button:hover:not(.logout-btn) {
+aside button:not(.theme-btn) {
+    background: #f3f4f6 !important;
+    color: var(--text-dark) !important;
+    border: 1px solid #e5e7eb !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+aside button:hover:not(.logout-btn):not(.theme-btn) {
     background: var(--primary) !important;
     color: white !important;
     border-color: var(--primary) !important;
@@ -480,4 +490,65 @@ aside > div:nth-child(2) h2 {
 aside > div:nth-child(2) p {
     color: var(--primary) !important;
     font-weight: 500 !important;
+}
+
+/* ========== THEME TOGGLE BUTTON ========== */
+.theme-btn {
+  width: 45px !important;
+  height: 45px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 2px solid #B2BEC3 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  margin-top: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 20px !important;
+  padding: 0 !important;
+}
+
+.theme-btn:hover {
+  background: #F4F3FF !important;
+  border-color: #A29BFE !important;
+  transform: scale(1.05) !important;
+}
+
+.theme-btn:active {
+  transform: scale(0.95) !important;
+}
+
+.theme-btn .icon {
+  width: 28px !important;
+  height: 28px !important;
+  color: #636E72 !important;
+  transition: all 0.3s ease !important;
+  display: block !important;
+}
+
+.theme-btn:hover .icon {
+  color: #6C5CE7 !important;
+}
+
+/* Dark mode theme button styles */
+html.dark-mode .theme-btn {
+  background: #3A3A4F !important;
+  border-color: #5A5A75 !important;
+}
+
+html.dark-mode .theme-btn:hover {
+  background: #4B4B63 !important;
+  border-color: #6C6C81 !important;
+}
+
+html.dark-mode .theme-btn .icon {
+  color: #DCDDE1 !important;
+}
+
+html.dark-mode .theme-btn:hover .icon {
+  color: #8E7CFF !important;
 }
