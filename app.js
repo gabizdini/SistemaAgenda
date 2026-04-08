@@ -344,12 +344,14 @@ function renderAuthScreen() {
 function render() {
   const showPage = () => {
     if (!currentUser) {
-      renderAuthScreen();
-    } else if (currentUser.role === USER_ROLES.CLIENT) {
-      renderClientDashboard();
-    } else {
-      renderProviderDashboard();
-    }
+  renderAuthScreen();
+} else if (currentUser.role === USER_ROLES.CLIENT) {
+  renderClientDashboard();
+} else if (showProviderProfile) {
+  renderProviderProfileScreen();
+} else {
+  renderProviderDashboard();
+}
 
     if (
   showBookingForm ||

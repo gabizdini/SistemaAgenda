@@ -1,6 +1,133 @@
 // ============================================
 // DASHBOARD DO PRESTADOR
 // ============================================
+let showProviderProfile = false;
+
+let showProfilePhotoPicker = false;
+
+function renderProviderProfileScreen() {
+  const root = document.getElementById("root");
+
+  const PROFILE_PHOTOS = [
+    "./images/1.png",
+    "./images/2.png",
+    "./images/3.png",
+    "./images/4.png",
+    "./images/5.png",
+  ];
+
+  window.openPhotoPicker = function () {
+    showProfilePhotoPicker = !showProfilePhotoPicker;
+    render();
+  };
+
+  window.selectProfilePhoto = function (photo) {
+    currentUser.profilePhoto = photo;
+
+    const userIndex = users.findIndex((u) => u.id === currentUser.id);
+    if (userIndex !== -1) users[userIndex].profilePhoto = photo;
+
+    saveToLocalStorage();
+    showProfilePhotoPicker = false;
+    render();
+  };
+
+  const html = `
+    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);">
+      <aside style="width:240px; background:#111827; color:white; padding:20px; box-shadow:4px 0 24px rgba(0,0,0,0.18);">
+        <h2 style="margin-bottom:24px;">AgendaFácil</h2>
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+  <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
+    ${
+      currentUser.profilePhoto
+        ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
+        : `${currentUser.name?.charAt(0)?.toUpperCase() || "P"}`
+    }
+  </div>
+
+  <div style="min-width:0;">
+    <h2 style="margin:0; font-size:18px; line-height:1.2; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+      ${currentUser.name}
+    </h2>
+    <p style="margin:4px 0 0; color:#cbd5e1; font-size:12px;">
+      Prestador de serviço
+    </p>
+  </div>
+</div>
+        <button onclick="window.openProviderHome()"
+          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
+          Início
+        </button>
+<p style="margin-bottom:12px; margin-top:0px; color:#9ca3af; font-size:12px; line-height:1.4;">
+  Para criar um serviço acesse "Início"
+</p>
+        <button onclick="window.logout()"
+          style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+          Sair
+        </button>
+      </aside>
+
+      <main style="flex:1; padding:32px;">
+        <div class="container">
+          <div style="display:flex; align-items:center; gap:18px; margin-bottom:18px;">
+            <div style="width:84px; height:84px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:34px; font-weight:700; box-shadow:0 12px 30px rgba(102,126,234,0.35);">
+              ${
+                currentUser.profilePhoto
+                  ? `<img src="${currentUser.profilePhoto}" alt="Foto do perfil" style="width:100%; height:100%; object-fit:cover;">`
+                  : `${currentUser.name?.charAt(0)?.toUpperCase() || "P"}`
+              }
+            </div>
+
+            <div>
+              <h2 style="margin:0; color:white; font-size:30px;">${currentUser.name}</h2>
+              <p style="margin:6px 0 0; color:#cbd5e1;">Prestador de serviço</p>
+              <p style="margin:6px 0 0; color:#94a3b8; font-size:12px;">Escolha uma foto de perfil</p>
+            </div>
+          </div>
+
+          <button type="button" onclick="window.openPhotoPicker()"
+            style="padding:10px 16px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; margin-bottom:18px;">
+            ${showProfilePhotoPicker ? "Fechar opções" : "Escolher foto"}
+          </button>
+
+          ${
+            showProfilePhotoPicker
+              ? `
+            <div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
+              ${PROFILE_PHOTOS.map((photo) => `
+                <button type="button" onclick="window.selectProfilePhoto('${photo}')"
+                  style="width:90px; height:90px; padding:0; border:${currentUser.profilePhoto === photo ? "3px solid #10b981" : "2px solid #e5e7eb"}; border-radius:16px; overflow:hidden; cursor:pointer; background:white;">
+                  <img src="${photo}" alt="Opção de foto" style="width:100%; height:100%; object-fit:cover;">
+                </button>
+              `).join("")}
+            </div>
+          `
+              : ""
+          }
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:24px;">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
+              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">Nome completo</p>
+              <h3 style="margin:0; color:#0f172a;">${currentUser.name}</h3>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
+              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">E-mail</p>
+              <h3 style="margin:0; color:#0f172a; word-break:break-word;">${currentUser.email}</h3>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
+              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">Tipo de conta</p>
+              <h3 style="margin:0; color:#10b981;">Prestador</h3>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  `;
+
+  root.innerHTML = html;
+}
 
 function renderProviderDashboard() {
   const root = document.getElementById("root");
@@ -13,6 +140,25 @@ function renderProviderDashboard() {
       providerServices.some((s) => s.id === b.serviceId) ||
       b.provider === currentUser.name,
   );
+window.openProviderHome = function () {
+  showProviderProfile = false;
+  showCreateServiceModal = false;
+  showMyServicesModal = false;
+  showDeleteServiceModal = false;
+  document.body.style.overflow = "auto";
+  render();
+};
+  window.openProviderProfile = function () {
+  showProviderProfile = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeProviderProfile = function () {
+  showProviderProfile = false;
+  document.body.style.overflow = "auto";
+  render();
+};
 
   window.logout = function () {
     currentUser = null;
@@ -301,6 +447,29 @@ if (showDeleteServiceModal && serviceToDelete) {
     <div style="display:flex; min-height:100vh;">
       <aside style="width:240px; background:#111827; color:white; padding:20px;">
         <h2 style="margin-bottom:20px;">AgendaFácil</h2>
+
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+  <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
+    ${
+      currentUser.profilePhoto
+        ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
+        : `${currentUser.name?.charAt(0)?.toUpperCase() || "P"}`
+    }
+  </div>
+
+  <div style="min-width:0;">
+    <h2 style="margin:0; font-size:18px; line-height:1.2; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+      ${currentUser.name}
+    </h2>
+    <p style="margin:4px 0 0; color:#cbd5e1; font-size:12px;">
+      Prestador de serviço
+    </p>
+  </div>
+</div>
+<button onclick="window.openProviderProfile()"
+          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
+          Perfil
+        </button>
 
         <button onclick="window.openCreateServiceModal()"
           style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
