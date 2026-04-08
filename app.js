@@ -16,6 +16,7 @@ let showNotificationsModal = false;
 let showClearNotificationsConfirm = false;
 let providerBookingToCancel = null;
 let selectedWorkDays = [];
+let selectedWorkHours = { start: "09:00", end: "18:00" };
 let showMyServicesModal = false;
 let showDeleteServiceModal = false;
 let serviceToDelete = null;

@@ -278,6 +278,7 @@ window.saveProfileChanges = function () {
 window.closeCreateServiceModal = function () {
   showCreateServiceModal = false;
   selectedWorkDays = [];
+  selectedWorkHours = { start: "09:00", end: "18:00" };
   document.body.style.overflow = "auto";
   render();
 };
@@ -507,6 +508,7 @@ window.confirmDeleteService = function () {
       providerId: currentUser.id,
       provider: currentUser.name,
       workDays: [...selectedWorkDays],
+      workHours: { ...selectedWorkHours },
     };
 
     services.push(newService);
@@ -514,6 +516,7 @@ window.confirmDeleteService = function () {
     showToast("Serviço criado com sucesso!", "success");
     showCreateServiceModal = false;
     selectedWorkDays = [];
+    selectedWorkHours = { start: "09:00", end: "18:00" };
     document.body.style.overflow = "auto";
     render();
   };
@@ -530,6 +533,14 @@ window.confirmDeleteService = function () {
 
   if (label) label.textContent = formatDuration(value);
 };
+
+  window.updateWorkHourStart = function (value) {
+    selectedWorkHours.start = value;
+  };
+
+  window.updateWorkHourEnd = function (value) {
+    selectedWorkHours.end = value;
+  };
 
   const createServiceModalHtml = showCreateServiceModal
   ? `
@@ -604,6 +615,23 @@ window.confirmDeleteService = function () {
           </div>
         </div>
 
+        <div style="margin-bottom: 20px;">
+          <label style="display:block; margin-bottom: 10px; font-weight: 500;">Horário de funcionamento</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div>
+              <label style="display:block; margin-bottom: 6px; font-size:14px; color:#6b7280;">Início</label>
+              <input id="workHourStart" type="time" value="09:00" onchange="event.stopPropagation(); window.updateWorkHourStart(this.value)"
+                style="width:100%; padding:10px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px;" />
+            </div>
+            <div>
+              <label style="display:block; margin-bottom: 6px; font-size:14px; color:#6b7280;">Fim</label>
+              <input id="workHourEnd" type="time" value="18:00" onchange="event.stopPropagation(); window.updateWorkHourEnd(this.value)"
+                style="width:100%; padding:10px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px;" />
+            </div>
+          </div>
+          <small style="display:block; margin-top:8px; color:#6b7280;">Define a disponibilidade do serviço nesses dias</small>
+        </div>
+
         <div style="display:flex; gap:12px; justify-content:flex-end;">
           <button onclick="window.closeCreateServiceModal()"
             style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
@@ -641,6 +669,7 @@ if (showMyServicesModal) {
                           <h4 style="margin-bottom:4px;">${service.name}</h4>
                           <p style="color:#6b7280; font-size:14px;">Duração: ${formatDuration(service.duration)}</p>
                           <p style="color:#6b7280; font-size:14px;">Dias: ${Array.isArray(service.workDays) ? service.workDays.map((d) => WEEK_DAYS.find((w) => w.value === d)?.short).filter(Boolean).join(", ") : "-"}</p>
+                          <p style="color:#6b7280; font-size:14px;">Horário: ${service.workHours ? `${service.workHours.start} - ${service.workHours.end}` : "09:00 - 18:00"}</p>
                         </div>
                         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
   <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">

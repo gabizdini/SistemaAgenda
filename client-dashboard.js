@@ -400,7 +400,16 @@ function renderProviderShopScreen() {
   }
 
   function generateTimeSlots() {
-    let timeSlotsHtml = TIME_SLOTS.map((time) => {
+    // Filtrar horários baseado no workHours do serviço
+    let filteredSlots = TIME_SLOTS;
+    
+    if (selectedService && selectedService.workHours && selectedService.workHours.start && selectedService.workHours.end) {
+      filteredSlots = TIME_SLOTS.filter((time) => {
+        return time >= selectedService.workHours.start && time <= selectedService.workHours.end;
+      });
+    }
+
+    let timeSlotsHtml = filteredSlots.map((time) => {
       const isBooked =
         selectedDate &&
         selectedService &&
@@ -1163,7 +1172,16 @@ function renderClientDashboard() {
   }
 
   function generateClientTimeSlots() {
-    let timeSlotsHtml = TIME_SLOTS.map((time) => {
+    // Filtrar horários baseado no workHours do serviço
+    let filteredSlots = TIME_SLOTS;
+    
+    if (selectedService && selectedService.workHours && selectedService.workHours.start && selectedService.workHours.end) {
+      filteredSlots = TIME_SLOTS.filter((time) => {
+        return time >= selectedService.workHours.start && time <= selectedService.workHours.end;
+      });
+    }
+
+    let timeSlotsHtml = filteredSlots.map((time) => {
       const isBooked =
         selectedDate &&
         selectedService &&
@@ -1327,7 +1345,16 @@ window.confirmCancel = function () {
   }
   let bookingModalHtml = "";
   if (showBookingForm && selectedService) {
-    let timeSlotsHtml = TIME_SLOTS.map((time) => {
+    // Filtrar horários baseado no workHours do serviço
+    let filteredSlots = TIME_SLOTS;
+    
+    if (selectedService.workHours && selectedService.workHours.start && selectedService.workHours.end) {
+      filteredSlots = TIME_SLOTS.filter((time) => {
+        return time >= selectedService.workHours.start && time <= selectedService.workHours.end;
+      });
+    }
+
+    let timeSlotsHtml = filteredSlots.map((time) => {
       const isBooked =
         selectedDate &&
         selectedService &&
