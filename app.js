@@ -10,6 +10,7 @@ let bookingToCancel = null;
 let showCreateServiceModal = false;
 let services = [];
 let showBookingsModal = false;
+let showProviderBookingsModal = false;
 let selectedWorkDays = [];
 let showMyServicesModal = false;
 let showDeleteServiceModal = false;
@@ -17,6 +18,8 @@ let serviceToDelete = null;
 let showClientProfile = false;
 let showClientEditProfileModal = false;
 let showClientProfilePhotoPicker = false;
+let selectedProviderId = null;
+let showProviderShop = false;
 
 const savedServices = localStorage.getItem("agendamento_services");
 
@@ -349,10 +352,12 @@ function render() {
     if (!currentUser) {
   renderAuthScreen();
 } else if (currentUser.role === USER_ROLES.CLIENT) {
-  if (showClientProfile) {
+  if (showProviderShop) {
+    renderProviderShopScreen();
+  } else if (showClientProfile) {
     renderClientProfileScreen();
   } else {
-    renderClientDashboard();
+    renderProvidersListScreen();
   }
 } else if (showProviderProfile) {
   renderProviderProfileScreen();
@@ -369,7 +374,8 @@ function render() {
   showDeleteServiceModal ||
   showClientProfile ||
   showClientEditProfileModal ||
-  showClientProfilePhotoPicker
+  showClientProfilePhotoPicker ||
+  showProviderShop
 ) {
   document.body.style.overflow = "hidden";
 } else {

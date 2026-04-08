@@ -184,6 +184,7 @@ window.openProviderHome = function () {
   showProviderProfile = false;
   showCreateServiceModal = false;
   showMyServicesModal = false;
+  showProviderBookingsModal = false;
   showDeleteServiceModal = false;
   showEditProfileModal = false;
   document.body.style.overflow = "auto";
@@ -288,6 +289,18 @@ window.openMyServicesModal = function () {
 
 window.closeMyServicesModal = function () {
   showMyServicesModal = false;
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window.openProviderBookingsModal = function () {
+  showProviderBookingsModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeProviderBookingsModal = function () {
+  showProviderBookingsModal = false;
   document.body.style.overflow = "auto";
   render();
 };
@@ -521,6 +534,42 @@ if (showMyServicesModal) {
     </div>
   `;
 }
+let providerBookingsModalHtml = "";
+if (showProviderBookingsModal) {
+  providerBookingsModalHtml = `
+    <div class="modal-overlay" onclick="window.closeProviderBookingsModal()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3>Meus Agendamentos</h3>
+          <button onclick="window.closeProviderBookingsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+        </div>
+
+        ${
+          providerBookings.length === 0
+            ? '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhum agendamento encontrado</p></div>'
+            : `<div style="display:flex; flex-direction:column; gap:10px;">
+                ${providerBookings
+                  .map(
+                    (booking) => `
+                      <div class="booking-item">
+                        <div>
+                          <h4 style="margin-bottom:4px;">${booking.serviceName}</h4>
+                          <p style="color:#6b7280; font-size:14px;">Cliente: <strong>${booking.clientName}</strong></p>
+                          <p style="color:#667eea; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
+                        </div>
+                        <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
+                          Confirmado
+                        </span>
+                      </div>
+                    `,
+                  )
+                  .join("")}
+              </div>`
+        }
+      </div>
+    </div>
+  `;
+}
 let deleteServiceModalHtml = "";
 if (showDeleteServiceModal && serviceToDelete) {
   deleteServiceModalHtml = `
@@ -619,10 +668,11 @@ if (showEditProfileModal) {
           <p style="color:#d1d5db; margin-bottom:24px;">Dashboard do Prestador</p>
 
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:28px;">
-            <div style="background:white; border-radius:12px; padding:20px; text-align:center;">
+            <div onclick="window.openProviderBookingsModal()" style="background:white; border-radius:12px; padding:20px; text-align:center; cursor:pointer; transition:transform 0.2s; hover:transform scale(1.02);">
               <div style="font-size:28px; margin-bottom:8px;">📅</div>
               <h3>Total de Agendamentos</h3>
               <p style="font-size:30px; font-weight:700; color:#667eea;">${providerBookings.length}</p>
+              <p style="font-size:12px; color:#6b7280; margin-top:6px;">Clique para ver</p>
             </div>
 
             <div onclick="window.openMyServicesModal()" style="background:white; border-radius:12px; padding:20px; text-align:center; cursor:pointer;">
@@ -664,6 +714,7 @@ if (showEditProfileModal) {
 
     ${createServiceModalHtml} 
     ${myServicesModalHtml}
+    ${providerBookingsModalHtml}
     ${deleteServiceModalHtml}
     ${editProfileModalHtml}
   `;
