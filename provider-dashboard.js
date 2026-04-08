@@ -35,36 +35,40 @@ function renderProviderProfileScreen() {
   };
 
   const html = `
-    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);">
-      <aside style="width:240px; background:#111827; color:white; padding:20px; box-shadow:4px 0 24px rgba(0,0,0,0.18);">
-        <h2 style="margin-bottom:24px;">AgendaFácil</h2>
-<div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-  <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
-    ${
-      currentUser.profilePhoto
-        ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
-        : `${currentUser.name?.charAt(0)?.toUpperCase() || "P"}`
-    }
-  </div>
-
-  <div style="min-width:0;">
-    <h2 style="margin:0; font-size:18px; line-height:1.2; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-      ${currentUser.name}
-    </h2>
-    <p style="margin:4px 0 0; color:#cbd5e1; font-size:12px;">
-      Prestador de serviço
-    </p>
-  </div>
-</div>
+    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
+      <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
+        <h2 style="margin-bottom:24px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px;">AgendaFácil</h2>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; background:linear-gradient(135deg,rgba(108,92,231,0.05),rgba(162,155,254,0.05)); padding:12px; border-radius:12px;">
+          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
+            ${
+              currentUser.profilePhoto
+                ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
+                : `${currentUser.name?.charAt(0)?.toUpperCase() || "P"}`
+            }
+          </div>
+          <div style="min-width:0;">
+            <h2 style="margin:0; font-size:18px; line-height:1.2; color:#6C5CE7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700;">
+              ${currentUser.name}
+            </h2>
+            <p style="margin:4px 0 0; color:#8E44AD; font-size:12px; font-weight:500;">
+              Prestador
+            </p>
+          </div>
+        </div>
         <button onclick="window.openProviderHome()"
-          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
+          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
+          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
           Início
         </button>
+        
 <p style="margin-bottom:12px; margin-top:0px; color:#9ca3af; font-size:12px; line-height:1.4;">
-  Para criar um serviço acesse "Início"
+  Para gerenciar seus serviços<br> volte para a tela inicial
 </p>
         <button onclick="window.logout()"
-          style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+          style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#ef4444'; this.style.color='white';"
+          onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
           Sair
         </button>
       </aside>
@@ -72,7 +76,7 @@ function renderProviderProfileScreen() {
       <main style="flex:1; padding:32px;">
         <div class="container">
           <div style="display:flex; align-items:center; gap:18px; margin-bottom:18px;">
-            <div style="width:84px; height:84px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:34px; font-weight:700; box-shadow:0 12px 30px rgba(102,126,234,0.35);">
+            <div style="width:84px; height:84px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:34px; font-weight:700; box-shadow:0 12px 30px rgba(108,92,231,0.35);">
               ${
                 currentUser.profilePhoto
                   ? `<img src="${currentUser.profilePhoto}" alt="Foto do perfil" style="width:100%; height:100%; object-fit:cover;">`
@@ -81,18 +85,23 @@ function renderProviderProfileScreen() {
             </div>
 
             <div>
-              <h2 style="margin:0; color:white; font-size:30px;">${currentUser.name}</h2>
-              <p style="margin:6px 0 0; color:#cbd5e1;">Prestador de serviço</p>
+              <h2 style="margin:0; color:white; font-size:30px; font-weight:700;">${currentUser.name}</h2>
+              <p style="margin:6px 0 0; color:#e9d5ff; font-weight:500;">Prestador de serviço</p>
             </div>
           </div>
 
           <div style="display:flex; gap:12px; margin-bottom:18px;">
             <button type="button" onclick="window.openPhotoPicker()"
-              style="padding:10px 16px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer;">
+              style="padding:10px 16px; background:rgba(255,255,255,0.2); color:white; border:2px solid white; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+              onmouseover="this.style.background='white'; this.style.color='#6C5CE7';"
+              onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='white';"
+              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
               ${showProfilePhotoPicker ? "Fechar opções" : "Escolher foto"}
             </button>
             <button type="button" onclick="window.openEditProfileModal()"
-              style="padding:10px 16px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer;">
+              style="padding:10px 16px; background:rgba(255,255,255,0.2); color:white; border:2px solid white; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+              onmouseover="this.style.background='white'; this.style.color='#6C5CE7';"
+              onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='white';">
               Editar dados
             </button>
           </div>
@@ -103,7 +112,9 @@ function renderProviderProfileScreen() {
             <div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
               ${PROFILE_PHOTOS.map((photo) => `
                 <button type="button" onclick="window.selectProfilePhoto('${photo}')"
-                  style="width:90px; height:90px; padding:0; border:${currentUser.profilePhoto === photo ? "3px solid #10b981" : "2px solid #e5e7eb"}; border-radius:16px; overflow:hidden; cursor:pointer; background:white;">
+                  style="width:90px; height:90px; padding:0; border:${currentUser.profilePhoto === photo ? "3px solid #6C5CE7" : "2px solid #d1d5db"}; border-radius:16px; overflow:hidden; cursor:pointer; background:white; transition:all 0.2s; box-shadow:${currentUser.profilePhoto === photo ? "0 4px 12px rgba(108,92,231,0.3)" : "none"}"
+                  onmouseover="this.style.borderColor='#6C5CE7'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
+                  onmouseout="this.style.borderColor='${currentUser.profilePhoto === photo ? "#6C5CE7" : "#d1d5db"}'; this.style.boxShadow='${currentUser.profilePhoto === photo ? "0 4px 12px rgba(108,92,231,0.3)" : "none"}';">
                   <img src="${photo}" alt="Opção de foto" style="width:100%; height:100%; object-fit:cover;">
                 </button>
               `).join("")}
@@ -113,19 +124,25 @@ function renderProviderProfileScreen() {
           }
 
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:24px;">
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
-              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">Nome completo</p>
-              <h3 style="margin:0; color:#0f172a;">${currentUser.name}</h3>
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Nome completo</p>
+              <h3 style="margin:0; color:#2D3436; font-size:18px; font-weight:700;">${currentUser.name}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
-              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">E-mail</p>
-              <h3 style="margin:0; color:#0f172a; word-break:break-word;">${currentUser.email}</h3>
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">E-mail</p>
+              <h3 style="margin:0; color:#2D3436; word-break:break-word; font-size:14px; font-weight:700;">${currentUser.email}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
-              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">Tipo de conta</p>
-              <h3 style="margin:0; color:#10b981;">Prestador</h3>
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Tipo de conta</p>
+              <h3 style="margin:0; color:#6C5CE7; font-weight:700;">Prestador</h3>
             </div>
           </div>
         </div>
@@ -136,26 +153,34 @@ function renderProviderProfileScreen() {
       showEditProfileModal
         ? `
       <div class="modal-overlay" onclick="window.closeEditProfileModal()">
-        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 400px; width: 90%;">
-          <h3 style="margin-bottom: 20px;">Editar Perfil</h3>
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 400px; width: 90%; border-top:4px solid #6C5CE7;">
+          <h3 style="margin-bottom: 20px; color:#6C5CE7; font-size:20px;">✏️ Editar Perfil</h3>
 
           <div style="margin-bottom: 16px;">
-            <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">Nome completo</label>
+            <label style="display:block; margin-bottom: 8px; font-weight: 600; color: #6C5CE7;">Nome completo</label>
             <input id="editProfileName" type="text" value="${currentUser.name}"
-              style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+              style="width:100%; padding:12px; border:2px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box; transition:all 0.2s;"
+              onfocus="this.style.borderColor='#6C5CE7'; this.style.boxShadow='0 0 0 3px rgba(108,92,231,0.1)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" />
           </div>
 
           <div style="margin-bottom: 24px;">
-            <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">E-mail</label>
+            <label style="display:block; margin-bottom: 8px; font-weight: 600; color: #6C5CE7;">E-mail</label>
             <input id="editProfileEmail" type="email" value="${currentUser.email}"
-              style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+              style="width:100%; padding:12px; border:2px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box; transition:all 0.2s;"
+              onfocus="this.style.borderColor='#6C5CE7'; this.style.boxShadow='0 0 0 3px rgba(108,92,231,0.1)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" />
           </div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeEditProfileModal()" style="padding:10px 20px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+            <button onclick="window.closeEditProfileModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+              onmouseover="this.style.background='#DFE6E9';"
+              onmouseout="this.style.background='#ECEFF1';">
               Cancelar
             </button>
-            <button onclick="window.saveProfileChanges()" style="padding:10px 20px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+            <button onclick="window.saveProfileChanges()" style="padding:10px 20px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+              onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
+              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
               Confirmar
             </button>
           </div>
@@ -574,7 +599,9 @@ window.confirmDeleteService = function () {
     <button
       type="button"
       onclick="event.stopPropagation(); window.changeDuration(-15)"
-      style="width:36px; height:36px; border:none; border-radius:8px; background:#e5e7eb; cursor:pointer; font-size:20px; line-height:1;">
+      style="width:36px; height:36px; border:1px solid #B2BEC3; border-radius:8px; background:#ECEFF1; cursor:pointer; font-size:20px; line-height:1; color:#636E72; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center;"
+      onmouseover="this.style.background='#DFE6E9';"
+      onmouseout="this.style.background='#ECEFF1';">
       −
     </button>
 
@@ -588,7 +615,9 @@ window.confirmDeleteService = function () {
     <button
       type="button"
       onclick="event.stopPropagation(); window.changeDuration(15)"
-      style="width:36px; height:36px; border:none; border-radius:8px; background:#e5e7eb; cursor:pointer; font-size:20px; line-height:1;">
+      style="width:36px; height:36px; border:1px solid #B2BEC3; border-radius:8px; background:#ECEFF1; cursor:pointer; font-size:20px; line-height:1; color:#636E72; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center;"
+      onmouseover="this.style.background='#DFE6E9';"
+      onmouseout="this.style.background='#ECEFF1';">
       +
     </button>
   </div>
@@ -613,9 +642,9 @@ window.confirmDeleteService = function () {
                   class="work-day-btn ${selectedWorkDays.includes(day.value) ? "selected" : ""}"
                   style="
                     aspect-ratio: 1 / 1;
-                    border: 2px solid ${selectedWorkDays.includes(day.value) ? "#667eea" : "#e5e7eb"};
+                    border: 2px solid ${selectedWorkDays.includes(day.value) ? "#6C5CE7" : "#e5e7eb"};
                     border-radius: 10px;
-                    background: ${selectedWorkDays.includes(day.value) ? "#667eea" : "#f9fafb"};
+                    background: ${selectedWorkDays.includes(day.value) ? "#6C5CE7" : "#f9fafb"};
                     color: ${selectedWorkDays.includes(day.value) ? "white" : "#111827"};
                     cursor: pointer;
                     font-size: 12px;
@@ -647,7 +676,7 @@ window.confirmDeleteService = function () {
 
         <div style="display:flex; gap:12px; justify-content:flex-end;">
           <button onclick="window.closeCreateServiceModal()"
-            style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+            style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
             Cancelar
           </button>
           <button onclick="window.createService()"
@@ -667,7 +696,9 @@ if (showMyServicesModal) {
       <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
           <h3>Meus Serviços</h3>
-          <button onclick="window.closeMyServicesModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+          <button onclick="window.closeMyServicesModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
+            onmouseover="this.style.background='#DFE6E9';"
+            onmouseout="this.style.background='#ECEFF1';">Fechar</button>
         </div>
 
         ${
@@ -711,7 +742,9 @@ if (showProviderBookingsModal) {
       <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
           <h3>Total de Agendamentos</h3>
-          <button onclick="window.closeProviderBookingsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+          <button onclick="window.closeProviderBookingsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
+            onmouseover="this.style.background='#DFE6E9';"
+            onmouseout="this.style.background='#ECEFF1';">Fechar</button>
         </div>
 
         ${
@@ -726,7 +759,7 @@ if (showProviderBookingsModal) {
                         <div>
                           <h4 style="margin-bottom:4px;">${booking.serviceName}</h4>
                           <p style="color:#6b7280; font-size:14px;">Cliente: <strong>${booking.clientName}</strong></p>
-                          <p style="color:#667eea; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
+                          <p style="color:#6C5CE7; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
                         </div>
                         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
                           <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
@@ -766,7 +799,7 @@ if (showProviderCancelModal && providerBookingToCancel) {
         </div>
         
         <div style="display:flex; gap:12px; justify-content:flex-end;">
-          <button onclick="window.closeProviderCancelModal()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+          <button onclick="window.closeProviderCancelModal()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
             Voltar
           </button>
           <button onclick="window.confirmProviderCancel()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
@@ -823,7 +856,9 @@ if (showProviderNotificationsModal) {
                 ? `<button onclick="window.openProviderClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
                 : ""
             }
-            <button onclick="window.closeProviderNotificationsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+            <button onclick="window.closeProviderNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
+            onmouseover="this.style.background='#DFE6E9';"
+            onmouseout="this.style.background='#ECEFF1';">Fechar</button>
           </div>
         </div>
 
@@ -870,7 +905,9 @@ if (showProviderClearNotificationsConfirm) {
           Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
         </p>
         <div style="display:flex; gap:12px; justify-content:flex-end;">
-          <button onclick="window.closeProviderClearNotificationsConfirm()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Cancelar</button>
+          <button onclick="window.closeProviderClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
+            onmouseover="this.style.background='#DFE6E9';"
+            onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
           <button onclick="window.clearAllProviderNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
         </div>
       </div>
@@ -914,7 +951,7 @@ if (showDeleteServiceModal && serviceToDelete) {
           Tem certeza que deseja remover este serviço? Esta ação não pode ser desfeita.
         </p>` : ""}
         <div style="display:flex; gap:12px; justify-content:flex-end;">
-          <button onclick="window.closeDeleteServiceModal()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+          <button onclick="window.closeDeleteServiceModal()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
             ${hasActiveBookings ? "Fechar" : "Cancelar"}
           </button>
           ${confirmButton}
@@ -969,7 +1006,7 @@ if (showEditProfileModal) {
         <h2 style="margin-bottom:20px;">AgendaFácil</h2>
 
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-  <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
+  <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
     ${
       currentUser.profilePhoto
         ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
@@ -1015,7 +1052,7 @@ if (showEditProfileModal) {
             <div onclick="window.openProviderBookingsModal()" style="background:white; border-radius:12px; padding:20px; text-align:center; cursor:pointer; transition:transform 0.2s; hover:transform scale(1.02);">
               <div style="font-size:28px; margin-bottom:8px;">📅</div>
               <h3>Total de Agendamentos</h3>
-              <p style="font-size:30px; font-weight:700; color:#667eea;">${providerBookings.filter((b) => b.cancelled !== true).length}</p>
+              <p style="font-size:30px; font-weight:700; color:#6C5CE7;">${providerBookings.filter((b) => b.cancelled !== true).length}</p>
               <p style="font-size:12px; color:#6b7280; margin-top:6px;">Clique para ver</p>
             </div>
 
@@ -1041,7 +1078,7 @@ if (showEditProfileModal) {
                         <div>
                           <h4 style="margin-bottom:4px;">${booking.serviceName}</h4>
                           <p style="color:#6b7280; font-size:14px;">Cliente: <strong>${booking.clientName}</strong></p>
-                          <p style="color:#667eea; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
+                          <p style="color:#6C5CE7; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
                         </div>
                         <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
                           Confirmado

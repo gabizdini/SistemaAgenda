@@ -130,11 +130,11 @@ function renderClientProfileScreen() {
   };
 
   const html = `
-    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);">
-      <aside style="width:240px; background:#111827; color:white; padding:20px; box-shadow:4px 0 24px rgba(0,0,0,0.18);">
-        <h2 style="margin-bottom:24px;">AgendaFácil</h2>
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
+    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
+      <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
+        <h2 style="margin-bottom:24px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px;">AgendaFácil</h2>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; background:linear-gradient(135deg,rgba(108,92,231,0.05),rgba(162,155,254,0.05)); padding:12px; border-radius:12px;">
+          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
             ${
               currentUser.profilePhoto
                 ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
@@ -142,24 +142,28 @@ function renderClientProfileScreen() {
             }
           </div>
           <div style="min-width:0;">
-            <h2 style="margin:0; font-size:18px; line-height:1.2; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            <h2 style="margin:0; font-size:18px; line-height:1.2; color:#6C5CE7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700;">
               ${currentUser.name}
             </h2>
-            <p style="margin:4px 0 0; color:#cbd5e1; font-size:12px;">
+            <p style="margin:4px 0 0; color:#8E44AD; font-size:12px; font-weight:500;">
               Cliente
             </p>
           </div>
         </div>
         <button onclick="window.openClientHome()"
-          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
+          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
+          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
           Início
         </button>
         
 <p style="margin-bottom:12px; margin-top:0px; color:#9ca3af; font-size:12px; line-height:1.4;">
-  Para criar um serviço acesse "Início"
+  Para gerenciar seus agendamentos<br> volte para a tela inicial
 </p>
         <button onclick="window.logout()"
-          style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+          style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#ef4444'; this.style.color='white';"
+          onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
           Sair
         </button>
       </aside>
@@ -167,7 +171,7 @@ function renderClientProfileScreen() {
       <main style="flex:1; padding:32px;">
         <div class="container">
           <div style="display:flex; align-items:center; gap:18px; margin-bottom:18px;">
-            <div style="width:84px; height:84px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:34px; font-weight:700; box-shadow:0 12px 30px rgba(102,126,234,0.35);">
+            <div style="width:84px; height:84px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:34px; font-weight:700; box-shadow:0 12px 30px rgba(108,92,231,0.35);">
               ${
                 currentUser.profilePhoto
                   ? `<img src="${currentUser.profilePhoto}" alt="Foto do perfil" style="width:100%; height:100%; object-fit:cover;">`
@@ -176,18 +180,23 @@ function renderClientProfileScreen() {
             </div>
 
             <div>
-              <h2 style="margin:0; color:white; font-size:30px;">${currentUser.name}</h2>
-              <p style="margin:6px 0 0; color:#cbd5e1;">Cliente</p>
+              <h2 style="margin:0; color:white; font-size:30px; font-weight:700;">${currentUser.name}</h2>
+              <p style="margin:6px 0 0; color:#e9d5ff; font-weight:500;">Cliente</p>
             </div>
           </div>
 
           <div style="display:flex; gap:12px; margin-bottom:18px;">
             <button type="button" onclick="window.openClientPhotoPicker()"
-              style="padding:10px 16px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer;">
+              style="padding:10px 16px; background:rgba(255,255,255,0.2); color:white; border:2px solid white; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+              onmouseover="this.style.background='white'; this.style.color='#6C5CE7';"
+              onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='white';"
+              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
               ${showClientProfilePhotoPicker ? "Fechar opções" : "Escolher foto"}
             </button>
             <button type="button" onclick="window.openClientEditProfileModal()"
-              style="padding:10px 16px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer;">
+              style="padding:10px 16px; background:rgba(255,255,255,0.2); color:white; border:2px solid white; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+              onmouseover="this.style.background='white'; this.style.color='#6C5CE7';"
+              onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='white';">
               Editar dados
             </button>
           </div>
@@ -198,7 +207,9 @@ function renderClientProfileScreen() {
             <div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
               ${PROFILE_PHOTOS.map((photo) => `
                 <button type="button" onclick="window.selectClientProfilePhoto('${photo}')"
-                  style="width:90px; height:90px; padding:0; border:${currentUser.profilePhoto === photo ? "3px solid #10b981" : "2px solid #e5e7eb"}; border-radius:16px; overflow:hidden; cursor:pointer; background:white;">
+                  style="width:90px; height:90px; padding:0; border:${currentUser.profilePhoto === photo ? "3px solid #6C5CE7" : "2px solid #d1d5db"}; border-radius:16px; overflow:hidden; cursor:pointer; background:white; transition:all 0.2s; box-shadow:${currentUser.profilePhoto === photo ? "0 4px 12px rgba(108,92,231,0.3)" : "none"}"
+                  onmouseover="this.style.borderColor='#6C5CE7'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
+                  onmouseout="this.style.borderColor='${currentUser.profilePhoto === photo ? "#6C5CE7" : "#d1d5db"}'; this.style.boxShadow='${currentUser.profilePhoto === photo ? "0 4px 12px rgba(108,92,231,0.3)" : "none"}';">
                   <img src="${photo}" alt="Opção de foto" style="width:100%; height:100%; object-fit:cover;">
                 </button>
               `).join("")}
@@ -208,19 +219,25 @@ function renderClientProfileScreen() {
           }
 
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:24px;">
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
-              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">Nome completo</p>
-              <h3 style="margin:0; color:#0f172a;">${currentUser.name}</h3>
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Nome completo</p>
+              <h3 style="margin:0; color:#2D3436; font-size:18px; font-weight:700;">${currentUser.name}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
-              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">E-mail</p>
-              <h3 style="margin:0; color:#0f172a; word-break:break-word;">${currentUser.email}</h3>
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">E-mail</p>
+              <h3 style="margin:0; color:#2D3436; word-break:break-word; font-size:14px; font-weight:700;">${currentUser.email}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12);">
-              <p style="margin:0 0 8px; color:#64748b; font-size:14px;">Tipo de conta</p>
-              <h3 style="margin:0; color:#10b981;">Cliente</h3>
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Tipo de conta</p>
+              <h3 style="margin:0; color:#6C5CE7; font-weight:700;">Cliente</h3>
             </div>
           </div>
         </div>
@@ -231,26 +248,34 @@ function renderClientProfileScreen() {
       showClientEditProfileModal
         ? `
       <div class="modal-overlay" onclick="window.closeClientEditProfileModal()">
-        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 400px; width: 90%;">
-          <h3 style="margin-bottom: 20px;">Editar Perfil</h3>
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 400px; width: 90%; border-top:4px solid #6C5CE7;">
+          <h3 style="margin-bottom: 20px; color:#6C5CE7; font-size:20px;">✏️ Editar Perfil</h3>
 
           <div style="margin-bottom: 16px;">
-            <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">Nome completo</label>
+            <label style="display:block; margin-bottom: 8px; font-weight: 600; color: #6C5CE7;">Nome completo</label>
             <input id="editClientProfileName" type="text" value="${currentUser.name}"
-              style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+              style="width:100%; padding:12px; border:2px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box; transition:all 0.2s;"
+              onfocus="this.style.borderColor='#6C5CE7'; this.style.boxShadow='0 0 0 3px rgba(108,92,231,0.1)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" />
           </div>
 
           <div style="margin-bottom: 24px;">
-            <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">E-mail</label>
+            <label style="display:block; margin-bottom: 8px; font-weight: 600; color: #6C5CE7;">E-mail</label>
             <input id="editClientProfileEmail" type="email" value="${currentUser.email}"
-              style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+              style="width:100%; padding:12px; border:2px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box; transition:all 0.2s;"
+              onfocus="this.style.borderColor='#6C5CE7'; this.style.boxShadow='0 0 0 3px rgba(108,92,231,0.1)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" />
           </div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeClientEditProfileModal()" style="padding:10px 20px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+            <button onclick="window.closeClientEditProfileModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+              onmouseover="this.style.background='#DFE6E9';"
+              onmouseout="this.style.background='#ECEFF1';">
               Cancelar
             </button>
-            <button onclick="window.saveClientProfileChanges()" style="padding:10px 20px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+            <button onclick="window.saveClientProfileChanges()" style="padding:10px 20px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+              onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
+              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
               Confirmar
             </button>
           </div>
@@ -531,7 +556,9 @@ function renderProviderShopScreen() {
                         <div class="time-slots-grid">${timeSlotsHtml}</div>
                     </div>
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-                        <button onclick="window.closeProviderShopBookingForm()" style="padding: 10px 20px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
+                        <button onclick="window.closeProviderShopBookingForm()" style="padding: 10px 20px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; font-weight:600; transition:all 0.2s; color:#636E72;"
+                          onmouseover="this.style.background='#DFE6E9';"
+                          onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
                         <button onclick="window.confirmProviderShopBooking()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Agendamento</button>
                     </div>
                 </div>
@@ -540,9 +567,11 @@ function renderProviderShopScreen() {
   }
 
   const html = `
-    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);">
+    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
       <main style="flex:1; padding:32px;">
-        <button onclick="window.backToProviders()" style="padding:10px 16px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; margin-bottom:24px;">
+        <button onclick="window.backToProviders()" style="padding:10px 16px; background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4); border-radius:8px; cursor:pointer; margin-bottom:24px; font-weight:600; transition:all 0.3s;"
+          onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.borderColor='rgba(255,255,255,0.6)';"
+          onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.borderColor='rgba(255,255,255,0.4)';">
           ← Voltar aos Prestadores
         </button>
 
@@ -574,7 +603,9 @@ function renderProviderShopScreen() {
                           <h4 style="margin:0 0 8px; color:#111827; font-size:16px;">${service.name}</h4>
                           <p style="margin:0 0 4px; color:#6b7280; font-size:14px;">Duração: ${formatDuration(service.duration)}</p>
                           <p style="margin:0 0 12px; color:#10b981; font-weight:700; font-size:18px;">R$ ${service.price.toFixed(2)}</p>
-                          <button onclick="window.openProviderShopBookingForm(${service.id})" style="width:100%; padding:10px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+                          <button onclick="window.openProviderShopBookingForm(${service.id})" style="width:100%; padding:10px; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s;"
+                            onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
+                            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                             Agendar
                           </button>
                         </div>
@@ -807,7 +838,7 @@ function renderProvidersListScreen() {
                         `
                             : ``
                         }
-                        <button onclick="window.closeMyBookings()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+                        <button onclick="window.closeMyBookings()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
                             Fechar
                         </button>
                     </div>
@@ -837,7 +868,7 @@ function renderProvidersListScreen() {
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Voltar</button>
+                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Voltar</button>
                         <button onclick="window.confirmCancelFromModal()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Cancelamento</button>
                     </div>
                 </div>
@@ -859,7 +890,7 @@ function renderProvidersListScreen() {
                   ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
                   : ""
               }
-              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Fechar</button>
             </div>
           </div>
 
@@ -906,7 +937,7 @@ function renderProvidersListScreen() {
             Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
           </p>
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Cancelar</button>
+            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
             <button onclick="window.clearAllNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
           </div>
         </div>
@@ -915,11 +946,11 @@ function renderProvidersListScreen() {
   }
 
   const html = `
-    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);">
-      <aside style="width:240px; background:#111827; color:white; padding:20px; box-shadow:4px 0 24px rgba(0,0,0,0.18);">
-        <h2 style="margin-bottom:24px;">AgendaFácil</h2>
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
+    <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
+      <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
+        <h2 style="margin-bottom:24px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px;">AgendaFácil</h2>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; background:linear-gradient(135deg,rgba(108,92,231,0.05),rgba(162,155,254,0.05)); padding:12px; border-radius:12px;">
+          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
             ${
               currentUser.profilePhoto
                 ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
@@ -927,33 +958,41 @@ function renderProvidersListScreen() {
             }
           </div>
           <div style="min-width:0;">
-            <h2 style="margin:0; font-size:18px; line-height:1.2; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            <h2 style="margin:0; font-size:18px; line-height:1.2; color:#6C5CE7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700;">
               ${currentUser.name}
             </h2>
-            <p style="margin:4px 0 0; color:#cbd5e1; font-size:12px;">
+            <p style="margin:4px 0 0; color:#8E44AD; font-size:12px; font-weight:500;">
               Cliente
             </p>
           </div>
         </div>
-        <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
+        <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
+          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
           👤 Perfil
         </button>
-        <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer; position:relative;">
+        <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
+          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb'; position:'relative';">
           🔔 Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
         </button>
-        <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
+        <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
+          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
           📅 Meus Agendamentos (${userBookings.filter((b) => b.cancelled !== true).length})
         </button>
         
-        <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+        <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+          onmouseover="this.style.background='#ef4444'; this.style.color='white';"
+          onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
           Sair
         </button>
       </aside>
 
       <main style="flex:1; padding:32px;">
         <div class="container">
-          <h2 style="margin-bottom:8px; color:#ffffff;">Prestadores Disponíveis</h2>
-          <p style="color:#cbd5e1; margin-bottom:32px;">Escolha um prestador para ver seus serviços</p>
+          <h2 style="margin-bottom:8px; color:white; font-weight:700; font-size:28px;">💼 Prestadores Disponíveis</h2>
+          <p style="color:#e9d5ff; margin-bottom:32px; font-weight:500;">Escolha um prestador para ver seus serviços</p>
 
           ${
             providers.length === 0
@@ -981,7 +1020,9 @@ function renderProvidersListScreen() {
                               </div>
                             </div>
                             <p style="margin:0 0 12px; color:#6b7280; font-size:14px;">📋 ${providerServices.length} serviço(s)</p>
-                            <button onclick="window.selectProvider(${provider.id})" style="width:100%; padding:10px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+                            <button onclick="window.selectProvider(${provider.id})" style="width:100%; padding:10px; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+                              onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
+                              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                               Ver Serviços
                             </button>
                           </div>
@@ -1367,7 +1408,7 @@ window.confirmCancel = function () {
         `
             : ``
         }
-        <button onclick="window.closeBookingsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+        <button onclick="window.closeBookingsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
             Fechar
         </button>
     </div>
@@ -1443,7 +1484,7 @@ window.confirmCancel = function () {
                         <div class="time-slots-grid">${timeSlotsHtml}</div>
                     </div>
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-                        <button onclick="window.closeBookingForm()" style="padding: 10px 20px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
+                        <button onclick="window.closeBookingForm()" style="padding: 10px 20px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
                         <button onclick="window.confirmBooking()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Agendamento</button>
                     </div>
                 </div>
@@ -1470,7 +1511,7 @@ window.confirmCancel = function () {
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Voltar</button>
+                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Voltar</button>
                         <button onclick="window.confirmCancel()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Cancelamento</button>
                     </div>
                 </div>
@@ -1492,7 +1533,7 @@ window.confirmCancel = function () {
                   ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
                   : ""
               }
-              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Fechar</button>
             </div>
           </div>
 
@@ -1539,7 +1580,7 @@ window.confirmCancel = function () {
             Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
           </p>
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Cancelar</button>
+            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
             <button onclick="window.clearAllNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
           </div>
         </div>

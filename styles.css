@@ -4,11 +4,21 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary: #6C5CE7;
+    --primary-dark: #5A4FCF;
+    --secondary: #8E44AD;
+    --accent: #A29BFE;
+    --bg-light: #F4F3FF;
+    --text-dark: #2D3436;
+    --gradient: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient);
     min-height: 100vh;
-    color: #333;
+    color: var(--text-dark);
 }
 
 /* ========== LOADING SPINNER ========== */
@@ -16,7 +26,7 @@ body {
     width: 40px;
     height: 40px;
     border: 4px solid #f3f3f3;
-    border-top: 4px solid #667eea;
+    border-top: 4px solid var(--primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -93,7 +103,7 @@ body {
 input, select, textarea {
     width: 100%;
     padding: 12px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid #d1d5db;
     border-radius: 8px;
     font-size: 16px;
     transition: border-color 0.2s;
@@ -101,7 +111,7 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: var(--primary);
 }
 
 button {
@@ -132,12 +142,12 @@ button:active {
 }
 
 .calendar-day:hover:not(.disabled) {
-    background: #667eea;
+    background: var(--primary);
     color: white;
 }
 
 .calendar-day.selected {
-    background: #667eea;
+    background: var(--primary);
     color: white;
 }
 
@@ -152,15 +162,15 @@ button:active {
 }
 
 .time-slot:hover:not(.booked) {
-    background: #667eea;
+    background: var(--primary);
     color: white;
-    border-color: #667eea;
+    border-color: var(--primary);
 }
 
 .time-slot.selected {
-    background: #667eea;
+    background: var(--primary);
     color: white;
-    border-color: #667eea;
+    border-color: var(--primary);
 }
 
 .time-slot.booked {
@@ -229,7 +239,7 @@ button:active {
             left: 0;
             width: 100%;
             height: 100vh;
-            background: linear-gradient(145deg, #fef9f0 0%, #fff5e6 100%);
+            background: var(--gradient);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -268,7 +278,7 @@ button:active {
         }
 
         .calendar-header {
-            background: linear-gradient(135deg, #f0935e, #f5a65a);
+            background: var(--gradient);
             height: 35%;
             width: 100%;
             position: relative;
@@ -307,7 +317,7 @@ button:active {
         }
 
         .calendar-numbers span.today {
-            background: #f5a65a;
+            background: var(--primary);
             color: white;
             border-radius: 50%;
             width: 15px;
@@ -320,9 +330,9 @@ button:active {
 
         .subtitle {
             font-size: 0.85rem;
-            color: #c47a44;
+            color: var(--secondary);
             margin-top: 0.5rem;
-            opacity: 0.7;
+            opacity: 0.8;
             font-weight: 500;
         }
 
@@ -335,17 +345,17 @@ button:active {
         .dot {
             width: 8px;
             height: 8px;
-            background: #f5a65a;
+            background: var(--primary);
             border-radius: 50%;
             animation: wave 1.4s ease-in-out infinite;
         }
 
-        .dot:nth-child(2) { animation-delay: 0.2s; background: #f0935e; }
-        .dot:nth-child(3) { animation-delay: 0.4s; background: #ffb347; }
+        .dot:nth-child(2) { animation-delay: 0.2s; background: var(--secondary); }
+        .dot:nth-child(3) { animation-delay: 0.4s; background: var(--accent); }
 .work-day-btn.selected {
-  background: #667eea !important;
+  background: var(--primary) !important;
   color: white !important;
-  border-color: #667eea !important;
+  border-color: var(--primary) !important;
 }
         @keyframes wave {
             0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
@@ -357,3 +367,117 @@ button:active {
             .loader-content { padding: 1rem; }
             .subtitle { font-size: 0.7rem; }
         }
+
+/* ========== MELHORIAS DE DESIGN ========== */
+button:not(.work-day-btn):not(.time-slot) {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+button:not(.work-day-btn):not(.time-slot):hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+}
+
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+}
+
+.service-card, .booking-item {
+    border-left: 4px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.service-card:hover, .booking-item:hover {
+    box-shadow: 0 8px 16px rgba(108, 92, 231, 0.15);
+    transform: translateY(-4px);
+}
+
+.modal-content {
+    border-top: 4px solid var(--primary);
+}
+
+.modal-content h3 {
+    color: var(--primary);
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(162, 155, 254, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(142, 68, 173, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ========== SIDEBAR/MENU STYLING ========== */
+aside {
+    background: white !important;
+    box-shadow: 0 8px 32px rgba(108, 92, 231, 0.15) !important;
+}
+
+aside h2 {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px;
+}
+
+aside button {
+    background: #f3f4f6 !important;
+    color: var(--text-dark) !important;
+    border: 1px solid #e5e7eb !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+aside button:hover:not(.logout-btn) {
+    background: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+    transform: translateX(4px);
+}
+
+aside .logout-btn {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+    border: 1px solid #fca5a5 !important;
+}
+
+aside .logout-btn:hover {
+    background: #ef4444 !important;
+    color: white !important;
+}
+
+aside p {
+    color: #6b7280 !important;
+}
+
+aside > div:nth-child(2) {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.05) 0%, rgba(162, 155, 254, 0.05) 100%);
+    border-radius: 12px;
+    padding: 12px !important;
+}
+
+aside > div:nth-child(2) h2 {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+aside > div:nth-child(2) p {
+    color: var(--primary) !important;
+    font-weight: 500 !important;
+}
