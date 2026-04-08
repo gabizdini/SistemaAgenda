@@ -5,6 +5,8 @@ let showProviderProfile = false;
 
 let showProfilePhotoPicker = false;
 
+let showEditProfileModal = false;
+
 function renderProviderProfileScreen() {
   const root = document.getElementById("root");
 
@@ -85,10 +87,16 @@ function renderProviderProfileScreen() {
             </div>
           </div>
 
-          <button type="button" onclick="window.openPhotoPicker()"
-            style="padding:10px 16px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; margin-bottom:18px;">
-            ${showProfilePhotoPicker ? "Fechar opções" : "Escolher foto"}
-          </button>
+          <div style="display:flex; gap:12px; margin-bottom:18px;">
+            <button type="button" onclick="window.openPhotoPicker()"
+              style="padding:10px 16px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer;">
+              ${showProfilePhotoPicker ? "Fechar opções" : "Escolher foto"}
+            </button>
+            <button type="button" onclick="window.openEditProfileModal()"
+              style="padding:10px 16px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer;">
+              Editar dados
+            </button>
+          </div>
 
           ${
             showProfilePhotoPicker
@@ -124,6 +132,39 @@ function renderProviderProfileScreen() {
         </div>
       </main>
     </div>
+
+    ${
+      showEditProfileModal
+        ? `
+      <div class="modal-overlay" onclick="window.closeEditProfileModal()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 400px; width: 90%;">
+          <h3 style="margin-bottom: 20px;">Editar Perfil</h3>
+
+          <div style="margin-bottom: 16px;">
+            <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">Nome completo</label>
+            <input id="editProfileName" type="text" value="${currentUser.name}"
+              style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">E-mail</label>
+            <input id="editProfileEmail" type="email" value="${currentUser.email}"
+              style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <button onclick="window.closeEditProfileModal()" style="padding:10px 20px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+              Cancelar
+            </button>
+            <button onclick="window.saveProfileChanges()" style="padding:10px 20px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    `
+        : ""
+    }
   `;
 
   root.innerHTML = html;
@@ -145,6 +186,7 @@ window.openProviderHome = function () {
   showCreateServiceModal = false;
   showMyServicesModal = false;
   showDeleteServiceModal = false;
+  showEditProfileModal = false;
   document.body.style.overflow = "auto";
   render();
 };
@@ -156,7 +198,65 @@ window.openProviderHome = function () {
 
 window.closeProviderProfile = function () {
   showProviderProfile = false;
+  showEditProfileModal = false;
   document.body.style.overflow = "auto";
+  render();
+};
+
+window.openEditProfileModal = function () {
+  showEditProfileModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeEditProfileModal = function () {
+  showEditProfileModal = false;
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window.saveProfileChanges = function () {
+  const newName = document.getElementById("editProfileName")?.value.trim();
+  const newEmail = document.getElementById("editProfileEmail")?.value.trim();
+
+  if (!newName) {
+    showToast("Nome é obrigatório", "error");
+    return;
+  }
+
+  if (!newEmail) {
+    showToast("Email é obrigatório", "error");
+    return;
+  }
+
+  // Validar email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(newEmail)) {
+    showToast("Email inválido", "error");
+    return;
+  }
+
+  // Verificar se email já existe (excluindo o usuário atual)
+  const emailExists = users.some((u) => u.email === newEmail && u.id !== currentUser.id);
+  if (emailExists) {
+    showToast("Este email já está cadastrado", "error");
+    return;
+  }
+
+  // Atualizar usuário atual
+  currentUser.name = newName;
+  currentUser.email = newEmail;
+
+  // Atualizar no array de usuários
+  const userIndex = users.findIndex((u) => u.id === currentUser.id);
+  if (userIndex !== -1) {
+    users[userIndex].name = newName;
+    users[userIndex].email = newEmail;
+  }
+
+  saveToLocalStorage();
+  showToast("Perfil atualizado com sucesso!", "success");
+  showEditProfileModal = false;
   render();
 };
 
@@ -443,6 +543,38 @@ if (showDeleteServiceModal && serviceToDelete) {
     </div>
   `;
 }
+
+let editProfileModalHtml = "";
+if (showEditProfileModal) {
+  editProfileModalHtml = `
+    <div class="modal-overlay" onclick="window.closeEditProfileModal()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 400px; width: 90%;">
+        <h3 style="margin-bottom: 20px;">Editar Perfil</h3>
+
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">Nome completo</label>
+          <input id="editProfileName" type="text" value="${currentUser.name}"
+            style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <label style="display:block; margin-bottom: 8px; font-weight: 500; color: #111827;">E-mail</label>
+          <input id="editProfileEmail" type="email" value="${currentUser.email}"
+            style="width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;" />
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="window.closeEditProfileModal()" style="padding:10px 20px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+            Cancelar
+          </button>
+          <button onclick="window.saveProfileChanges()" style="padding:10px 20px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
   const html = `
     <div style="display:flex; min-height:100vh;">
       <aside style="width:240px; background:#111827; color:white; padding:20px;">
@@ -534,6 +666,7 @@ if (showDeleteServiceModal && serviceToDelete) {
     ${createServiceModalHtml} 
     ${myServicesModalHtml}
     ${deleteServiceModalHtml}
+    ${editProfileModalHtml}
   `;
 
   root.innerHTML = html;
