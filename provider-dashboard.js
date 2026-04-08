@@ -83,7 +83,6 @@ function renderProviderProfileScreen() {
             <div>
               <h2 style="margin:0; color:white; font-size:30px;">${currentUser.name}</h2>
               <p style="margin:6px 0 0; color:#cbd5e1;">Prestador de serviço</p>
-              <p style="margin:6px 0 0; color:#94a3b8; font-size:12px;">Escolha uma foto de perfil</p>
             </div>
           </div>
 

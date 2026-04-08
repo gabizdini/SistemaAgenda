@@ -14,6 +14,9 @@ let selectedWorkDays = [];
 let showMyServicesModal = false;
 let showDeleteServiceModal = false;
 let serviceToDelete = null;
+let showClientProfile = false;
+let showClientEditProfileModal = false;
+let showClientProfilePhotoPicker = false;
 
 const savedServices = localStorage.getItem("agendamento_services");
 
@@ -346,7 +349,11 @@ function render() {
     if (!currentUser) {
   renderAuthScreen();
 } else if (currentUser.role === USER_ROLES.CLIENT) {
-  renderClientDashboard();
+  if (showClientProfile) {
+    renderClientProfileScreen();
+  } else {
+    renderClientDashboard();
+  }
 } else if (showProviderProfile) {
   renderProviderProfileScreen();
 } else {
@@ -359,7 +366,10 @@ function render() {
   showBookingsModal ||
   showCreateServiceModal ||
   showMyServicesModal ||
-  showDeleteServiceModal
+  showDeleteServiceModal ||
+  showClientProfile ||
+  showClientEditProfileModal ||
+  showClientProfilePhotoPicker
 ) {
   document.body.style.overflow = "hidden";
 } else {
