@@ -387,6 +387,51 @@ window.declineReopenSlot = function () {
   render();
 };
 
+window.openProviderNotificationsModal = function () {
+  showProviderNotificationsModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeProviderNotificationsModal = function () {
+  showProviderNotificationsModal = false;
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window.openProviderClearNotificationsConfirm = function () {
+  showProviderNotificationsModal = false;
+  showProviderClearNotificationsConfirm = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeProviderClearNotificationsConfirm = function () {
+  showProviderClearNotificationsConfirm = false;
+  showProviderNotificationsModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.clearAllProviderNotifications = function () {
+  const providerBookings = bookings.filter((b) => {
+    const service = services.find((s) => s.id === b.serviceId);
+    return service && service.providerId === currentUser.id;
+  });
+
+  providerBookings.forEach((b) => {
+    if (b.cancelled === true && b.cancelledByClient === true) {
+      b.notificationRead = true;
+    }
+  });
+
+  saveToLocalStorage();
+  showToast("Notificações apagadas", "success");
+  showProviderClearNotificationsConfirm = false;
+  showProviderNotificationsModal = true;
+  render();
+};
+
 window.openDeleteServiceModal = function (serviceId) {
   serviceToDelete = serviceId;
   showMyServicesModal = false; // fecha "Meus Serviços"
@@ -714,6 +759,83 @@ if (showReopenSlotModal && slotToReopen) {
   `;
 }
 
+let providerNotificationsModalHtml = "";
+if (showProviderNotificationsModal) {
+  const providerServices = services.filter((s) => s.providerId === currentUser.id);
+  const cancelledByClient = bookings.filter(
+    (b) =>
+      b.cancelled === true &&
+      b.cancelledByClient === true &&
+      b.notificationRead !== true &&
+      providerServices.some((s) => s.id === b.serviceId)
+  );
+
+  providerNotificationsModalHtml = `
+    <div class="modal-overlay" onclick="window.closeProviderNotificationsModal()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3>🔔 Notificações de Cancelamento</h3>
+          <div style="display:flex; gap:8px;">
+            ${
+              cancelledByClient.length > 0
+                ? `<button onclick="window.openProviderClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
+                : ""
+            }
+            <button onclick="window.closeProviderNotificationsModal()" style="padding:8px 12px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+          </div>
+        </div>
+
+        ${
+          cancelledByClient.length === 0
+            ? '<div class="empty-state"><div class="empty-state-icon">✓</div><p>Nenhuma notificação</p></div>'
+            : `<div style="display:flex; flex-direction:column; gap:12px;">
+                ${cancelledByClient
+                  .map(
+                    (notification) => `
+                      <div style="background:#fef3c7; border-left:4px solid #f59e0b; padding:16px; border-radius:8px;">
+                        <div style="margin-bottom:8px;">
+                          <h4 style="margin:0 0 4px 0; color:#92400e;">${notification.serviceName}</h4>
+                          <p style="margin:0; color:#92400e; font-size:14px;">
+                            <strong>Cliente:</strong> ${notification.clientName}
+                          </p>
+                          <p style="margin:4px 0 0 0; color:#92400e; font-size:14px;">
+                            📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
+                          </p>
+                        </div>
+                        <div style="border-top:1px solid #fcd34d; padding-top:8px; margin-top:8px;">
+                          <p style="margin:0; color:#92400e; font-size:13px; line-height:1.5;">
+                            <strong>Motivo do cancelamento:</strong> ${notification.cancellationReason}
+                          </p>
+                        </div>
+                      </div>
+                    `,
+                  )
+                  .join("")}
+              </div>`
+        }
+      </div>
+    </div>
+  `;
+}
+
+let providerClearNotificationsConfirmModalHtml = "";
+if (showProviderClearNotificationsConfirm) {
+  providerClearNotificationsConfirmModalHtml = `
+    <div class="modal-overlay" onclick="window.closeProviderClearNotificationsConfirm()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width:400px;">
+        <h3 style="margin-bottom:16px;">Confirmar Limpeza de Notificações</h3>
+        <p style="margin-bottom:24px; color:#6b7280;">
+          Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
+        </p>
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="window.closeProviderClearNotificationsConfirm()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">Cancelar</button>
+          <button onclick="window.clearAllProviderNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 let deleteServiceModalHtml = "";
 if (showDeleteServiceModal && serviceToDelete) {
   deleteServiceModalHtml = `
@@ -764,9 +886,17 @@ if (showEditProfileModal) {
           </button>
         </div>
       </div>
-    </div>
-  `;
-}
+    `;
+  }
+
+  const notificationCount = bookings.filter(
+    (b) =>
+      b.cancelled === true &&
+      b.cancelledByClient === true &&
+      b.notificationRead !== true &&
+      providerServices.some((s) => s.id === b.serviceId)
+  ).length;
+
   const html = `
     <div style="display:flex; min-height:100vh;">
       <aside style="width:240px; background:#111827; color:white; padding:20px;">
@@ -793,6 +923,10 @@ if (showEditProfileModal) {
 <button onclick="window.openProviderProfile()"
           style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
           Perfil
+        </button>
+
+        <button onclick="window.openProviderNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
+          🔔 Notificações ${notificationCount > 0 ? "(" + notificationCount + ")" : ""}
         </button>
 
         <button onclick="window.openCreateServiceModal()"
@@ -862,6 +996,8 @@ if (showEditProfileModal) {
     ${providerBookingsModalHtml}
     ${providerCancelModalHtml}
     ${reopenSlotModalHtml}
+    ${providerNotificationsModalHtml}
+    ${providerClearNotificationsConfirmModalHtml}
     ${deleteServiceModalHtml}
     ${editProfileModalHtml}
   `;

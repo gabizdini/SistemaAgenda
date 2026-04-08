@@ -27,6 +27,9 @@ let showProviderShop = false;
 let showReopenSlotModal = false;
 let slotToReopen = null;
 let blockedSlots = [];
+let showClientCancelJustificativeModal = false;
+let showProviderNotificationsModal = false;
+let showProviderClearNotificationsConfirm = false;
 
 const savedServices = localStorage.getItem("agendamento_services");
 const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");

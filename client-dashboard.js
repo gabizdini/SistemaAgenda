@@ -638,13 +638,13 @@ function renderProvidersListScreen() {
   window.openCancelModal = function (bookingId) {
     bookingToCancel = bookingId;
     showBookingsModal = false;
-    showCancelModal = true;
+    showClientCancelJustificativeModal = true;
     document.body.style.overflow = "hidden";
     render();
   };
 
   window.closeCancelModal = function () {
-    showCancelModal = false;
+    showClientCancelJustificativeModal = false;
     bookingToCancel = null;
     document.body.style.overflow = "hidden";
     showBookingsModal = true;
@@ -652,14 +652,24 @@ function renderProvidersListScreen() {
   };
 
   window.confirmCancelFromModal = function () {
+    const justificativa = document.getElementById("clientCancelJustificativa")?.value.trim();
+    
+    if (!justificativa) {
+      showToast("Por favor, insira uma justificativa", "error");
+      return;
+    }
+
     const target = bookingToCancel;
-    showCancelModal = false;
+    showClientCancelJustificativeModal = false;
     bookingToCancel = null;
 
     if (target === "__all__") {
       bookings.forEach((b) => {
-        if (b.clientId === currentUser.id) {
+        if (b.clientId === currentUser.id && b.cancelled !== true) {
           b.cancelled = true;
+          b.cancelledByClient = true;
+          b.cancellationReason = justificativa;
+          b.notificationRead = false;
         }
       });
       saveToLocalStorage();
@@ -674,6 +684,9 @@ function renderProvidersListScreen() {
       const booking = bookings.find((b) => b.id === target);
       if (booking) {
         booking.cancelled = true;
+        booking.cancelledByClient = true;
+        booking.cancellationReason = justificativa;
+        booking.notificationRead = false;
         saveToLocalStorage();
         showToast("Agendamento cancelado", "success");
       }
@@ -684,14 +697,24 @@ function renderProvidersListScreen() {
   };
 
   window.confirmCancel = function () {
+    const justificativa = document.getElementById("clientCancelJustificativa")?.value.trim();
+    
+    if (!justificativa) {
+      showToast("Por favor, insira uma justificativa", "error");
+      return;
+    }
+
     const target = bookingToCancel;
-    showCancelModal = false;
+    showClientCancelJustificativeModal = false;
     bookingToCancel = null;
 
     if (target) {
-      const index = bookings.findIndex((b) => b.id === target);
-      if (index !== -1) {
-        bookings.splice(index, 1);
+      const booking = bookings.find((b) => b.id === target);
+      if (booking) {
+        booking.cancelled = true;
+        booking.cancelledByClient = true;
+        booking.cancellationReason = justificativa;
+        booking.notificationRead = false;
         saveToLocalStorage();
         showToast("Agendamento cancelado", "success");
       }
@@ -704,7 +727,7 @@ function renderProvidersListScreen() {
   window.cancelAllBookings = function () {
     bookingToCancel = "__all__";
     showBookingsModal = false;
-    showCancelModal = true;
+    showClientCancelJustificativeModal = true;
     document.body.style.overflow = "hidden";
     render();
   };
@@ -763,21 +786,26 @@ function renderProvidersListScreen() {
   }
 
   let cancelModalHtml = "";
-  if (showCancelModal && bookingToCancel) {
+  if (showClientCancelJustificativeModal && bookingToCancel) {
     cancelModalHtml = `
             <div class="modal-overlay" onclick="window.closeCancelModal()">
                 <div class="modal-content" onclick="event.stopPropagation()">
                     <h3 style="margin-bottom: 12px;">Cancelar Agendamento</h3>
-                    <p style="margin-bottom: 24px; color: #6b7280;">
-                        ${
-                          bookingToCancel === "__all__"
-                            ? "Tem certeza que deseja cancelar TODOS os agendamentos? Esta ação não pode ser desfeita."
-                            : "Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita."
-                        }
+                    <p style="margin-bottom: 16px; color: #6b7280;">
+                        Insira uma justificativa para o cancelamento. Esta mensagem será enviada ao prestador.
                     </p>
+                    
+                    <div style="margin-bottom: 20px;">
+                      <textarea 
+                        id="clientCancelJustificativa"
+                        placeholder="Motivo do cancelamento..."
+                        style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-family: sans-serif; font-size: 14px; resize: vertical; min-height: 100px; box-sizing: border-box;">
+                      </textarea>
+                    </div>
+                    
                     <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
-                        <button onclick="window.confirmCancelFromModal()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar</button>
+                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Voltar</button>
+                        <button onclick="window.confirmCancelFromModal()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Cancelamento</button>
                     </div>
                 </div>
             </div>
@@ -1338,21 +1366,26 @@ window.confirmCancel = function () {
   }
 
   let cancelModalHtml = "";
-  if (showCancelModal && bookingToCancel) {
+  if (showClientCancelJustificativeModal && bookingToCancel) {
     cancelModalHtml = `
             <div class="modal-overlay" onclick="window.closeCancelModal()">
                 <div class="modal-content" onclick="event.stopPropagation()">
                     <h3 style="margin-bottom: 12px;">Cancelar Agendamento</h3>
-                    <p style="margin-bottom: 24px; color: #6b7280;">
-    ${
-      bookingToCancel === "__all__"
-        ? "Tem certeza que deseja cancelar TODOS os agendamentos? Esta ação não pode ser desfeita."
-        : "Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita."
-    }
-</p>
+                    <p style="margin-bottom: 16px; color: #6b7280;">
+                        Insira uma justificativa para o cancelamento. Esta mensagem será enviada ao prestador.
+                    </p>
+                    
+                    <div style="margin-bottom: 20px;">
+                      <textarea 
+                        id="clientCancelJustificativa"
+                        placeholder="Motivo do cancelamento..."
+                        style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-family: sans-serif; font-size: 14px; resize: vertical; min-height: 100px; box-sizing: border-box;">
+                      </textarea>
+                    </div>
+                    
                     <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Cancelar</button>
-                        <button onclick="window.confirmCancel()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar</button>
+                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer;">Voltar</button>
+                        <button onclick="window.confirmCancel()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Cancelamento</button>
                     </div>
                 </div>
             </div>
