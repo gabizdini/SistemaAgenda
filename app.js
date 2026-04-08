@@ -184,7 +184,7 @@ function toggleDarkMode() {
 function applyTheme() {
   const htmlElement = document.documentElement;
   
-  if (isDarkMode) {
+  if (!isDarkMode) {
     htmlElement.classList.add("dark-mode");
   } else {
     htmlElement.classList.remove("dark-mode");

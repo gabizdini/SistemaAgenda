@@ -73,7 +73,7 @@ function renderProviderProfileScreen() {
         </button>
 
         <button id="themeToggle" class="theme-btn">
-          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+          <i data-lucide="${isDarkMode ? 'sun' : 'moon'}" class="icon"></i>
         </button>
       </aside>
       </aside>
@@ -1047,7 +1047,7 @@ if (showEditProfileModal) {
           Sair
         </button>
         <button id="themeToggle" class="theme-btn">
-          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+          <i data-lucide="${isDarkMode ? 'sun' : 'moon'}" class="icon"></i>
         </button>
       </aside>
       </aside>

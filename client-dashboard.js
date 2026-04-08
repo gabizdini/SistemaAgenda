@@ -167,7 +167,7 @@ function renderClientProfileScreen() {
           Sair
         </button>
         <button id="themeToggle" class="theme-btn">
-          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+          <i data-lucide="${isDarkMode ? 'sun' : 'moon'}" class="icon"></i>
         </button>
       </aside>
       </aside>
@@ -993,7 +993,7 @@ function renderProvidersListScreen() {
         </button>
 
         <button id="themeToggle" class="theme-btn">
-          <i data-lucide="${isDarkMode ? 'moon' : 'sun'}" class="icon"></i>
+          <i data-lucide="${isDarkMode ? 'sun' : 'moon'}" class="icon"></i>
         </button>
       </aside>
 
