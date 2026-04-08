@@ -154,7 +154,7 @@ function renderClientProfileScreen() {
           style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
           onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
-          Início
+          <i data-lucide="arrow-left" style="width:18px; height:18px; color:#636E72;"></i> Início
         </button>
         
 <p style="margin-bottom:12px; margin-top:0px; color:#9ca3af; font-size:12px; line-height:1.4;">
@@ -164,7 +164,7 @@ function renderClientProfileScreen() {
           style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#ef4444'; this.style.color='white';"
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
-          Sair
+          <i data-lucide="log-out" style="width:18px; height:18px; color:#636E72;"></i> Sair
         </button>
         <button id="themeToggle" class="theme-btn">
           <i data-lucide="${isDarkMode ? 'sun' : 'moon'}" class="icon"></i>
@@ -887,7 +887,7 @@ function renderProvidersListScreen() {
       <div class="modal-overlay" onclick="window.closeNotificationsModal()">
         <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <h3>🔔 Notificações</h3>
+            <h3><i data-lucide="bell" style="width:18px; height:18px; color:#6C5CE7;"></i> Notificações</h3>
             <div style="display:flex; gap:8px;">
               ${
                 cancelledByProvider.length > 0
@@ -973,23 +973,29 @@ function renderProvidersListScreen() {
         <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
           onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
-          👤 Perfil
+          <i data-lucide="user" style="width:18px; height:18px; color:#636E72;"></i> Perfil
         </button>
-        <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
-          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb'; position:'relative';">
-          🔔 Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
-        </button>
+        <button onclick="window.openNotificationsModal()"
+  style="width:100%; display:flex; align-items:center; gap:8px; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+  
+  onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7'; this.querySelector('i').style.color='white';"
+  
+  onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb'; this.querySelector('i').style.color='#636E72';">
+
+  <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i>
+
+  Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
+</button>
         <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
           onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
-          📅 Meus Agendamentos (${userBookings.filter((b) => b.cancelled !== true).length})
+          <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos(${userBookings.filter((b) => b.cancelled !== true).length})
         </button>
         
         <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#ef4444'; this.style.color='white';"
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
-          Sair
+           <i data-lucide="log-out" style="width:18px; height:18px; color:#636E72;"></i> Sair
         </button>
 
         <button id="themeToggle" class="theme-btn">
@@ -1001,7 +1007,7 @@ function renderProvidersListScreen() {
 
       <main style="flex:1; padding:32px;">
         <div class="container">
-          <h2 style="margin-bottom:8px; color:white; font-weight:700; font-size:28px;">💼 Prestadores Disponíveis</h2>
+          <h2 style="margin-bottom:8px; color:white; font-weight:700; font-size:28px;">Prestadores Disponíveis</h2>
           <p style="color:#e9d5ff; margin-bottom:32px; font-weight:500;">Escolha um prestador para ver seus serviços</p>
 
           ${
@@ -1603,16 +1609,16 @@ window.confirmCancel = function () {
         <aside style="width:240px; background:#111827; color:white; padding:20px;">
             <h2 style="margin-bottom:20px;">AgendaFácil</h2>
             <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-              🔔 Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
+             <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
             </button>
             <button onclick="window.openBookingsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
-            Meus Agendamentos
+            <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos
             </button>
             <button onclick="window.openClientProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-            Perfil
+            <i data-lucide="user" style="width:18px; height:18px; color:#636E72;"></i> Perfil
             </button>
             <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
-                Sair
+            <i data-lucide="door-open" style="width:18px; height:18px; color:#636E72;"></i> Sair
             </button>
         </aside>
 

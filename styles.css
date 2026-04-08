@@ -419,7 +419,6 @@ body::before {
     pointer-events: none;
     z-index: -1;
 }
-
 /* ========== SIDEBAR/MENU STYLING ========== */
 aside {
     background: white !important;
