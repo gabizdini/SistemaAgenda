@@ -2,6 +2,15 @@
 // DASHBOARD DO CLIENTE
 // ============================================
 
+// Funções globais para eventos onclick
+window.selectProvider = function (providerId) {
+  console.log("selectProvider chamado com providerId:", providerId);
+  selectedProviderId = providerId;
+  showProviderShop = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
 function renderClientProfileScreen() {
   const root = document.getElementById("root");
 
@@ -145,6 +154,10 @@ function renderClientProfileScreen() {
           style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
           Início
         </button>
+        
+<p style="margin-bottom:12px; margin-top:0px; color:#9ca3af; font-size:12px; line-height:1.4;">
+  Para criar um serviço acesse "Início"
+</p>
         <button onclick="window.logout()"
           style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
           Sair
@@ -559,13 +572,6 @@ function renderProvidersListScreen() {
   const providers = users.filter((u) => u.role === USER_ROLES.PROVIDER);
   const userBookings = bookings.filter((b) => b.clientId === currentUser.id);
 
-  window.selectProvider = function (providerId) {
-    selectedProviderId = providerId;
-    showProviderShop = true;
-    document.body.style.overflow = "hidden";
-    render();
-  };
-
   window.openMyBookings = function () {
     showBookingsModal = true;
     document.body.style.overflow = "hidden";
@@ -759,6 +765,7 @@ function renderProvidersListScreen() {
 
   let bookingsModalHtml = "";
   if (showBookingsModal) {
+    const activeBookings = userBookings.filter((b) => !b.cancelled);
     bookingsModalHtml = `
         <div class="modal-overlay" onclick="window.closeMyBookings()">
             <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;">
@@ -766,7 +773,7 @@ function renderProvidersListScreen() {
                     <h3>Meus Agendamentos</h3>
                     <div style="display:flex; gap:8px;">
                         ${
-                          userBookings.length >= 2
+                          activeBookings.length >= 2
                             ? `
                             <button onclick="window.cancelAllBookings()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; min-width:130px;">
                                 Cancelar Todos
@@ -902,15 +909,16 @@ function renderProvidersListScreen() {
             </p>
           </div>
         </div>
+        <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
+          👤 Perfil
+        </button>
         <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer; position:relative;">
           🔔 Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
         </button>
         <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
           📅 Meus Agendamentos (${userBookings.filter((b) => b.cancelled !== true).length})
         </button>
-        <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-          👤 Perfil
-        </button>
+        
         <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
           Sair
         </button>
@@ -932,7 +940,7 @@ function renderProvidersListScreen() {
                           (s) => s.providerId === provider.id,
                         );
                         return `
-                          <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,0.08); cursor:pointer; transition:transform 0.2s;" onclick="window.selectProvider(${provider.id})" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                          <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,0.08); cursor:pointer; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
                             <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
                               <div style="width:56px; height:56px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:24px; font-weight:700; flex-shrink:0;">
                                 ${
@@ -947,7 +955,7 @@ function renderProvidersListScreen() {
                               </div>
                             </div>
                             <p style="margin:0 0 12px; color:#6b7280; font-size:14px;">📋 ${providerServices.length} serviço(s)</p>
-                            <button style="width:100%; padding:10px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
+                            <button onclick="window.selectProvider(${provider.id})" style="width:100%; padding:10px; background:#667eea; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">
                               Ver Serviços
                             </button>
                           </div>
