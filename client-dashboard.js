@@ -129,6 +129,47 @@ function renderClientProfileScreen() {
     render();
   };
 
+  window.openDeleteClientAccountModal = function () {
+    showDeleteAccountModal = true;
+    accountToDelete = currentUser.id;
+    document.body.style.overflow = "hidden";
+    render();
+  };
+
+  window.closeDeleteClientAccountModal = function () {
+    showDeleteAccountModal = false;
+    accountToDelete = null;
+    document.body.style.overflow = "auto";
+    render();
+  };
+
+  window.confirmDeleteClientAccount = function () {
+    const confirmText = document.getElementById("deleteAccountConfirmText")?.value.trim().toUpperCase();
+    
+    if (confirmText !== "DELETE") {
+      showToast("Digite 'DELETE' para confirmar", "error");
+      return;
+    }
+
+    // Remover usuário
+    users = users.filter((u) => u.id !== currentUser.id);
+    
+    // Remover/cancelar seus agendamentos
+    bookings = bookings.filter((b) => b.clientId !== currentUser.id);
+    
+    // Remover seus serviços (se for prestador)
+    services = services.filter((s) => s.providerId !== currentUser.id);
+    
+    saveToLocalStorage();
+    showToast("Conta deletada com sucesso", "success");
+    
+    currentUser = null;
+    isLogin = true;
+    showDeleteAccountModal = false;
+    showClientProfile = false;
+    render();
+  };
+
   const html = `
     <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
       <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
@@ -202,6 +243,12 @@ function renderClientProfileScreen() {
               onmouseover="this.style.background='white'; this.style.color='#6C5CE7';"
               onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='white';">
               Editar dados
+            </button>
+            <button type="button" onclick="window.openDeleteClientAccountModal()"
+              style="padding:10px 16px; background:rgba(239,68,68,0.2); color:white; border:2px solid rgba(239,68,68,0.5); border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+              onmouseover="this.style.background='#ef4444'; this.style.color='white'; this.style.borderColor='#ef4444';"
+              onmouseout="this.style.background='rgba(239,68,68,0.2)'; this.style.color='white'; this.style.borderColor='rgba(239,68,68,0.5)';">
+              🗑️ Deletar conta
             </button>
           </div>
 
@@ -281,6 +328,45 @@ function renderClientProfileScreen() {
               onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
               onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
               Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    `
+        : ""
+    }
+
+    ${
+      showDeleteAccountModal && accountToDelete === currentUser.id
+        ? `
+      <div class="modal-overlay" onclick="window.closeDeleteClientAccountModal()">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 450px; width: 90%; border-top:4px solid #ef4444;">
+          <h3 style="margin-bottom: 20px; color:#ef4444; font-size:20px;">⚠️ Deletar Conta</h3>
+          
+          <div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:12px; margin-bottom:20px;">
+            <p style="margin:0; color:#991b1b; font-size:14px; line-height:1.5;">
+              ⚠️ <strong>Atenção!</strong> Esta ação é <strong>irreversível</strong>. Todos os dados, agendamentos e histórico serão deletados permanentemente.
+            </p>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label style="display:block; margin-bottom: 8px; font-weight: 600; color: #ef4444;">Para confirmar, digite '<strong>DELETE</strong>':</label>
+            <input id="deleteAccountConfirmText" type="text" placeholder="Digite DELETE aqui"
+              style="width:100%; padding:12px; border:2px solid #fca5a5; border-radius:8px; font-size:14px; box-sizing:border-box; transition:all 0.2s; background:#fff5f5;"
+              onfocus="this.style.borderColor='#ef4444'; this.style.boxShadow='0 0 0 3px rgba(239,68,68,0.1)'"
+              onblur="this.style.borderColor='#fca5a5'; this.style.boxShadow='none'" />
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <button onclick="window.closeDeleteClientAccountModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+              onmouseover="this.style.background='#DFE6E9';"
+              onmouseout="this.style.background='#ECEFF1';">
+              Cancelar
+            </button>
+            <button onclick="window.confirmDeleteClientAccount()" style="padding:10px 20px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+              onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(239,68,68,0.3)';"
+              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+              Deletar Conta
             </button>
           </div>
         </div>
@@ -589,7 +675,7 @@ function renderProviderShopScreen() {
           </div>
           <div>
             <h2 style="margin:0 0 8px; color:#111827; font-size:24px;">${provider.name}</h2>
-            <p style="margin:0 0 4px; color:#6b7280;">Prestador de serviços</p>
+            <p style="margin:0 0 4px; color:#6b7280;">${provider.category || "Prestador de serviços"}</p>
             <p style="margin:0; color:#10b981; font-weight:600;">${providerServices.length} serviço(s) disponível(is)</p>
           </div>
         </div>
@@ -1032,7 +1118,7 @@ function renderProvidersListScreen() {
                               </div>
                               <div style="min-width:0;">
                                 <h3 style="margin:0; color:#111827; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${provider.name}</h3>
-                                <p style="margin:4px 0 0; color:#6b7280; font-size:12px;">Prestador</p>
+                                <p style="margin:4px 0 0; color:#6b7280; font-size:12px;">${provider.category || "Prestador"}</p>
                               </div>
                             </div>
                             <p style="margin:0 0 12px; color:#6b7280; font-size:14px;">📋 ${providerServices.length} serviço(s)</p>

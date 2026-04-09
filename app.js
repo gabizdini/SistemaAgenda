@@ -31,6 +31,8 @@ let blockedSlots = [];
 let showClientCancelJustificativeModal = false;
 let showProviderNotificationsModal = false;
 let showProviderClearNotificationsConfirm = false;
+let showDeleteAccountModal = false;
+let accountToDelete = null;
 
 const savedServices = localStorage.getItem("agendamento_services");
 const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");
@@ -72,6 +74,22 @@ const mockServices = [
     price: 200,
     provider: "Clínica Saúde",
   },
+];
+
+// ============================================
+// CATEGORIAS DE PRESTADORES
+// ============================================
+const PROVIDER_CATEGORIES = [
+  { id: 1, name: "💇 Beleza & Cabelo", emoji: "💇" },
+  { id: 2, name: "💅 Manicure & Pedicure", emoji: "💅" },
+  { id: 3, name: "🏥 Saúde & Médico", emoji: "🏥" },
+  { id: 4, name: "🔧 Manutenção & Reparo", emoji: "🔧" },
+  { id: 5, name: "🏋️ Fitness & Personal", emoji: "🏋️" },
+  { id: 6, name: "🎓 Educação & Aulas", emoji: "🎓" },
+  { id: 7, name: "🏠 Limpeza & Organização", emoji: "🏠" },
+  { id: 8, name: "🚗 Automotivo", emoji: "🚗" },
+  { id: 9, name: "💻 Tecnologia & TI", emoji: "💻" },
+  { id: 10, name: "🎨 Criativo & Design", emoji: "🎨" },
 ];
 
 // Gerar horários disponíveis (8h às 18h com intervalos de 30min)
