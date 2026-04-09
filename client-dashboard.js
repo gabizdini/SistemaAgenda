@@ -759,7 +759,7 @@ function renderProvidersListScreen() {
 
   window.clearAllNotifications = function () {
     userBookings.forEach((b) => {
-      if (b.cancelled === true && b.cancelledByProvider === true) {
+      if (b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true)) {
         b.notificationRead = true;
       }
     });
@@ -968,7 +968,7 @@ function renderProvidersListScreen() {
 
   let notificationsModalHtml = "";
   if (showNotificationsModal) {
-    const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true);
+    const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true);
     notificationsModalHtml = `
       <div class="modal-overlay" onclick="window.closeNotificationsModal()">
         <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
@@ -1070,7 +1070,7 @@ function renderProvidersListScreen() {
 
   <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i>
 
-  Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
+  Notificações ${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length})` : ''}
 </button>
         <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
@@ -1623,7 +1623,7 @@ window.confirmCancel = function () {
 
   let notificationsModalHtml = "";
   if (showNotificationsModal) {
-    const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true);
+    const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true);
     notificationsModalHtml = `
       <div class="modal-overlay" onclick="window.closeNotificationsModal()">
         <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
@@ -1695,7 +1695,7 @@ window.confirmCancel = function () {
         <aside style="width:240px; background:#111827; color:white; padding:20px;">
             <h2 style="margin-bottom:20px;">AgendaFácil</h2>
             <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-             <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && b.cancelledByProvider === true && b.notificationRead !== true).length})` : ''}
+             <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length})` : ''}
             </button>
             <button onclick="window.openBookingsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
             <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos

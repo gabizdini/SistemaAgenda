@@ -115,7 +115,7 @@ function renderProviderProfileScreen() {
               style="padding:10px 16px; background:rgba(255,255,255,0.2); color:white; border:2px solid white; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
               onmouseover="this.style.background='white'; this.style.color='#6C5CE7';"
               onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='white';">
-              📂 Categoria
+              Categoria
             </button>
             <button type="button" onclick="window.openDeleteProviderAccountModal()"
               style="padding:10px 16px; background:rgba(239,68,68,0.2); color:white; border:2px solid rgba(239,68,68,0.5); border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
@@ -445,14 +445,33 @@ window.saveProfileChanges = function () {
       return;
     }
 
+    const deletedProviderId = currentUser.id;
+    const deletedProviderName = currentUser.name;
+
+    // Encontrar todos os agendamentos deste prestador por:
+    // 1. Serviços que pertencem a este ID de prestador
+    // 2. Agendamentos com o nome do prestador (para contas recriadas)
+    const providerServices = services.filter((s) => s.providerId === deletedProviderId);
+    const providerBookings = bookings.filter((b) => 
+      providerServices.some((s) => s.id === b.serviceId) ||
+      b.provider === deletedProviderName
+    );
+
+    // Marcar agendamentos como cancelados e criar notificações
+    providerBookings.forEach((booking) => {
+      if (booking.cancelled !== true) { // Só marcar se ainda não foi cancelado
+        booking.cancelled = true;
+        booking.cancelledByProviderDeleted = true;
+        booking.notificationRead = false;
+        booking.cancellationReason = `A conta do prestador "${deletedProviderName}" foi removida.`;
+      }
+    });
+
     // Remover usuário
-    users = users.filter((u) => u.id !== currentUser.id);
+    users = users.filter((u) => u.id !== deletedProviderId);
     
-    // Remover/cancelar seus agendamentos
-    bookings = bookings.filter((b) => b.clientId !== currentUser.id);
-    
-    // Remover seus serviços (se for prestador)
-    services = services.filter((s) => s.providerId !== currentUser.id);
+    // Remover serviços do prestador
+    services = services.filter((s) => s.providerId !== deletedProviderId);
     
     saveToLocalStorage();
     showToast("Conta deletada com sucesso", "success");
