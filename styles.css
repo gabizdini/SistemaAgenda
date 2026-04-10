@@ -153,12 +153,17 @@ button:active {
 
 /* ========== HORÁRIOS ========== */
 .time-slot {
-    padding: 10px;
+    padding: 12px 8px;
     border: 2px solid #e5e7eb;
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
+    font-weight: 500;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .time-slot:hover:not(.booked) {
@@ -221,11 +226,18 @@ button:active {
 
 .time-slots-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 8px;
+    scroll-behavior: smooth;
 }
 
 /* ========== RESPONSIVO ========== */
+@media (max-width: 900px) {
+    .time-slots-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
 @media (max-width: 600px) {
     .time-slots-grid {
         grid-template-columns: repeat(3, 1fr);

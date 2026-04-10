@@ -729,7 +729,12 @@ window.confirmDeleteService = function () {
 
     // Validar horários
     const timeToMinutes = (timeStr) => {
-      const [hours, minutes] = timeStr.split(":").map(Number);
+      if (!timeStr || typeof timeStr !== 'string') return 0;
+      const parts = timeStr.trim().split(":");
+      if (parts.length !== 2) return 0;
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      if (isNaN(hours) || isNaN(minutes)) return 0;
       return hours * 60 + minutes;
     };
 
@@ -780,7 +785,12 @@ window.confirmDeleteService = function () {
     
     // Validação em tempo real
     const timeToMinutes = (timeStr) => {
-      const [hours, minutes] = timeStr.split(":").map(Number);
+      if (!timeStr || typeof timeStr !== 'string') return 0;
+      const parts = timeStr.trim().split(":");
+      if (parts.length !== 2) return 0;
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      if (isNaN(hours) || isNaN(minutes)) return 0;
       return hours * 60 + minutes;
     };
     
@@ -797,7 +807,12 @@ window.confirmDeleteService = function () {
     
     // Validação em tempo real
     const timeToMinutes = (timeStr) => {
-      const [hours, minutes] = timeStr.split(":").map(Number);
+      if (!timeStr || typeof timeStr !== 'string') return 0;
+      const parts = timeStr.trim().split(":");
+      if (parts.length !== 2) return 0;
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      if (isNaN(hours) || isNaN(minutes)) return 0;
       return hours * 60 + minutes;
     };
     
