@@ -429,6 +429,20 @@ function renderProviderShopScreen() {
       return;
     }
 
+    // Verificar se cliente já tem agendamento no mesmo dia/horário com outro prestador
+    const hasConflictingBooking = bookings.some(
+      (b) =>
+        b.clientId === currentUser.id &&
+        b.date === selectedDate &&
+        b.time === selectedTime &&
+        b.cancelled !== true
+    );
+
+    if (hasConflictingBooking) {
+      showToast("Você já tem um agendamento no mesmo dia e horário", "error");
+      return;
+    }
+
     const newBooking = {
       id: Date.now(),
       serviceId: selectedService.id,
@@ -556,11 +570,23 @@ function renderProviderShopScreen() {
       const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
       const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
+      // Verificar se cliente já tem agendamento neste dia/horário com outro prestador
+      const isClientBooked = currentUser && bookings.some(
+        (b) =>
+          b.clientId === currentUser.id &&
+          b.date === selectedDate &&
+          b.time === time &&
+          b.cancelled !== true
+      );
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked;
+
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
-            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
-            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
+            onclick="${!isUnavailable && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
+            style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
+            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
@@ -623,11 +649,23 @@ function renderProviderShopScreen() {
       const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
       const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
+      // Verificar se cliente já tem agendamento neste dia/horário com outro prestador
+      const isClientBooked = currentUser && bookings.some(
+        (b) =>
+          b.clientId === currentUser.id &&
+          b.date === selectedDate &&
+          b.time === time &&
+          b.cancelled !== true
+      );
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked;
+
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
-            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
-            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
+            onclick="${!isUnavailable && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
+            style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
+            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
@@ -1373,11 +1411,23 @@ function renderClientDashboard() {
       const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
       const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
+      // Verificar se cliente já tem agendamento neste dia/horário com outro prestador
+      const isClientBooked = currentUser && bookings.some(
+        (b) =>
+          b.clientId === currentUser.id &&
+          b.date === selectedDate &&
+          b.time === time &&
+          b.cancelled !== true
+      );
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked;
+
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
-            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectTime('${time}')` : ""}"
-            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
+            onclick="${!isUnavailable && selectedDate ? `window.selectTime('${time}')` : ""}"
+            style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
+            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
@@ -1563,11 +1613,23 @@ window.confirmCancel = function () {
       const slotKey = `${selectedService?.providerId || selectedService?.id}_${selectedDate}_${time}`;
       const isBlocked = blockedSlots.some((slot) => `${slot.providerId}_${slot.date}_${slot.time}` === slotKey);
 
+      // Verificar se cliente já tem agendamento neste dia/horário com outro prestador
+      const isClientBooked = currentUser && bookings.some(
+        (b) =>
+          b.clientId === currentUser.id &&
+          b.date === selectedDate &&
+          b.time === time &&
+          b.cancelled !== true
+      );
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked;
+
       return `
         <div
-            class="time-slot ${selectedTime === time ? "selected" : ""} ${isBooked || isBlocked ? "booked" : ""}"
-            onclick="${!isBooked && !isBlocked && selectedDate ? `window.selectTime('${time}')` : ""}"
-            style="${isBooked || isBlocked ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}">
+            class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
+            onclick="${!isUnavailable && selectedDate ? `window.selectTime('${time}')` : ""}"
+            style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
+            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
