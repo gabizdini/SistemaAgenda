@@ -727,6 +727,20 @@ window.confirmDeleteService = function () {
       return;
     }
 
+    // Validar horários
+    const timeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const startMinutes = timeToMinutes(selectedWorkHours.start);
+    const endMinutes = timeToMinutes(selectedWorkHours.end);
+
+    if (startMinutes >= endMinutes) {
+      showToast("O horário de início deve ser menor que o horário de término.", "error");
+      return;
+    }
+
     const newService = {
       id: Date.now(),
       name,
@@ -763,10 +777,36 @@ window.confirmDeleteService = function () {
 
   window.updateWorkHourStart = function (value) {
     selectedWorkHours.start = value;
+    
+    // Validação em tempo real
+    const timeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+    
+    const startMinutes = timeToMinutes(selectedWorkHours.start);
+    const endMinutes = timeToMinutes(selectedWorkHours.end);
+    
+    if (startMinutes >= endMinutes) {
+      showToast("Horário de início deve ser menor que de término", "error");
+    }
   };
 
   window.updateWorkHourEnd = function (value) {
     selectedWorkHours.end = value;
+    
+    // Validação em tempo real
+    const timeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+    
+    const startMinutes = timeToMinutes(selectedWorkHours.start);
+    const endMinutes = timeToMinutes(selectedWorkHours.end);
+    
+    if (startMinutes >= endMinutes) {
+      showToast("Horário de início deve ser menor que de término", "error");
+    }
   };
 
   const createServiceModalHtml = showCreateServiceModal
