@@ -42,6 +42,19 @@ if (savedBlockedSlots) blockedSlots = JSON.parse(savedBlockedSlots);
 if (savedServices) services = JSON.parse(savedServices);
 const USER_ROLES = { CLIENT: "client", PROVIDER: "provider" };
 
+// Estados obrigatórios
+const STATES = {
+  LOADING: "loading",
+  EMPTY: "empty",
+  ERROR: "erro",
+  VALIDATION: "validação",
+  SUCCESS: "sucesso",
+  NO_PERMISSION: "sem_permissão"
+};
+
+let currentState = null;
+let stateMessage = "";
+
 // ============================================
 // MOCK SERVICES (CORRIGIDO - ADICIONADO!)
 // ============================================
@@ -290,6 +303,63 @@ function showToast(message, type) {
   setTimeout(() => toast.remove(), 3000);
 }
 
+// Funções para gerenciar estados
+function setState(state, message = "") {
+  currentState = state;
+  stateMessage = message;
+}
+
+function clearState() {
+  currentState = null;
+  stateMessage = "";
+}
+
+function showState() {
+  const root = document.getElementById("root");
+  if (!currentState) return false;
+
+  const states = {
+    loading: { icon: "⏳", title: "Carregando", color: "#6C5CE7", bg: "rgba(107, 92, 231, 0.1)" },
+    empty: { icon: "📭", title: "Sem dados", color: "#9ca3af", bg: "rgba(156, 163, 175, 0.1)" },
+    erro: { icon: "❌", title: "Erro", color: "#ef4444", bg: "rgba(239, 68, 68, 0.1)" },
+    validação: { icon: "⚠️", title: "Validação", color: "#f59e0b", bg: "rgba(245, 158, 11, 0.1)" },
+    sucesso: { icon: "✅", title: "Sucesso", color: "#10b981", bg: "rgba(16, 185, 129, 0.1)" },
+    sem_permissão: { icon: "🔒", title: "Acesso Negado", color: "#a855f7", bg: "rgba(168, 85, 247, 0.1)" }
+  };
+
+  const state = states[currentState];
+  if (!state) return false;
+
+  if (currentState === "loading") {
+    // Usar tela de load existente
+    const loader = document.getElementById("loader");
+    if (loader) {
+      loader.style.display = "flex";
+      loader.style.opacity = "1";
+      loader.style.visibility = "visible";
+    }
+    return true;
+  }
+
+  // Para outros estados, mostrar container customizado
+  root.innerHTML = `
+    <div style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      background: ${state.bg};
+    ">
+      <div style="font-size: 60px; margin-bottom: 20px;">${state.icon}</div>
+      <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 12px; color: ${state.color};">${state.title}</h2>
+      <p style="font-size: 16px; color: #6b7280; text-align: center; max-width: 400px;">${stateMessage}</p>
+    </div>
+  `;
+  return true;
+}
+
 // ============================================
 // FUNÇÃO PARA ESCONDER O LOADER
 // ============================================
@@ -458,6 +528,12 @@ function renderAuthScreen() {
 function render() {
   applyTheme();
   window.toggleDarkMode = toggleDarkMode;
+  
+  // Se houver estado ativo, mostrar tela de estado
+  if (showState()) {
+    initThemeButton();
+    return;
+  }
   
   const showPage = () => {
     if (!currentUser) {
