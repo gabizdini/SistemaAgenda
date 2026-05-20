@@ -13,11 +13,11 @@ function renderProviderProfileScreen() {
   const root = document.getElementById("root");
 
   const PROFILE_PHOTOS = [
-    "./images/1.png",
-    "./images/2.png",
-    "./images/3.png",
-    "./images/4.png",
-    "./images/5.png",
+    "./assets/images/1.png",
+    "./assets/images/2.png",
+    "./assets/images/3.png",
+    "./assets/images/4.png",
+    "./assets/images/5.png",
   ];
 
   window.openPhotoPicker = function () {
