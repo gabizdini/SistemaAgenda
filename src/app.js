@@ -34,6 +34,7 @@ let showProviderClearNotificationsConfirm = false;
 let showDeleteAccountModal = false;
 let accountToDelete = null;
 let showLogoutConfirmModal = false;
+let showLandingPage = true;
 
 const savedServices = localStorage.getItem("agendamento_services");
 const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");
@@ -447,6 +448,106 @@ function showLoader() {
 // ============================================
 let isLogin = true;
 
+// ============================================
+// TELA INICIAL (LANDING PAGE)
+// ============================================
+function renderLandingPage() {
+  const root = document.getElementById("root");
+
+  const html = `
+    <div style="min-height: 100vh; display: flex; flex-direction: column; background: white;">
+      <!-- HEADER -->
+      <header style="background: white; border-bottom: 1px solid #e5e7eb; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 28px;">📅</span>
+          <h1 style="margin: 0; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agenda GVT</h1>
+        </div>
+        <button onclick="window.goToLogin()" style="padding: 12px 28px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Fazer Login</button>
+      </header>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main style="flex: 1; padding: 80px 40px; max-width: 1200px; margin: 0 auto; width: 100%;">
+        <!-- SEÇÃO HERO -->
+        <div style="text-align: center; margin-bottom: 80px;">
+          <h2 style="font-size: 48px; font-weight: 700; color: #2D3436; margin: 0 0 20px 0;">Organize seus agendamentos com facilidade</h2>
+          <p style="font-size: 20px; color: #6b7280; margin: 0 0 40px 0; line-height: 1.6;">Conecte clientes e prestadores de serviço em uma única plataforma intuitiva e segura</p>
+          <button onclick="window.goToSignup()" style="padding: 16px 40px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Começar Agora</button>
+        </div>
+
+        <!-- RECURSOS -->
+        <div style="margin-top: 60px;">
+          <h3 style="text-align: center; font-size: 32px; color: #2D3436; margin-bottom: 50px;">O que oferecemos</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+            <!-- Card 1 -->
+            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size: 40px; margin-bottom: 15px;">📅</div>
+              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Agendamento Simplificado</h4>
+              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Sistema intuitivo para agendar e gerenciar compromissos em tempo real</p>
+            </div>
+            <!-- Card 2 -->
+            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #8E44AD; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size: 40px; margin-bottom: 15px;">👥</div>
+              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Conecte Prestadores</h4>
+              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Encontre profissionais qualificados para seus serviços de forma rápida</p>
+            </div>
+            <!-- Card 3 -->
+            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #A29BFE; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size: 40px; margin-bottom: 15px;">🔔</div>
+              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Notificações em Tempo Real</h4>
+              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Receba alertas sobre novos agendamentos, cancelamentos e confirmações</p>
+            </div>
+            <!-- Card 4 -->
+            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size: 40px; margin-bottom: 15px;">💼</div>
+              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Gestão de Serviços</h4>
+              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Crie, edite e organize seus serviços com facilidade</p>
+            </div>
+            <!-- Card 5 -->
+            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #8E44AD; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size: 40px; margin-bottom: 15px;">🔒</div>
+              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Segurança Garantida</h4>
+              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Seus dados são protegidos com segurança de primeira categoria</p>
+            </div>
+            <!-- Card 6 -->
+            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #A29BFE; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size: 40px; margin-bottom: 15px;">📱</div>
+              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Acesso em Qualquer Lugar</h4>
+              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Use em desktop, tablet ou dispositivo móvel, sempre disponível</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA FINAL -->
+        <div style="text-align: center; margin-top: 80px; padding: 40px; background: linear-gradient(135deg, #f8f9fa 0%, #f0f1f7 100%); border-radius: 12px;">
+          <h3 style="font-size: 28px; color: #2D3436; margin: 0 0 20px 0;">Pronto para começar?</h3>
+          <p style="color: #6b7280; margin: 0 0 30px 0; font-size: 16px;">Crie sua conta agora e comece a gerenciar seus agendamentos</p>
+          <button onclick="window.goToSignup()" style="padding: 14px 36px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Cadastre-se Agora</button>
+        </div>
+      </main>
+
+      <!-- FOOTER -->
+      <footer style="background: #2D3436; color: white; padding: 40px; text-align: center; margin-top: auto;">
+        <p style="margin: 0 0 10px 0;">© 2024 Agenda GVT - Sistema de Agendamento</p>
+        <p style="margin: 0; color: #a0a0a0; font-size: 14px;">Simplificando agendamentos, conectando pessoas</p>
+      </footer>
+    </div>
+  `;
+
+  root.innerHTML = html;
+
+  window.goToLogin = function() {
+    showLandingPage = false;
+    isLogin = true;
+    render();
+  };
+
+  window.goToSignup = function() {
+    showLandingPage = false;
+    isLogin = false;
+    render();
+  };
+}
+
 function renderAuthScreen() {
   const root = document.getElementById("root");
 
@@ -592,38 +693,42 @@ function render() {
   
   const showPage = () => {
     if (!currentUser) {
-  renderAuthScreen();
-} else if (currentUser.role === USER_ROLES.CLIENT) {
-  if (showProviderShop) {
-    renderProviderShopScreen();
-  } else if (showClientProfile) {
-    renderClientProfileScreen();
-  } else {
-    renderProvidersListScreen();
-  }
-} else if (showProviderProfile) {
-  renderProviderProfileScreen();
-} else {
-  renderProviderDashboard();
-}
+      if (showLandingPage) {
+        renderLandingPage();
+      } else {
+        renderAuthScreen();
+      }
+    } else if (currentUser.role === USER_ROLES.CLIENT) {
+      if (showProviderShop) {
+        renderProviderShopScreen();
+      } else if (showClientProfile) {
+        renderClientProfileScreen();
+      } else {
+        renderProvidersListScreen();
+      }
+    } else if (showProviderProfile) {
+      renderProviderProfileScreen();
+    } else {
+      renderProviderDashboard();
+    }
 
     if (
-  showBookingForm ||
-  showCancelModal ||
-  showBookingsModal ||
-  showCreateServiceModal ||
-  showMyServicesModal ||
-  showDeleteServiceModal ||
-  showClientProfile ||
-  showClientEditProfileModal ||
-  showClientProfilePhotoPicker ||
-  showProviderShop ||
-  showLogoutConfirmModal
-) {
-  document.body.style.overflow = "hidden";
-} else {
-  document.body.style.overflow = "auto";
-}
+      showBookingForm ||
+      showCancelModal ||
+      showBookingsModal ||
+      showCreateServiceModal ||
+      showMyServicesModal ||
+      showDeleteServiceModal ||
+      showClientProfile ||
+      showClientEditProfileModal ||
+      showClientProfilePhotoPicker ||
+      showProviderShop ||
+      showLogoutConfirmModal
+    ) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
   };
 
   // só mostra loader na primeira carga ou login/logout
