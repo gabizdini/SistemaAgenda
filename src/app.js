@@ -510,7 +510,7 @@ function renderAuthScreen() {
   const html = `
         <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
             <div style="background: white; border-radius: 24px; padding: 40px; max-width: 450px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-                <h1 style="text-align: center; margin-bottom: 8px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AgendaFácil</h1>
+                <h1 style="text-align: center; margin-bottom: 8px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agenda GVT</h1>
                 <p style="text-align: center; color: #6b7280; margin-bottom: 32px;">${isLogin ? "Faça login para continuar" : "Crie sua conta gratuitamente"}</p>
                 
                 <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 12px;">
