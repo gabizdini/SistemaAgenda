@@ -67,7 +67,7 @@ function renderProviderProfileScreen() {
 <p style="margin-bottom:12px; margin-top:0px; color:#9ca3af; font-size:12px; line-height:1.4;">
   Para gerenciar seus serviços<br> volte para a tela inicial
 </p>
-        <button onclick="window.logout()"
+        <button onclick="window.openLogoutConfirm()"
           style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#ef4444'; this.style.color='white';"
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
@@ -288,6 +288,7 @@ function renderProviderProfileScreen() {
     `
         : ""
     }
+    ${getLogoutConfirmModalHtml()}
   `;
 
   root.innerHTML = html;
@@ -1281,7 +1282,7 @@ if (showEditProfileModal) {
           <i data-lucide="plus-circle" style="width:18px; height:18px; color:#636E72;"></i> Criar serviço
         </button>
 
-        <button onclick="window.logout()"
+        <button onclick="window.openLogoutConfirm()"
           style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
           <i data-lucide="log-out" style="width:18px; height:18px; color:#636E72;"></i> Sair
         </button>
@@ -1351,6 +1352,7 @@ if (showEditProfileModal) {
     ${providerClearNotificationsConfirmModalHtml}
     ${deleteServiceModalHtml}
     ${editProfileModalHtml}
+    ${getLogoutConfirmModalHtml()}
   `;
 
   root.innerHTML = html;

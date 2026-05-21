@@ -33,6 +33,7 @@ let showProviderNotificationsModal = false;
 let showProviderClearNotificationsConfirm = false;
 let showDeleteAccountModal = false;
 let accountToDelete = null;
+let showLogoutConfirmModal = false;
 
 const savedServices = localStorage.getItem("agendamento_services");
 const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");
@@ -303,6 +304,60 @@ function showToast(message, type) {
   setTimeout(() => toast.remove(), 3000);
 }
 
+// Funções para modal de confirmação de logout
+window.openLogoutConfirm = function () {
+  showLogoutConfirmModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeLogoutConfirm = function () {
+  showLogoutConfirmModal = false;
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window.confirmLogout = function () {
+  showLogoutConfirmModal = false;
+  document.body.style.overflow = "auto";
+  currentUser = null;
+  isLogin = true;
+  showClientProfile = false;
+  showClientEditProfileModal = false;
+  showClientProfilePhotoPicker = false;
+  selectedProviderId = null;
+  showProviderShop = false;
+  saveToLocalStorage();
+  render();
+};
+
+function getLogoutConfirmModalHtml() {
+  if (!showLogoutConfirmModal) return "";
+
+  return `
+    <div class="modal-overlay" onclick="window.closeLogoutConfirm()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 420px; width: 90%; border-top:4px solid #6C5CE7;">
+        <h3 style="margin-bottom: 16px; color:#6C5CE7; font-size:20px;">Confirmar saída</h3>
+        <p style="margin-bottom: 24px; color:#6b7280;">
+          Tem certeza que deseja sair da sua conta?
+        </p>
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="window.closeLogoutConfirm()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+            onmouseover="this.style.background='#DFE6E9';"
+            onmouseout="this.style.background='#ECEFF1';">
+            Cancelar
+          </button>
+          <button onclick="window.confirmLogout()" style="padding:10px 20px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
+            onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
+            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // Funções para gerenciar estados
 function setState(state, message = "") {
   currentState = state;
@@ -562,7 +617,8 @@ function render() {
   showClientProfile ||
   showClientEditProfileModal ||
   showClientProfilePhotoPicker ||
-  showProviderShop
+  showProviderShop ||
+  showLogoutConfirmModal
 ) {
   document.body.style.overflow = "hidden";
 } else {

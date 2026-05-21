@@ -201,7 +201,7 @@ function renderClientProfileScreen() {
 <p style="margin-bottom:12px; margin-top:0px; color:#9ca3af; font-size:12px; line-height:1.4;">
   Para gerenciar seus agendamentos<br> volte para a tela inicial
 </p>
-        <button onclick="window.logout()"
+        <button onclick="window.openLogoutConfirm()"
           style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#ef4444'; this.style.color='white';"
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
@@ -374,6 +374,7 @@ function renderClientProfileScreen() {
     `
         : ""
     }
+    ${getLogoutConfirmModalHtml()}
   `;
 
   root.innerHTML = html;
@@ -747,6 +748,7 @@ function renderProviderShopScreen() {
     </div>
 
     ${bookingModalHtml}
+    ${getLogoutConfirmModalHtml()}
   `;
 
   root.innerHTML = html;
@@ -1116,7 +1118,7 @@ function renderProvidersListScreen() {
           <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos(${userBookings.filter((b) => b.cancelled !== true).length})
         </button>
         
-        <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
+        <button onclick="window.openLogoutConfirm()" style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
           onmouseover="this.style.background='#ef4444'; this.style.color='white';"
           onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
            <i data-lucide="log-out" style="width:18px; height:18px; color:#636E72;"></i> Sair
@@ -1180,6 +1182,7 @@ function renderProvidersListScreen() {
     ${notificationsModalHtml}
     ${clearNotificationsConfirmModalHtml}
     ${cancelModalHtml}
+    ${getLogoutConfirmModalHtml()}
   `;
 
   root.innerHTML = html;
@@ -1765,7 +1768,7 @@ window.confirmCancel = function () {
             <button onclick="window.openClientProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
             <i data-lucide="user" style="width:18px; height:18px; color:#636E72;"></i> Perfil
             </button>
-            <button onclick="window.logout()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
+            <button onclick="window.openLogoutConfirm()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
             <i data-lucide="door-open" style="width:18px; height:18px; color:#636E72;"></i> Sair
             </button>
         </aside>
@@ -1787,6 +1790,7 @@ window.confirmCancel = function () {
     ${clearNotificationsConfirmModalHtml}
     ${cancelModalHtml}
     ${bookingsModalHtml}
+    ${getLogoutConfirmModalHtml()}
 `;
 
   root.innerHTML = html;
