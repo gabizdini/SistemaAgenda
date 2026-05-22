@@ -459,7 +459,6 @@ function renderLandingPage() {
       <!-- HEADER -->
       <header style="background: white; border-bottom: 1px solid #e5e7eb; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 28px;">📅</span>
           <h1 style="margin: 0; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agenda GVT</h1>
         </div>
         <button onclick="window.goToLogin()" style="padding: 12px 28px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Fazer Login</button>
@@ -480,39 +479,21 @@ function renderLandingPage() {
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
             <!-- Card 1 -->
             <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-              <div style="font-size: 40px; margin-bottom: 15px;">📅</div>
+
               <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Agendamento Simplificado</h4>
               <p style="color: #6b7280; margin: 0; line-height: 1.5;">Sistema intuitivo para agendar e gerenciar compromissos em tempo real</p>
             </div>
             <!-- Card 2 -->
             <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #8E44AD; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-              <div style="font-size: 40px; margin-bottom: 15px;">👥</div>
+
               <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Conecte Prestadores</h4>
               <p style="color: #6b7280; margin: 0; line-height: 1.5;">Encontre profissionais qualificados para seus serviços de forma rápida</p>
             </div>
-            <!-- Card 3 -->
-            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #A29BFE; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-              <div style="font-size: 40px; margin-bottom: 15px;">🔔</div>
-              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Notificações em Tempo Real</h4>
-              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Receba alertas sobre novos agendamentos, cancelamentos e confirmações</p>
-            </div>
             <!-- Card 4 -->
             <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-              <div style="font-size: 40px; margin-bottom: 15px;">💼</div>
+
               <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Gestão de Serviços</h4>
               <p style="color: #6b7280; margin: 0; line-height: 1.5;">Crie, edite e organize seus serviços com facilidade</p>
-            </div>
-            <!-- Card 5 -->
-            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #8E44AD; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-              <div style="font-size: 40px; margin-bottom: 15px;">🔒</div>
-              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Segurança Garantida</h4>
-              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Seus dados são protegidos com segurança de primeira categoria</p>
-            </div>
-            <!-- Card 6 -->
-            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #A29BFE; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-              <div style="font-size: 40px; margin-bottom: 15px;">📱</div>
-              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Acesso em Qualquer Lugar</h4>
-              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Use em desktop, tablet ou dispositivo móvel, sempre disponível</p>
             </div>
           </div>
         </div>
