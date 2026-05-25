@@ -174,7 +174,38 @@ const savedUsers = localStorage.getItem("agendamento_users");
 const savedBookings = localStorage.getItem("agendamento_bookings");
 const savedCurrentUser = localStorage.getItem("agendamento_currentUser");
 
-if (savedUsers) users = JSON.parse(savedUsers);
+// Usuários padrão para testes
+const defaultUsers = [
+  {
+    id: 1,
+    name: "Ana Silva",
+    username: "ana_silva",
+    email: "ana@email.com",
+    password: "123",
+    role: USER_ROLES.CLIENT,
+  },
+  {
+    id: 2,
+    name: "Carlos Souza",
+    username: "carlos_barber",
+    email: "carlos@email.com",
+    password: "123",
+    role: USER_ROLES.PROVIDER,
+  },
+];
+
+if (savedUsers) {
+  users = JSON.parse(savedUsers);
+  // Garantir que usuários padrão estão presentes
+  defaultUsers.forEach(defaultUser => {
+    if (!users.find(u => u.id === defaultUser.id)) {
+      users.push(defaultUser);
+    }
+  });
+} else {
+  users = defaultUsers;
+}
+
 if (savedBookings) bookings = JSON.parse(savedBookings);
 if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
 
@@ -633,8 +664,9 @@ function renderAuthScreen() {
                             <input type="text" id="name" placeholder="Digite seu nome" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
                         </div>
                         <div style="margin-bottom: 16px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">UserName: </label>
-                            <input type="text" id="username" placeholder="seu_usuario" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; text-transform: lowercase;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Seu username</label>
+                            <input type="text" id="username" placeholder="seu_usuario" autocomplete="off" spellcheck="false" data-lpignore="true" data-form-type="other" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; text-transform: lowercase; transition: border-color 0.3s;">
+                            <p id="usernameFeedback" style="margin: 8px 0 0; font-size: 13px; font-weight: 600; display: none; min-height: 20px;"></p>
                             <p style="margin: 4px 0 0; color: #6b7280; font-size: 12px;">Use letras, números, ponto, hífen e underscore. Mín. 3 caracteres.</p>
                         </div>
                         <div style="margin-bottom: 16px;">
@@ -685,10 +717,80 @@ function renderAuthScreen() {
     toggleMode();
   };
 
+  // Limpar campo de username para evitar preenchimento automático
+  const usernameInput = document.getElementById("username");
+  if (usernameInput) {
+    // Limpar ao carregar
+    usernameInput.value = "";
+    // Limpar se houver qualquer valor pré-preenchido
+    setTimeout(() => {
+      usernameInput.value = "";
+    }, 100);
+    
+    // Validação em tempo real
+    usernameInput.addEventListener("input", function(e) {
+      // Remover caracteres inválidos
+      if (this.value.includes("@") || this.value.includes(".com")) {
+        this.value = "";
+      }
+      
+      const username = this.value.trim().toLowerCase();
+      const feedbackElement = document.getElementById("usernameFeedback");
+      
+      if (!feedbackElement) return;
+      
+      // Se campo vazio, não mostrar feedback
+      if (username.length === 0) {
+        feedbackElement.innerHTML = "";
+        feedbackElement.style.display = "none";
+        this.style.borderColor = "#e5e7eb";
+        return;
+      }
+      
+      // Validar tamanho mínimo
+      if (username.length < 3) {
+        feedbackElement.innerHTML = '⚠️ Mínimo 3 caracteres';
+        feedbackElement.style.display = "block";
+        feedbackElement.style.color = "#f59e0b";
+        this.style.borderColor = "#f59e0b";
+        return;
+      }
+      
+      // Validar caracteres
+      if (!/^[a-zA-Z0-9._-]+$/.test(username)) {
+        feedbackElement.innerHTML = '❌ Caracteres inválidos';
+        feedbackElement.style.display = "block";
+        feedbackElement.style.color = "#ef4444";
+        this.style.borderColor = "#ef4444";
+        return;
+      }
+      
+      // Verificar se username já existe
+      const exists = (window.allUsers || []).some(u => (u.username || "").toLowerCase() === username);
+      
+      if (exists) {
+        feedbackElement.innerHTML = '❌ Esse username já existe!';
+        feedbackElement.style.display = "block";
+        feedbackElement.style.color = "#ef4444";
+        feedbackElement.style.fontWeight = "600";
+        this.style.borderColor = "#ef4444";
+      } else {
+        feedbackElement.innerHTML = '✅ Username disponível!';
+        feedbackElement.style.display = "block";
+        feedbackElement.style.color = "#10b981";
+        feedbackElement.style.fontWeight = "600";
+        this.style.borderColor = "#10b981";
+      }
+    });
+  }
+
   window.goToLandingPage = function() {
     showLandingPage = true;
     render();
   };
+
+  // Fazer users acessível globalmente para validação de username
+  window.allUsers = users;
 
   const backBtn = document.getElementById("backBtn");
   if (backBtn) {
