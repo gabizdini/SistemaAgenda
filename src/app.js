@@ -138,6 +138,7 @@ let users = [
   {
     id: 1,
     name: "Ana Silva",
+    username: "ana_silva",
     email: "ana@email.com",
     password: "123",
     role: USER_ROLES.CLIENT,
@@ -145,6 +146,7 @@ let users = [
   {
     id: 2,
     name: "Carlos Souza",
+    username: "carlos_barber",
     email: "carlos@email.com",
     password: "123",
     role: USER_ROLES.PROVIDER,
@@ -553,11 +555,28 @@ function renderAuthScreen() {
     } else {
       // CADASTRO
       const name = document.getElementById("name").value;
+      const username = document.getElementById("username").value;
       const role = document.getElementById("role").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
 
       if (!name) {
         showToast("Nome é obrigatório", "error");
+        return;
+      }
+      if (!username) {
+        showToast("Nome único é obrigatório", "error");
+        return;
+      }
+      if (username.length < 3) {
+        showToast("Nome único deve ter pelo menos 3 caracteres", "error");
+        return;
+      }
+      if (!/^[a-zA-Z0-9._-]+$/.test(username)) {
+        showToast("Nome único pode conter apenas letras, números, ponto, hífen e underscore", "error");
+        return;
+      }
+      if (users.find((u) => u.username === username)) {
+        showToast("Este nome único já está em uso", "error");
         return;
       }
       if (password !== confirmPassword) {
@@ -572,6 +591,7 @@ function renderAuthScreen() {
       const newUser = {
         id: Date.now(),
         name: name,
+        username: username,
         email: email,
         password: password,
         role: role,
@@ -611,6 +631,11 @@ function renderAuthScreen() {
                         <div style="margin-bottom: 16px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 500;">Nome completo</label>
                             <input type="text" id="name" placeholder="Digite seu nome" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">UserName: </label>
+                            <input type="text" id="username" placeholder="seu_usuario" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; text-transform: lowercase;">
+                            <p style="margin: 4px 0 0; color: #6b7280; font-size: 12px;">Use letras, números, ponto, hífen e underscore. Mín. 3 caracteres.</p>
                         </div>
                         <div style="margin-bottom: 16px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 500;">Tipo de conta</label>

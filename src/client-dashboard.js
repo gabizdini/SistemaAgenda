@@ -290,6 +290,13 @@ function renderClientProfileScreen() {
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Tipo de conta</p>
               <h3 style="margin:0; color:#6C5CE7; font-weight:700;">Cliente</h3>
             </div>
+
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Username</p>
+              <h3 style="margin:0; color:#6C5CE7; font-weight:700; font-size:16px;">@${currentUser.username || currentUser.email.split('@')[0]}</h3>
+            </div>
           </div>
         </div>
       </main>
@@ -714,7 +721,8 @@ function renderProviderShopScreen() {
           </div>
           <div>
             <h2 style="margin:0 0 8px; color:#111827; font-size:24px;">${provider.name}</h2>
-            <p style="margin:0 0 4px; color:#6b7280;">${provider.category || "Prestador de serviços"}</p>
+            <p style="margin:0 0 4px; color:#6C5CE7; font-weight:600;">@${provider.username || provider.email.split('@')[0]}</p>
+            <p style="margin:4px 0; color:#6b7280;">${provider.category || "Prestador de serviços"}</p>
             <p style="margin:0; color:#10b981; font-weight:600;">${providerServices.length} serviço(s) disponível(is)</p>
           </div>
         </div>
@@ -1158,7 +1166,8 @@ function renderProvidersListScreen() {
                               </div>
                               <div style="min-width:0;">
                                 <h3 style="margin:0; color:#111827; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${provider.name}</h3>
-                                <p style="margin:4px 0 0; color:#6b7280; font-size:12px;">${provider.category || "Prestador"}</p>
+                                <p style="margin:4px 0 0; color:#6C5CE7; font-size:12px; font-weight:600;">@${provider.username || provider.email.split('@')[0]}</p>
+                                <p style="margin:2px 0 0; color:#6b7280; font-size:12px;">${provider.category || "Prestador"}</p>
                               </div>
                             </div>
                             <p style="margin:0 0 12px; color:#6b7280; font-size:14px;">📋 ${providerServices.length} serviço(s)</p>

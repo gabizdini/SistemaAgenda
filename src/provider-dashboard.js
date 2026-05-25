@@ -164,6 +164,13 @@ function renderProviderProfileScreen() {
               <h3 style="margin:0; color:#6C5CE7; font-weight:700;">Prestador</h3>
             </div>
 
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
+              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
+              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Username</p>
+              <h3 style="margin:0; color:#6C5CE7; font-weight:700; font-size:16px;">@${currentUser.username || currentUser.email.split('@')[0]}</h3>
+            </div>
+
             <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #10b981; transition:all 0.3s ease;"
               onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
