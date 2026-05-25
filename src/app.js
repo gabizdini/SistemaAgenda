@@ -1,6 +1,3 @@
-// ============================================
-// CONSTANTES GLOBAIS
-// ============================================
 let selectedService = null;
 let selectedDate = null;
 let selectedTime = null;
@@ -44,7 +41,6 @@ if (savedBlockedSlots) blockedSlots = JSON.parse(savedBlockedSlots);
 if (savedServices) services = JSON.parse(savedServices);
 const USER_ROLES = { CLIENT: "client", PROVIDER: "provider" };
 
-// Estados obrigatórios
 const STATES = {
   LOADING: "loading",
   EMPTY: "empty",
@@ -57,9 +53,6 @@ const STATES = {
 let currentState = null;
 let stateMessage = "";
 
-// ============================================
-// MOCK SERVICES (CORRIGIDO - ADICIONADO!)
-// ============================================
 const mockServices = [
   {
     id: 1,
@@ -91,9 +84,6 @@ const mockServices = [
   },
 ];
 
-// ============================================
-// CATEGORIAS DE PRESTADORES
-// ============================================
 const PROVIDER_CATEGORIES = [
   { id: 1, name: "💇 Beleza & Cabelo", emoji: "💇" },
   { id: 2, name: "💅 Manicure & Pedicure", emoji: "💅" },
@@ -107,13 +97,12 @@ const PROVIDER_CATEGORIES = [
   { id: 10, name: "🎨 Criativo & Design", emoji: "🎨" },
 ];
 
-// Gerar horários disponíveis (8h às 18h com intervalos de 30min)
 const TIME_SLOTS = [];
 for (let i = 8; i <= 18; i++) {
   TIME_SLOTS.push(`${i.toString().padStart(2, "0")}:00`);
   if (i !== 18) TIME_SLOTS.push(`${i.toString().padStart(2, "0")}:30`);
 }
-//formato de duração: 30, 45, 60 (minutos)
+
 function formatDuration(minutes) {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
@@ -130,9 +119,6 @@ const WEEK_DAYS = [
   { value: 5, label: "Sexta", short: "Sex" },
   { value: 6, label: "Sábado", short: "Sáb" },
 ];
-// ============================================
-// DADOS PERSISTIDOS (localStorage)
-// ============================================
 
 let users = [
   {
@@ -169,12 +155,10 @@ let bookings = [
 
 let currentUser = null;
 
-// Carregar dados salvos
 const savedUsers = localStorage.getItem("agendamento_users");
 const savedBookings = localStorage.getItem("agendamento_bookings");
 const savedCurrentUser = localStorage.getItem("agendamento_currentUser");
 
-// Usuários padrão para testes
 const defaultUsers = [
   {
     id: 1,
@@ -196,7 +180,6 @@ const defaultUsers = [
 
 if (savedUsers) {
   users = JSON.parse(savedUsers);
-  // Garantir que usuários padrão estão presentes
   defaultUsers.forEach(defaultUser => {
     if (!users.find(u => u.id === defaultUser.id)) {
       users.push(defaultUser);
@@ -234,9 +217,6 @@ function saveToLocalStorage() {
   }
 }
 
-// ============================================
-// TEMA ESCURO / CLARO
-// ============================================
 let isDarkMode = localStorage.getItem("agendamento_darkMode") === "true" || false;
 
 function toggleDarkMode() {
@@ -298,7 +278,6 @@ function getTheme() {
 }
 
 function initThemeButton() {
-  // Inicializar Lucide Icons
   if (window.lucide) {
     window.lucide.createIcons();
   }
@@ -310,7 +289,6 @@ function initThemeButton() {
   }
 }
 
-//prestador add serviços
 function addService(name, duration, price) {
   const newService = {
     id: Date.now(),
@@ -338,7 +316,6 @@ function showToast(message, type) {
   setTimeout(() => toast.remove(), 3000);
 }
 
-// Funções para modal de confirmação de logout
 window.openLogoutConfirm = function () {
   showLogoutConfirmModal = true;
   document.body.style.overflow = "hidden";
@@ -392,7 +369,7 @@ function getLogoutConfirmModalHtml() {
   `;
 }
 
-// Funções para gerenciar estados
+
 function setState(state, message = "") {
   currentState = state;
   stateMessage = message;
@@ -420,7 +397,6 @@ function showState() {
   if (!state) return false;
 
   if (currentState === "loading") {
-    // Usar tela de load existente
     const loader = document.getElementById("loader");
     if (loader) {
       loader.style.display = "flex";
@@ -430,7 +406,6 @@ function showState() {
     return true;
   }
 
-  // Para outros estados, mostrar container customizado
   root.innerHTML = `
     <div style="
       display: flex;
@@ -449,9 +424,6 @@ function showState() {
   return true;
 }
 
-// ============================================
-// FUNÇÃO PARA ESCONDER O LOADER
-// ============================================
 function hideLoader() {
   const loader = document.getElementById("loader");
   if (loader) {
@@ -464,9 +436,6 @@ function hideLoader() {
   }
 }
 
-// ============================================
-// FUNÇÃO PARA MOSTRAR O LOADER
-// ============================================
 function showLoader() {
   const loader = document.getElementById("loader");
   if (loader) {
@@ -476,53 +445,37 @@ function showLoader() {
   }
 }
 
-// ============================================
-// TELA DE LOGIN/CADASTRO
-// ============================================
 let isLogin = true;
 
-// ============================================
-// TELA INICIAL (LANDING PAGE)
-// ============================================
 function renderLandingPage() {
   const root = document.getElementById("root");
 
   const html = `
-    <div style="min-height: 100vh; display: flex; flex-direction: column; background: white;">
-      <!-- HEADER -->
       <header style="background: white; border-bottom: 1px solid #e5e7eb; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 10px;">
           <h1 style="margin: 0; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agenda GVT</h1>
         </div>
         <button onclick="window.goToLogin()" style="padding: 12px 28px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Fazer Login</button>
-      </header>
-
-      <!-- CONTEÚDO PRINCIPAL -->
       <main style="flex: 1; padding: 80px 40px; max-width: 1200px; margin: 0 auto; width: 100%;">
-        <!-- SEÇÃO HERO -->
         <div style="text-align: center; margin-bottom: 80px;">
           <h2 style="font-size: 48px; font-weight: 700; color: #2D3436; margin: 0 0 20px 0;">Organize seus agendamentos com facilidade</h2>
           <p style="font-size: 20px; color: #6b7280; margin: 0 0 40px 0; line-height: 1.6;">Conecte clientes e prestadores de serviço em uma única plataforma intuitiva e segura</p>
           <button onclick="window.goToSignup()" style="padding: 16px 40px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Começar Agora</button>
         </div>
 
-        <!-- RECURSOS -->
         <div style="margin-top: 60px;">
           <h3 style="text-align: center; font-size: 32px; color: #2D3436; margin-bottom: 50px;">O que oferecemos</h3>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
-            <!-- Card 1 -->
             <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
 
               <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Agendamento Simplificado</h4>
               <p style="color: #6b7280; margin: 0; line-height: 1.5;">Sistema intuitivo para agendar e gerenciar compromissos em tempo real</p>
             </div>
-            <!-- Card 2 -->
             <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #8E44AD; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
 
               <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Conecte Prestadores</h4>
               <p style="color: #6b7280; margin: 0; line-height: 1.5;">Encontre profissionais qualificados para seus serviços de forma rápida</p>
             </div>
-            <!-- Card 4 -->
             <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
 
               <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Gestão de Serviços</h4>
@@ -531,7 +484,6 @@ function renderLandingPage() {
           </div>
         </div>
 
-        <!-- CTA FINAL -->
         <div style="text-align: center; margin-top: 80px; padding: 40px; background: linear-gradient(135deg, #f8f9fa 0%, #f0f1f7 100%); border-radius: 12px;">
           <h3 style="font-size: 28px; color: #2D3436; margin: 0 0 20px 0;">Pronto para começar?</h3>
           <p style="color: #6b7280; margin: 0 0 30px 0; font-size: 16px;">Crie sua conta agora e comece a gerenciar seus agendamentos</p>
@@ -539,7 +491,6 @@ function renderLandingPage() {
         </div>
       </main>
 
-      <!-- FOOTER -->
       <footer style="background: #2D3436; color: white; padding: 40px; text-align: center; margin-top: auto;">
         <p style="margin: 0 0 10px 0;">© 2024 Agenda GVT - Sistema de Agendamento</p>
         <p style="margin: 0; color: #a0a0a0; font-size: 14px;">Simplificando agendamentos, conectando pessoas</p>
@@ -571,7 +522,6 @@ function renderAuthScreen() {
     const password = document.getElementById("password").value;
 
     if (isLogin) {
-      // LOGIN
       const user = users.find(
         (u) => u.email === email && u.password === password,
       );
@@ -584,7 +534,6 @@ function renderAuthScreen() {
         showToast("Email ou senha inválidos", "error");
       }
     } else {
-      // CADASTRO
       const name = document.getElementById("name").value;
       const username = document.getElementById("username").value;
       const role = document.getElementById("role").value;
@@ -717,19 +666,14 @@ function renderAuthScreen() {
     toggleMode();
   };
 
-  // Limpar campo de username para evitar preenchimento automático
   const usernameInput = document.getElementById("username");
   if (usernameInput) {
-    // Limpar ao carregar
     usernameInput.value = "";
-    // Limpar se houver qualquer valor pré-preenchido
     setTimeout(() => {
       usernameInput.value = "";
     }, 100);
     
-    // Validação em tempo real
     usernameInput.addEventListener("input", function(e) {
-      // Remover caracteres inválidos
       if (this.value.includes("@") || this.value.includes(".com")) {
         this.value = "";
       }
@@ -739,7 +683,6 @@ function renderAuthScreen() {
       
       if (!feedbackElement) return;
       
-      // Se campo vazio, não mostrar feedback
       if (username.length === 0) {
         feedbackElement.innerHTML = "";
         feedbackElement.style.display = "none";
@@ -747,7 +690,6 @@ function renderAuthScreen() {
         return;
       }
       
-      // Validar tamanho mínimo
       if (username.length < 3) {
         feedbackElement.innerHTML = '⚠️ Mínimo 3 caracteres';
         feedbackElement.style.display = "block";
@@ -756,7 +698,6 @@ function renderAuthScreen() {
         return;
       }
       
-      // Validar caracteres
       if (!/^[a-zA-Z0-9._-]+$/.test(username)) {
         feedbackElement.innerHTML = '❌ Caracteres inválidos';
         feedbackElement.style.display = "block";
@@ -765,7 +706,6 @@ function renderAuthScreen() {
         return;
       }
       
-      // Verificar se username já existe
       const exists = (window.allUsers || []).some(u => (u.username || "").toLowerCase() === username);
       
       if (exists) {
@@ -789,9 +729,6 @@ function renderAuthScreen() {
     render();
   };
 
-  // Fazer users acessível globalmente para validação de username
-  window.allUsers = users;
-
   const backBtn = document.getElementById("backBtn");
   if (backBtn) {
     backBtn.addEventListener("mouseover", function() {
@@ -803,15 +740,10 @@ function renderAuthScreen() {
   }
 }
 
-// ============================================
-// RENDER PRINCIPAL COM LOADER
-// ============================================
-
 function render() {
   applyTheme();
   window.toggleDarkMode = toggleDarkMode;
   
-  // Se houver estado ativo, mostrar tela de estado
   if (showState()) {
     initThemeButton();
     return;
@@ -857,7 +789,6 @@ function render() {
     }
   };
 
-  // só mostra loader na primeira carga ou login/logout
   const loader = document.getElementById("loader");
 
   if (loader && loader.style.display !== "none") {
@@ -872,9 +803,6 @@ function render() {
   }
 }
 
-// ============================================
-// FUNÇÃO PARA GERAR CALENDÁRIO NO LOADER
-// ============================================
 function generateLoaderCalendar() {
   const container = document.getElementById("calendarNumbers");
   if (!container) return;
@@ -889,12 +817,10 @@ function generateLoaderCalendar() {
 
   let html = "";
 
-  // espaços vazios antes do dia 1
   for (let i = 0; i < firstDay; i++) {
     html += `<span></span>`;
   }
 
-  // dias do mês
   for (let day = 1; day <= totalDays; day++) {
     if (day === today) {
       html += `<span class="today">${day}</span>`;
@@ -906,13 +832,8 @@ function generateLoaderCalendar() {
   container.innerHTML = html;
 }
 
-// ============================================
-// INICIAR APLICAÇÃO
-// ============================================
-
-// Garantir que abra na tela de login e com loader toda vez que recarregar a página
 window.addEventListener("DOMContentLoaded", function () {
-  localStorage.removeItem("agendamento_currentUser"); // força abrir no login
+  localStorage.removeItem("agendamento_currentUser");
   currentUser = null;
   isLogin = true;
   generateLoaderCalendar();
