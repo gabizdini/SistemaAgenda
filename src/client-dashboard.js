@@ -11,6 +11,28 @@ window.selectProvider = function (providerId) {
   render();
 };
 
+window.updateProviderSearch = function () {
+  const input = document.getElementById("providerSearch");
+  providerSearchTerm = input.value;
+  const term = providerSearchTerm.toLowerCase();
+  document.querySelectorAll("#providerGrid > div").forEach((card) => {
+    const name = card.querySelector("h3")?.textContent?.toLowerCase() || "";
+    const username = card.querySelector("p")?.textContent?.toLowerCase() || "";
+    card.style.display = !term || name.includes(term) || username.includes(term) ? "" : "none";
+  });
+  const clearBtn = document.getElementById("providerSearchClear");
+  if (clearBtn) clearBtn.style.display = providerSearchTerm ? "" : "none";
+};
+
+window.clearProviderSearch = function () {
+  providerSearchTerm = "";
+  const input = document.getElementById("providerSearch");
+  if (input) { input.value = ""; input.focus(); }
+  document.querySelectorAll("#providerGrid > div").forEach((card) => card.style.display = "");
+  const clearBtn = document.getElementById("providerSearchClear");
+  if (clearBtn) clearBtn.style.display = "none";
+};
+
 function renderClientProfileScreen() {
   const root = document.getElementById("root");
 
@@ -1173,12 +1195,24 @@ function renderProvidersListScreen() {
           <h2 style="margin-bottom:8px; color:white; font-weight:700; font-size:28px;">Prestadores Disponíveis</h2>
           <p style="color:#e9d5ff; margin-bottom:32px; font-weight:500;">Escolha um prestador para ver seus serviços</p>
 
+          <div style="position:relative; margin-bottom:24px; max-width:400px;">
+            <input id="providerSearch" type="text" placeholder="Pesquisar prestador..." value="${providerSearchTerm}" oninput="window.updateProviderSearch()" style="width:100%; padding:12px 16px 12px 44px; background:rgba(255,255,255,0.9); border:1px solid #e5e7eb; border-radius:12px; font-size:15px; outline:none; box-sizing:border-box; transition:all 0.2s;">
+            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#9ca3af; pointer-events:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <span id="providerSearchClear" onclick="window.clearProviderSearch()" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#9ca3af; cursor:pointer; display:${providerSearchTerm ? '' : 'none'};">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+          </div>
+
           ${
-            providers.length === 0
-              ? '<div class="empty-state"><div class="empty-state-icon">👤</div><p>Nenhum prestador disponível</p></div>'
-              : `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px;">
-                  ${providers
-                    .map(
+            (() => {
+              const filtered = providers.filter(p => !providerSearchTerm || p.name.toLowerCase().includes(providerSearchTerm.toLowerCase()) || (p.username && p.username.toLowerCase().includes(providerSearchTerm.toLowerCase())));
+              return filtered.length === 0
+                ? '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>Nenhum prestador encontrado</p></div>'
+                : `<div id="providerGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px;">
+                    ${filtered
+                      .map(
                       (provider) => {
                         const providerServices = services.filter(
                           (s) => s.providerId === provider.id,
@@ -1209,7 +1243,8 @@ function renderProvidersListScreen() {
                     )
                     .join("")}
                 </div>`
-          }
+          })()
+        }
         </div>
       </main>
     </div>

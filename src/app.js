@@ -37,6 +37,7 @@ let showLogoutConfirmModal = false;
 let showConfirmDoneModal = false;
 let doneBookingId = null;
 let showLandingPage = true;
+let providerSearchTerm = "";
 
 const savedServices = localStorage.getItem("agendamento_services");
 const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");
