@@ -192,9 +192,9 @@ function renderProviderProfileScreen() {
           </div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeEditProfileModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
-              onmouseover="this.style.background='#DFE6E9';"
-              onmouseout="this.style.background='#ECEFF1';">
+            <button onclick="window.closeEditProfileModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;">
+              
+              
               Cancelar
             </button>
             <button onclick="window.saveProfileChanges()" style="padding:10px 20px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
@@ -231,9 +231,9 @@ function renderProviderProfileScreen() {
           </div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeDeleteProviderAccountModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
-              onmouseover="this.style.background='#DFE6E9';"
-              onmouseout="this.style.background='#ECEFF1';">
+            <button onclick="window.closeDeleteProviderAccountModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;">
+              
+              
               Cancelar
             </button>
             <button onclick="window.confirmDeleteProviderAccount()" style="padding:10px 20px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
@@ -833,9 +833,9 @@ window.confirmDeleteService = function () {
     <button
       type="button"
       onclick="event.stopPropagation(); window.changeDuration(-15)"
-      style="width:36px; height:36px; border:1px solid #B2BEC3; border-radius:8px; background:#ECEFF1; cursor:pointer; font-size:20px; line-height:1; color:#636E72; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center;"
-      onmouseover="this.style.background='#DFE6E9';"
-      onmouseout="this.style.background='#ECEFF1';">
+      style="width:36px; height:36px; border:1px solid #B2BEC3; border-radius:8px; background:#ECEFF1; cursor:pointer; font-size:20px; line-height:1; color:#636E72; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center;">
+      
+      
       −
     </button>
 
@@ -849,9 +849,9 @@ window.confirmDeleteService = function () {
     <button
       type="button"
       onclick="event.stopPropagation(); window.changeDuration(15)"
-      style="width:36px; height:36px; border:1px solid #B2BEC3; border-radius:8px; background:#ECEFF1; cursor:pointer; font-size:20px; line-height:1; color:#636E72; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center;"
-      onmouseover="this.style.background='#DFE6E9';"
-      onmouseout="this.style.background='#ECEFF1';">
+      style="width:36px; height:36px; border:1px solid #B2BEC3; border-radius:8px; background:#ECEFF1; cursor:pointer; font-size:20px; line-height:1; color:#636E72; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center;">
+      
+      
       +
     </button>
   </div>
@@ -910,7 +910,7 @@ window.confirmDeleteService = function () {
 
         <div style="display:flex; gap:12px; justify-content:flex-end;">
           <button onclick="window.closeCreateServiceModal()"
-            style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
+            style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">
             Cancelar
           </button>
           <button onclick="window.createService()"
@@ -931,8 +931,8 @@ if (showMyServicesModal) {
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
           <h3>Meus Serviços</h3>
           <button onclick="window.closeMyServicesModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
-            onmouseover="this.style.background='#DFE6E9';"
-            onmouseout="this.style.background='#ECEFF1';">Fechar</button>
+            
+           >Fechar</button>
         </div>
 
         ${
@@ -977,8 +977,8 @@ if (showProviderBookingsModal) {
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
           <h3>Total de Agendamentos</h3>
           <button onclick="window.closeProviderBookingsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
-            onmouseover="this.style.background='#DFE6E9';"
-            onmouseout="this.style.background='#ECEFF1';">Fechar</button>
+            
+           >Fechar</button>
         </div>
 
         ${
@@ -1033,7 +1033,7 @@ if (showProviderCancelModal && providerBookingToCancel) {
         </div>
         
         <div style="display:flex; gap:12px; justify-content:flex-end;">
-          <button onclick="window.closeProviderCancelModal()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
+          <button onclick="window.closeProviderCancelModal()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">
             Voltar
           </button>
           <button onclick="window.confirmProviderCancel()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
@@ -1091,8 +1091,8 @@ if (showProviderNotificationsModal) {
                 : ""
             }
             <button onclick="window.closeProviderNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
-            onmouseover="this.style.background='#DFE6E9';"
-            onmouseout="this.style.background='#ECEFF1';">Fechar</button>
+            
+           >Fechar</button>
           </div>
         </div>
 
@@ -1140,8 +1140,8 @@ if (showProviderClearNotificationsConfirm) {
         </p>
         <div style="display:flex; gap:12px; justify-content:flex-end;">
           <button onclick="window.closeProviderClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;"
-            onmouseover="this.style.background='#DFE6E9';"
-            onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
+            
+           >Cancelar</button>
           <button onclick="window.clearAllProviderNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
         </div>
       </div>
@@ -1185,7 +1185,7 @@ if (showDeleteServiceModal && serviceToDelete) {
           Tem certeza que deseja remover este serviço? Esta ação não pode ser desfeita.
         </p>` : ""}
         <div style="display:flex; gap:12px; justify-content:flex-end;">
-          <button onclick="window.closeDeleteServiceModal()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
+          <button onclick="window.closeDeleteServiceModal()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">
             ${hasActiveBookings ? "Fechar" : "Cancelar"}
           </button>
           ${confirmButton}

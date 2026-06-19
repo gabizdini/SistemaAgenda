@@ -315,8 +315,8 @@ function renderClientProfileScreen() {
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
             <button onclick="window.closeClientEditProfileModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
-              onmouseover="this.style.background='#DFE6E9';"
-              onmouseout="this.style.background='#ECEFF1';">
+              
+             >
               Cancelar
             </button>
             <button onclick="window.saveClientProfileChanges()" style="padding:10px 20px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
@@ -354,8 +354,8 @@ function renderClientProfileScreen() {
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
             <button onclick="window.closeDeleteClientAccountModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
-              onmouseover="this.style.background='#DFE6E9';"
-              onmouseout="this.style.background='#ECEFF1';">
+              
+             >
               Cancelar
             </button>
             <button onclick="window.confirmDeleteClientAccount()" style="padding:10px 20px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
@@ -681,8 +681,8 @@ function renderProviderShopScreen() {
                     </div>
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
                         <button onclick="window.closeProviderShopBookingForm()" style="padding: 10px 20px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; font-weight:600; transition:all 0.2s; color:#636E72;"
-                          onmouseover="this.style.background='#DFE6E9';"
-                          onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
+                          
+                         >Cancelar</button>
                         <button onclick="window.confirmProviderShopBooking()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Agendamento</button>
                     </div>
                 </div>
@@ -964,7 +964,7 @@ function renderProvidersListScreen() {
                         `
                             : ``
                         }
-                        <button onclick="window.closeMyBookings()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
+                        <button onclick="window.closeMyBookings()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">
                             Fechar
                         </button>
                     </div>
@@ -994,7 +994,7 @@ function renderProvidersListScreen() {
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Voltar</button>
+                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;">Voltar</button>
                         <button onclick="window.confirmCancelFromModal()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Cancelamento</button>
                     </div>
                 </div>
@@ -1016,7 +1016,7 @@ function renderProvidersListScreen() {
                   ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
                   : ""
               }
-              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Fechar</button>
+              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">Fechar</button>
             </div>
           </div>
 
@@ -1063,7 +1063,7 @@ function renderProvidersListScreen() {
             Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
           </p>
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
+            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">Cancelar</button>
             <button onclick="window.clearAllNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
           </div>
         </div>
@@ -1548,7 +1548,7 @@ window.confirmCancel = function () {
         `
             : ``
         }
-        <button onclick="window.closeBookingsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">
+        <button onclick="window.closeBookingsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">
             Fechar
         </button>
     </div>
@@ -1636,7 +1636,7 @@ window.confirmCancel = function () {
                         <div class="time-slots-grid">${timeSlotsHtml}</div>
                     </div>
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-                        <button onclick="window.closeBookingForm()" style="padding: 10px 20px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
+                        <button onclick="window.closeBookingForm()" style="padding: 10px 20px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;">Cancelar</button>
                         <button onclick="window.confirmBooking()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Agendamento</button>
                     </div>
                 </div>
@@ -1663,7 +1663,7 @@ window.confirmCancel = function () {
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Voltar</button>
+                        <button onclick="window.closeCancelModal()" style="padding: 8px 16px; background: #ECEFF1; border: 1px solid #B2BEC3; border-radius: 8px; cursor: pointer; color: #636E72; font-weight: 600; transition: all 0.2s;">Voltar</button>
                         <button onclick="window.confirmCancel()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">Confirmar Cancelamento</button>
                     </div>
                 </div>
@@ -1685,7 +1685,7 @@ window.confirmCancel = function () {
                   ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
                   : ""
               }
-              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Fechar</button>
+              <button onclick="window.closeNotificationsModal()" style="padding:8px 12px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">Fechar</button>
             </div>
           </div>
 
@@ -1732,7 +1732,7 @@ window.confirmCancel = function () {
             Tem certeza que deseja apagar TODAS as notificações? Esta ação não pode ser desfeita.
           </p>
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='#DFE6E9';" onmouseout="this.style.background='#ECEFF1';">Cancelar</button>
+            <button onclick="window.closeClearNotificationsConfirm()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">Cancelar</button>
             <button onclick="window.clearAllNotifications()" style="padding:8px 16px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Confirmar</button>
           </div>
         </div>

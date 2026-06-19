@@ -385,8 +385,8 @@ function getLogoutConfirmModalHtml() {
         </p>
         <div style="display:flex; gap:12px; justify-content:flex-end;">
           <button onclick="window.closeLogoutConfirm()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
-            onmouseover="this.style.background='#DFE6E9';"
-            onmouseout="this.style.background='#ECEFF1';">
+            
+           >
             Cancelar
           </button>
           <button onclick="window.confirmLogout()" style="padding:10px 20px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
