@@ -1387,9 +1387,14 @@ if (showEditProfileModal) {
                           <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
                             Confirmado
                           </span>
-                          <button onclick="window.openConfirmDoneModal(${booking.id})" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
-                            Feito
-                          </button>
+                          <div style="display:flex; gap:6px;">
+                            <button onclick="window.openProviderCancelModal(${booking.id})" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
+                              Cancelar
+                            </button>
+                            <button onclick="window.openConfirmDoneModal(${booking.id})" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
+                              Feito
+                            </button>
+                          </div>
                         </div>
                       </div>
                     `,
