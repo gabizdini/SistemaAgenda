@@ -11,15 +11,23 @@ window.selectProvider = function (providerId) {
   render();
 };
 
-window.updateProviderSearch = function () {
-  const input = document.getElementById("providerSearch");
-  providerSearchTerm = input.value;
+function applyProviderFilters() {
   const term = providerSearchTerm.toLowerCase();
   document.querySelectorAll("#providerGrid > div").forEach((card) => {
     const name = card.querySelector("h3")?.textContent?.toLowerCase() || "";
     const username = card.querySelector("p")?.textContent?.toLowerCase() || "";
-    card.style.display = !term || name.includes(term) || username.includes(term) ? "" : "none";
+    const catEl = card.querySelector(".provider-category");
+    const category = catEl?.textContent?.toLowerCase() || "";
+    const matchesSearch = !term || name.includes(term) || username.includes(term);
+    const matchesCategory = !providerCategoryFilter || category === providerCategoryFilter.toLowerCase();
+    card.style.display = matchesSearch && matchesCategory ? "" : "none";
   });
+}
+
+window.updateProviderSearch = function () {
+  const input = document.getElementById("providerSearch");
+  providerSearchTerm = input.value;
+  applyProviderFilters();
   const clearBtn = document.getElementById("providerSearchClear");
   if (clearBtn) clearBtn.style.display = providerSearchTerm ? "" : "none";
 };
@@ -28,10 +36,30 @@ window.clearProviderSearch = function () {
   providerSearchTerm = "";
   const input = document.getElementById("providerSearch");
   if (input) { input.value = ""; input.focus(); }
-  document.querySelectorAll("#providerGrid > div").forEach((card) => card.style.display = "");
+  applyProviderFilters();
   const clearBtn = document.getElementById("providerSearchClear");
   if (clearBtn) clearBtn.style.display = "none";
 };
+
+window.toggleProviderFilter = function () {
+  const dd = document.getElementById("providerFilterDropdown");
+  if (dd) dd.style.display = dd.style.display === "none" ? "" : "none";
+};
+
+window.setProviderCategory = function (category) {
+  providerCategoryFilter = category;
+  const dd = document.getElementById("providerFilterDropdown");
+  if (dd) dd.style.display = "none";
+  applyProviderFilters();
+};
+
+document.addEventListener("click", function (e) {
+  const dd = document.getElementById("providerFilterDropdown");
+  const btn = document.getElementById("providerFilterBtn");
+  if (dd && dd.style.display !== "none" && !dd.contains(e.target) && !btn?.contains(e.target)) {
+    dd.style.display = "none";
+  }
+});
 
 function renderClientProfileScreen() {
   const root = document.getElementById("root");
@@ -1195,19 +1223,32 @@ function renderProvidersListScreen() {
           <h2 style="margin-bottom:8px; color:white; font-weight:700; font-size:28px;">Prestadores Disponíveis</h2>
           <p style="color:#e9d5ff; margin-bottom:32px; font-weight:500;">Escolha um prestador para ver seus serviços</p>
 
-          <div style="position:relative; margin-bottom:24px; max-width:400px;">
-            <input id="providerSearch" type="text" placeholder="Pesquisar prestador..." value="${providerSearchTerm}" oninput="window.updateProviderSearch()" style="width:100%; padding:12px 16px 12px 44px; background:rgba(255,255,255,0.9); border:1px solid #e5e7eb; border-radius:12px; font-size:15px; outline:none; box-sizing:border-box; transition:all 0.2s;">
-            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#9ca3af; pointer-events:none;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </span>
-            <span id="providerSearchClear" onclick="window.clearProviderSearch()" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#9ca3af; cursor:pointer; display:${providerSearchTerm ? '' : 'none'};">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </span>
+          <div style="display:flex; gap:10px; margin-bottom:24px; max-width:440px;">
+            <div style="position:relative; flex:1;">
+              <input id="providerSearch" type="text" placeholder="Pesquisar prestador..." value="${providerSearchTerm}" oninput="window.updateProviderSearch()" style="width:100%; padding:12px 16px 12px 44px; background:rgba(255,255,255,0.9); border:1px solid #e5e7eb; border-radius:12px; font-size:15px; outline:none; box-sizing:border-box; transition:all 0.2s;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#9ca3af; pointer-events:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <span id="providerSearchClear" onclick="window.clearProviderSearch()" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#9ca3af; cursor:pointer; display:${providerSearchTerm ? '' : 'none'};">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </span>
+            </div>
+            <div style="position:relative;">
+              <button id="providerFilterBtn" onclick="window.toggleProviderFilter()" style="height:100%; padding:12px; background:rgba(255,255,255,0.9); border:1px solid #e5e7eb; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${providerCategoryFilter ? '#6C5CE7' : '#9ca3af'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              </button>
+              <div id="providerFilterDropdown" style="display:none; position:absolute; top:calc(100% + 4px); right:0; background:white; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:200px; max-height:300px; overflow-y:auto; z-index:100;">
+                <div onclick="window.setProviderCategory('')" style="padding:10px 14px; cursor:pointer; font-size:14px; color:#ef4444; transition:background 0.15s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='transparent'">Remover filtro</div>
+                ${PROVIDER_CATEGORIES.map(cat => `
+                  <div onclick="window.setProviderCategory('${cat.name.replace(/'/g, "\\'")}')" style="padding:10px 14px; cursor:pointer; font-size:14px; color:#111827; transition:background 0.15s; background:${providerCategoryFilter === cat.name ? '#f3f0ff' : 'transparent'};" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='${providerCategoryFilter === cat.name ? '#f3f0ff' : 'transparent'}">${cat.name}</div>
+                `).join("")}
+              </div>
+            </div>
           </div>
 
           ${
             (() => {
-              const filtered = providers.filter(p => !providerSearchTerm || p.name.toLowerCase().includes(providerSearchTerm.toLowerCase()) || (p.username && p.username.toLowerCase().includes(providerSearchTerm.toLowerCase())));
+              const filtered = providers.filter(p => (!providerSearchTerm || p.name.toLowerCase().includes(providerSearchTerm.toLowerCase()) || (p.username && p.username.toLowerCase().includes(providerSearchTerm.toLowerCase()))) && (!providerCategoryFilter || p.category === providerCategoryFilter));
               return filtered.length === 0
                 ? '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>Nenhum prestador encontrado</p></div>'
                 : `<div id="providerGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px;">
@@ -1230,7 +1271,7 @@ function renderProvidersListScreen() {
                               <div style="min-width:0;">
                                 <h3 style="margin:0; color:#111827; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${provider.name}</h3>
                                 <p style="margin:4px 0 0; color:#6C5CE7; font-size:12px; font-weight:600;">@${provider.username || provider.email.split('@')[0]}</p>
-                                <p style="margin:2px 0 0; color:#6b7280; font-size:12px;">${provider.category || "Prestador"}</p>
+                                <p class="provider-category" style="margin:2px 0 0; color:#6b7280; font-size:12px;">${provider.category || "Prestador"}</p>
                               </div>
                             </div>
                             <p style="margin:0 0 12px; color:#6b7280; font-size:14px;">📋 ${providerServices.length} serviço(s)</p>
