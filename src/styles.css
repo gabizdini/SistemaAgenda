@@ -686,6 +686,11 @@ aside button:hover:not(.logout-btn):not(.theme-btn) {
     transform: translateX(4px);
 }
 
+aside button:not(.theme-btn) i,
+aside button:not(.theme-btn) svg {
+  color: inherit !important;
+}
+
 aside .logout-btn {
     background: #fee2e2 !important;
     color: #991b1b !important;

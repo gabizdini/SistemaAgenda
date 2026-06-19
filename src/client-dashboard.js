@@ -51,6 +51,12 @@ window.setProviderCategory = function (category) {
   const dd = document.getElementById("providerFilterDropdown");
   if (dd) dd.style.display = "none";
   applyProviderFilters();
+  const btnSvg = document.querySelector("#providerFilterBtn svg line");
+  if (btnSvg) {
+    btnSvg.closest("svg").querySelectorAll("line").forEach(l => {
+      l.setAttribute("stroke", providerCategoryFilter ? "#6C5CE7" : "#9ca3af");
+    });
+  }
 };
 
 document.addEventListener("click", function (e) {
