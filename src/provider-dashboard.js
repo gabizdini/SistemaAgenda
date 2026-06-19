@@ -696,7 +696,7 @@ window.confirmDeleteService = function () {
 
   // Verificar se há agendamentos ativos neste serviço
   const activeBookings = bookings.filter(
-    (b) => b.serviceId === serviceToDelete && b.cancelled !== true
+    (b) => b.serviceId === serviceToDelete && b.cancelled !== true && b.completed !== true
   );
 
   if (activeBookings.length > 0) {
@@ -1218,7 +1218,7 @@ let deleteServiceModalHtml = "";
 if (showDeleteServiceModal && serviceToDelete) {
   // Verificar se há agendamentos ativos neste serviço
   const activeBookings = bookings.filter(
-    (b) => b.serviceId === serviceToDelete && b.cancelled !== true
+    (b) => b.serviceId === serviceToDelete && b.cancelled !== true && b.completed !== true
   );
   const hasActiveBookings = activeBookings.length > 0;
 
@@ -1390,6 +1390,35 @@ if (showEditProfileModal) {
                           <button onclick="window.openConfirmDoneModal(${booking.id})" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
                             Feito
                           </button>
+                        </div>
+                      </div>
+                    `,
+                  )
+                  .join("")}
+              </div>`
+        }
+          </div>
+
+          <div style="margin-top:32px;">
+            <h3 style="margin-bottom:12px; color:#ffffff;">Serviços Realizados</h3>
+            ${
+          providerBookings.filter((b) => b.completed === true).length === 0
+            ? '<div class="empty-state"><div class="empty-state-icon">✅</div><p>Nenhum serviço concluído ainda</p></div>'
+            : `<div style="display:flex; flex-direction:column; gap:10px;">
+                ${providerBookings
+                  .filter((b) => b.completed === true)
+                  .map(
+                    (booking) => `
+                      <div class="booking-item">
+                        <div>
+                          <h4 style="margin-bottom:4px;">${booking.serviceName}</h4>
+                          <p style="color:#6b7280; font-size:14px;">Cliente: <strong>${booking.clientName}</strong></p>
+                          <p style="color:#6C5CE7; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
+                        </div>
+                        <div style="display:flex; align-items:center;">
+                          <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
+                            Concluído
+                          </span>
                         </div>
                       </div>
                     `,
