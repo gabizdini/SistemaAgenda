@@ -192,9 +192,7 @@ function renderClientProfileScreen() {
           </div>
         </div>
         <button onclick="window.openClientHome()"
-          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
-          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
+          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
           <i data-lucide="arrow-left" style="width:18px; height:18px; color:#636E72;"></i> Início
         </button>
         
@@ -202,9 +200,7 @@ function renderClientProfileScreen() {
   Para gerenciar seus agendamentos<br> volte para a tela inicial
 </p>
         <button onclick="window.openLogoutConfirm()"
-          style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#ef4444'; this.style.color='white';"
-          onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
+          style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
           <i data-lucide="log-out" style="width:18px; height:18px; color:#636E72;"></i> Sair
         </button>
         <button id="themeToggle" class="theme-btn">
@@ -270,30 +266,22 @@ function renderClientProfileScreen() {
           }
 
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:24px;">
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Nome completo</p>
               <h3 style="margin:0; color:#2D3436; font-size:18px; font-weight:700;">${currentUser.name}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">E-mail</p>
               <h3 style="margin:0; color:#2D3436; word-break:break-word; font-size:14px; font-weight:700;">${currentUser.email}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Tipo de conta</p>
               <h3 style="margin:0; color:#6C5CE7; font-weight:700;">Cliente</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Username</p>
               <h3 style="margin:0; color:#6C5CE7; font-weight:700; font-size:16px;">@${currentUser.username || currentUser.email.split('@')[0]}</h3>
             </div>
@@ -1104,31 +1092,21 @@ function renderProvidersListScreen() {
             </p>
           </div>
         </div>
-        <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
-          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
+        <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
           <i data-lucide="user" style="width:18px; height:18px; color:#636E72;"></i> Perfil
         </button>
         <button onclick="window.openNotificationsModal()"
-  style="width:100%; display:flex; align-items:center; gap:8px; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-  
-  onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7'; this.querySelector('i').style.color='white';"
-  
-  onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb'; this.querySelector('i').style.color='#636E72';">
+  style="width:100%; display:flex; align-items:center; gap:8px; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
 
   <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i>
 
   Notificações ${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length})` : ''}
 </button>
-        <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
-          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
+        <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
           <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos(${userBookings.filter((b) => b.cancelled !== true).length})
         </button>
         
-        <button onclick="window.openLogoutConfirm()" style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#ef4444'; this.style.color='white';"
-          onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
+        <button onclick="window.openLogoutConfirm()" style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
            <i data-lucide="log-out" style="width:18px; height:18px; color:#636E72;"></i> Sair
         </button>
 
@@ -1155,7 +1133,7 @@ function renderProvidersListScreen() {
                           (s) => s.providerId === provider.id,
                         );
                         return `
-                          <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,0.08); cursor:pointer; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                          <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,0.08); cursor:pointer; transition:transform 0.2s;">
                             <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
                               <div style="width:56px; height:56px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:24px; font-weight:700; flex-shrink:0;">
                                 ${
@@ -1171,9 +1149,7 @@ function renderProvidersListScreen() {
                               </div>
                             </div>
                             <p style="margin:0 0 12px; color:#6b7280; font-size:14px;">📋 ${providerServices.length} serviço(s)</p>
-                            <button onclick="window.selectProvider(${provider.id})" style="width:100%; padding:10px; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-                              onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108,92,231,0.3)';"
-                              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <button onclick="window.selectProvider(${provider.id})" style="width:100%; padding:10px; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
                               Ver Serviços
                             </button>
                           </div>

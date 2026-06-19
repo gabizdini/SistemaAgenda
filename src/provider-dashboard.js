@@ -58,9 +58,7 @@ function renderProviderProfileScreen() {
           </div>
         </div>
         <button onclick="window.openProviderHome()"
-          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#6C5CE7'; this.style.color='white'; this.style.borderColor='#6C5CE7';"
-          onmouseout="this.style.background='#f3f4f6'; this.style.color='#2D3436'; this.style.borderColor='#e5e7eb';">
+          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
           <i data-lucide="arrow-left" style="width:18px; height:18px; color:#636E72;"></i> Início
         </button>
         
@@ -68,9 +66,7 @@ function renderProviderProfileScreen() {
   Para gerenciar seus serviços<br> volte para a tela inicial
 </p>
         <button onclick="window.openLogoutConfirm()"
-          style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;"
-          onmouseover="this.style.background='#ef4444'; this.style.color='white';"
-          onmouseout="this.style.background='#fee2e2'; this.style.color='#991b1b';">
+          style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
           <i data-lucide="log-out" style="width:18px; height:18px; color:#636E72;"></i> Sair
         </button>
 
@@ -143,37 +139,27 @@ function renderProviderProfileScreen() {
           }
 
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:24px;">
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Nome completo</p>
               <h3 style="margin:0; color:#2D3436; font-size:18px; font-weight:700;">${currentUser.name}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">E-mail</p>
               <h3 style="margin:0; color:#2D3436; word-break:break-word; font-size:14px; font-weight:700;">${currentUser.email}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #6C5CE7; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Tipo de conta</p>
               <h3 style="margin:0; color:#6C5CE7; font-weight:700;">Prestador</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #A29BFE; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Username</p>
               <h3 style="margin:0; color:#6C5CE7; font-weight:700; font-size:16px;">@${currentUser.username || currentUser.email.split('@')[0]}</h3>
             </div>
 
-            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #10b981; transition:all 0.3s ease;"
-              onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 16px 40px rgba(108,92,231,0.2)';"
-              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)';">
+            <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #10b981; transition:all 0.3s ease;">
               <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Categoria</p>
               <h3 style="margin:0; color:#2D3436; font-size:16px; font-weight:700;">${currentUser.category || "Não selecionada"}</h3>
             </div>
@@ -274,9 +260,7 @@ function renderProviderProfileScreen() {
           <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:12px; margin-bottom:24px; max-height:400px; overflow-y:auto;">
             ${PROVIDER_CATEGORIES.map((category) => `
               <button type="button" onclick="window.selectCategory(${category.id})"
-                style="padding:16px; border:2px solid ${currentUser.categoryId === category.id ? "#6C5CE7" : "#d1d5db"}; background:${currentUser.categoryId === category.id ? "#f0e6ff" : "white"}; border-radius:12px; cursor:pointer; transition:all 0.2s; text-align:center; font-weight:600;"
-                onmouseover="this.style.borderColor='#6C5CE7'; this.style.background='#f0e6ff';"
-                onmouseout="this.style.borderColor='${currentUser.categoryId === category.id ? "#6C5CE7" : "#d1d5db"}'; this.style.background='${currentUser.categoryId === category.id ? "#f0e6ff" : "white"}';">
+                style="padding:16px; border:2px solid ${currentUser.categoryId === category.id ? "#6C5CE7" : "#d1d5db"}; background:${currentUser.categoryId === category.id ? "#f0e6ff" : "white"}; border-radius:12px; cursor:pointer; transition:all 0.2s; text-align:center; font-weight:600;">
                 <div style="font-size:24px; margin-bottom:8px;">${category.emoji}</div>
                 <div style="font-size:12px; color:#2D3436;">${category.name}</div>
               </button>
@@ -284,9 +268,7 @@ function renderProviderProfileScreen() {
           </div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.closeCategoryModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;"
-              onmouseover="this.style.background='#DFE6E9';"
-              onmouseout="this.style.background='#ECEFF1';">
+            <button onclick="window.closeCategoryModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;">
               Fechar
             </button>
           </div>

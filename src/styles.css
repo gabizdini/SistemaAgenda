@@ -776,3 +776,263 @@ html.dark-mode .theme-btn .icon {
 html.dark-mode .theme-btn:hover .icon {
   color: #8E7CFF !important;
 }
+
+/* =========================================
+   DARK MODE GLOBAL OVERRIDES
+   ========================================= */
+
+html.dark-mode body {
+  background: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+/* Backgrounds that are white or light */
+html.dark-mode aside[style*="background:white"],
+html.dark-mode aside[style*="background: white"],
+html.dark-mode div[style*="background:white"],
+html.dark-mode div[style*="background: white"],
+html.dark-mode header[style*="background: white"],
+html.dark-mode header[style*="background:white"],
+html.dark-mode .card {
+  background: #1e1e1e !important;
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+  border-color: #333 !important;
+}
+
+/* Semi-transparent white backgrounds (used in cards/widgets) */
+html.dark-mode div[style*="background:rgba(255,255,255,0.95)"] {
+  background: #2d2d2d !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+html.dark-mode div[style*="background:rgba(255,255,255,0.8)"] {
+  background: rgba(45, 45, 45, 0.8) !important;
+  color: #e0e0e0 !important;
+}
+
+/* Light gray backgrounds */
+html.dark-mode div[style*="background:#f8f9fa"],
+html.dark-mode div[style*="background: #f8f9fa"],
+html.dark-mode div[style*="background:#f3f4f6"],
+html.dark-mode div[style*="background: #f3f4f6"],
+html.dark-mode div[style*="background:#ECEFF1"] {
+  background: #252525 !important;
+  color: #cccccc !important;
+  border-color: #333 !important;
+}
+
+/* Darker texts */
+html.dark-mode *,
+html.dark-mode div[style*="color:#2D3436"],
+html.dark-mode div[style*="color: #2D3436"],
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode p,
+html.dark-mode span {
+  /* Only override color if not specifically styled as white or gradient text, and not icons */
+}
+
+html.dark-mode [style*="color:#2D3436"], 
+html.dark-mode [style*="color:#636E72"],
+html.dark-mode [style*="color: #2D3436"],
+html.dark-mode [style*="color: #636E72"] {
+   color: #e0e0e0 !important;
+}
+
+html.dark-mode input,
+html.dark-mode select,
+html.dark-mode textarea {
+  background: #333 !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+html.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder {
+  color: #999 !important;
+}
+
+/* Modals */
+html.dark-mode div[style*="border-radius: 24px"],
+html.dark-mode div[style*="border-radius:24px"] {
+  background: #242424 !important;
+}
+
+/* Buttons with white or light backgrounds */
+html.dark-mode button[style*="background:white"],
+html.dark-mode button[style*="background: white"],
+html.dark-mode button[style*="background:#ECEFF1"] {
+  background: #333 !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+html.dark-mode button[style*="background:#f3f4f6"],
+html.dark-mode button[style*="background: #f3f4f6"] {
+  background: #3a3a3a !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+/* Dark mode main content area */
+html.dark-mode main {
+  background: #121212 !important;
+}
+
+/* Fix sidebar text color explicitly */
+html.dark-mode aside {
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+}
+
+/* Dark mode sidebar buttons */
+html.dark-mode aside button:not(.theme-btn) {
+  background: #374151 !important;
+  color: #e0e0e0 !important;
+  border-color: #4B5563 !important;
+}
+
+html.dark-mode aside button:hover:not(.logout-btn):not(.theme-btn) {
+  background: #6C5CE7 !important;
+  color: white !important;
+  border-color: #6C5CE7 !important;
+}
+
+html.dark-mode aside .logout-btn {
+  background: #4a1a1a !important;
+  color: #fca5a5 !important;
+  border-color: #7f1d1d !important;
+}
+
+html.dark-mode aside .logout-btn:hover {
+  background: #dc2626 !important;
+  color: white !important;
+  border-color: #dc2626 !important;
+}
+
+/* Dark mode sidebar inner elements */
+html.dark-mode aside > div:nth-child(2) {
+  background: #252536 !important;
+}
+
+html.dark-mode aside > div:nth-child(2) h2 {
+  color: #B3A9FF !important;
+}
+
+html.dark-mode aside > div:nth-child(2) p {
+  color: #c084fc !important;
+}
+
+html.dark-mode aside p[style*="color:#9ca3af"] {
+  color: #d1d5db !important;
+}
+
+html.dark-mode [style*="color:#8E44AD"] {
+  color: #c084fc !important;
+}
+
+html.dark-mode [style*="color:#6C5CE7"] {
+  color: #B3A9FF !important;
+}
+
+html.dark-mode [style*="color:#9ca3af"] {
+  color: #d1d5db !important;
+}
+
+/* Dark mode modals */
+html.dark-mode .modal-content {
+  background: #242424 !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+html.dark-mode .modal-content h3 {
+  color: #B3A9FF;
+}
+
+html.dark-mode .modal-overlay {
+  background: rgba(0,0,0,0.7) !important;
+}
+
+html.dark-mode [style*="color:#6b7280"] {
+  color: #9ca3af !important;
+}
+
+html.dark-mode [style*="color:#111827"] {
+  color: #e0e0e0 !important;
+}
+
+/* Booking items inside modals - dark mode */
+html.dark-mode .booking-item {
+  background: #2d2d2d !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+/* Category buttons inside modals - dark mode */
+html.dark-mode .modal-content button[style*="padding:16px"][style*="border-radius:12px"] {
+  background: #333 !important;
+  border-color: #555 !important;
+  color: #e0e0e0 !important;
+}
+
+html.dark-mode .modal-content button[style*="padding:16px"][style*="border-radius:12px"]:hover {
+  background: #3a3050 !important;
+  border-color: #B3A9FF !important;
+}
+
+html.dark-mode .modal-content button[style*="background:#f0e6ff"] {
+  background: #3a3050 !important;
+  border-color: #B3A9FF !important;
+}
+
+/* Cards hover effect (client dashboard) */
+div[style*="background:rgba(255,255,255,0.95)"] {
+  transition: all 0.3s ease;
+}
+
+div[style*="background:rgba(255,255,255,0.95)"]:hover {
+  transform: translateY(-4px) !important;
+}
+
+div[style*="background:rgba(255,255,255,0.95)"][style*="border-left"]:hover {
+  box-shadow: 0 16px 40px rgba(108,92,231,0.2) !important;
+}
+
+/* "Ver Serviços" button hover */
+button[style*="background:linear-gradient(135deg, #6C5CE7"]:hover {
+  opacity: 0.9 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(108,92,231,0.3) !important;
+}
+
+/* =========================================
+   LANDING PAGE - DARK MODE
+   ========================================= */
+
+/* Header */
+html.dark-mode header {
+  background: #1e1e1e !important;
+  border-bottom-color: #333 !important;
+}
+
+html.dark-mode header div h1 {
+  background: linear-gradient(135deg, #B3A9FF 0%, #c084fc 50%, #d1c4ff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* CTA section */
+html.dark-mode div[style*="background:linear-gradient(135deg, #f8f9fa"],
+html.dark-mode div[style*="background: linear-gradient(135deg, #f8f9fa"] {
+  background: #1e1e1e !important;
+}
+
+/* Feature cards hover */
+div[style*="background:#f8f9fa"]:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 8px 24px rgba(108,92,231,0.15) !important;
+}
