@@ -824,6 +824,15 @@ html.dark-mode div[style*="background: #ECEFF1"] {
   border-color: #333 !important;
 }
 
+/* Logo text in dark sidebar */
+html.dark-mode aside[style*="background:#111827"] .logo-text,
+html.dark-mode aside[style*="background: #111827"] .logo-text {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  color: #e0e0e0 !important;
+}
+
 /* Darker texts */
 html.dark-mode *,
 html.dark-mode div[style*="color:#2D3436"],

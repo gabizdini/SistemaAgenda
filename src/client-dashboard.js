@@ -173,7 +173,7 @@ function renderClientProfileScreen() {
   const html = `
     <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
       <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
-        <h2 style="margin-bottom:24px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px;">Agenda GVT</h2>
+        <div style="margin-bottom:16px;">${window.renderLogo(50)}</div>
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; background:linear-gradient(135deg,rgba(108,92,231,0.05),rgba(162,155,254,0.05)); padding:12px; border-radius:12px;">
           <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
             ${
@@ -1074,7 +1074,7 @@ function renderProvidersListScreen() {
   const html = `
     <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
       <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
-        <h2 style="margin-bottom:24px; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px;">Agenda GVT</h2>
+        <div style="margin-bottom:16px;">${window.renderLogo(50)}</div>
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; background:linear-gradient(135deg,rgba(108,92,231,0.05),rgba(162,155,254,0.05)); padding:12px; border-radius:12px;">
           <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
             ${
@@ -1743,7 +1743,7 @@ window.confirmCancel = function () {
   const html = `
     <div style="display:flex; min-height:100vh;">
         <aside style="width:240px; background:#111827; color:white; padding:20px;">
-            <h2 style="margin-bottom:20px;">Agenda GVT</h2>
+            <div style="margin-bottom:16px;">${window.renderLogo(50)}</div>
             <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
              <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length})` : ''}
             </button>

@@ -247,6 +247,13 @@ function toggleDarkMode() {
   render();
 }
 
+window.renderLogo = function(height = 40) {
+  return `<div style="display:inline-flex; align-items:center; gap:10px;">
+    <img src="assets/images/logo-GVT.png" alt="Agenda GVT" style="height:${height}px; width:auto;">
+    <span class="logo-text" style="font-size:${Math.round(height * 0.35)}px; font-weight:700; line-height:1.2; background:linear-gradient(135deg,#6C5CE7 0%,#8E44AD 50%,#A29BFE 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Agenda GVT</span>
+  </div>`;
+};
+
 function applyTheme() {
   const htmlElement = document.documentElement;
   
@@ -500,7 +507,7 @@ function renderLandingPage() {
       <!-- HEADER -->
       <header style="background: white; border-bottom: 1px solid #e5e7eb; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <h1 style="margin: 0; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agenda GVT</h1>
+          <h1 style="margin: 0;">${window.renderLogo(80)}</h1>
         </div>
         <button onclick="window.goToLogin()" style="padding: 12px 28px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s;">Fazer Login</button>
       </header>
@@ -650,7 +657,7 @@ function renderAuthScreen() {
                 <button id="backBtn" onclick="window.goToLandingPage()" style="display: flex; align-items: center; gap: 6px; background: var(--neutral-100); color: var(--neutral-800); border: 1px solid var(--neutral-200); padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background var(--transition-base); margin-bottom: 20px;">
                     <span>←</span> Voltar
                 </button>
-                <h1 style="text-align: center; margin-bottom: 8px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agenda GVT</h1>
+                <div style="text-align:center; margin-bottom:8px;">${window.renderLogo(64)}</div>
                 <p style="text-align: center; color: #6b7280; margin-bottom: 32px;">${isLogin ? "Faça login para continuar" : "Crie sua conta gratuitamente"}</p>
                 
                 <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 12px;">
