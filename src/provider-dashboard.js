@@ -551,6 +551,44 @@ window.confirmProviderCancel = function () {
   render();
 };
 
+window.openConfirmDoneModal = function (bookingId) {
+  doneBookingId = bookingId;
+  showConfirmDoneModal = true;
+  document.body.style.overflow = "hidden";
+  render();
+};
+
+window.closeConfirmDoneModal = function () {
+  showConfirmDoneModal = false;
+  doneBookingId = null;
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window.confirmDone = function () {
+  const bookingIndex = bookings.findIndex((b) => b.id === doneBookingId);
+  if (bookingIndex !== -1) {
+    bookings[bookingIndex].completed = true;
+    bookings[bookingIndex].completionNotified = false;
+    saveToLocalStorage();
+    showToast("Serviço marcado como concluído", "success");
+  }
+  showConfirmDoneModal = false;
+  doneBookingId = null;
+  render();
+};
+
+window.markAsDone = function (bookingId) {
+  const bookingIndex = bookings.findIndex((b) => b.id === bookingId);
+  if (bookingIndex !== -1) {
+    bookings[bookingIndex].completed = true;
+    bookings[bookingIndex].completionNotified = false;
+    saveToLocalStorage();
+    showToast("Serviço marcado como concluído", "success");
+  }
+  render();
+};
+
 window.confirmReopenSlot = function () {
   if (slotToReopen) {
     const booking = bookings.find((b) => b.id === slotToReopen);
@@ -982,11 +1020,11 @@ if (showProviderBookingsModal) {
         </div>
 
         ${
-          providerBookings.filter((b) => !b.cancelled).length === 0
+          providerBookings.filter((b) => !b.cancelled && !b.completed).length === 0
             ? '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhum agendamento encontrado</p></div>'
             : `<div style="display:flex; flex-direction:column; gap:10px;">
                 ${providerBookings
-                  .filter((b) => !b.cancelled)
+                  .filter((b) => !b.cancelled && !b.completed)
                   .map(
                     (booking) => `
                       <div class="booking-item">
@@ -999,9 +1037,14 @@ if (showProviderBookingsModal) {
                           <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
                             Confirmado
                           </span>
-                          <button onclick="window.openProviderCancelModal(${booking.id})" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
-                            Cancelar
-                          </button>
+                          <div style="display:flex; gap:6px;">
+                            <button onclick="window.openConfirmDoneModal(${booking.id})" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
+                              Feito
+                            </button>
+                            <button onclick="window.openProviderCancelModal(${booking.id})" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
+                              Cancelar
+                            </button>
+                          </div>
                         </div>
                       </div>
                     `,
@@ -1009,6 +1052,28 @@ if (showProviderBookingsModal) {
                   .join("")}
               </div>`
         }
+      </div>
+    </div>
+  `;
+}
+
+let confirmDoneModalHtml = "";
+if (showConfirmDoneModal) {
+  confirmDoneModalHtml = `
+    <div class="modal-overlay" onclick="window.closeConfirmDoneModal()">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width:400px;">
+        <h3 style="margin-bottom:12px;">Confirmar Conclusão</h3>
+        <p style="margin-bottom:16px; color:#6b7280;">
+          Tem certeza que deseja marcar este serviço como concluído?
+        </p>
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <button onclick="window.closeConfirmDoneModal()" style="padding:8px 16px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600; transition:all 0.2s;">
+            Voltar
+          </button>
+          <button onclick="window.confirmDone()" style="padding:8px 16px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer;">
+            Confirmar
+          </button>
+        </div>
       </div>
     </div>
   `;
@@ -1290,7 +1355,7 @@ if (showEditProfileModal) {
             <div onclick="window.openProviderBookingsModal()" style="background:white; border-radius:12px; padding:20px; text-align:center; cursor:pointer; transition:transform 0.2s; hover:transform scale(1.02);">
               <div style="font-size:28px; margin-bottom:8px;">📅</div>
               <h3>Total de Agendamentos</h3>
-              <p style="font-size:30px; font-weight:700; color:#6C5CE7;">${providerBookings.filter((b) => b.cancelled !== true).length}</p>
+              <p style="font-size:30px; font-weight:700; color:#6C5CE7;">${providerBookings.filter((b) => !b.cancelled && !b.completed).length}</p>
               <p style="font-size:12px; color:#6b7280; margin-top:6px;">Clique para ver</p>
             </div>
 
@@ -1305,11 +1370,11 @@ if (showEditProfileModal) {
           <div>
             <h3 style="margin-bottom:12px; color:#ffffff;">Próximos Agendamentos</h3>
             ${
-          providerBookings.filter((b) => !b.cancelled).length === 0
+          providerBookings.filter((b) => !b.cancelled && !b.completed).length === 0
             ? '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Nenhum agendamento encontrado</p></div>'
             : `<div style="display:flex; flex-direction:column; gap:10px;">
                 ${providerBookings
-                  .filter((b) => !b.cancelled)
+                  .filter((b) => !b.cancelled && !b.completed)
                   .map(
                     (booking) => `
                       <div class="booking-item">
@@ -1318,9 +1383,14 @@ if (showEditProfileModal) {
                           <p style="color:#6b7280; font-size:14px;">Cliente: <strong>${booking.clientName}</strong></p>
                           <p style="color:#6C5CE7; font-weight:500; font-size:14px;">${new Date(booking.date).toLocaleDateString("pt-BR")} às ${booking.time}</p>
                         </div>
-                        <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
-                          Confirmado
-                        </span>
+                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+                          <span style="padding:4px 12px; background:#d1fae5; color:#065f46; border-radius:20px; font-size:14px;">
+                            Confirmado
+                          </span>
+                          <button onclick="window.openConfirmDoneModal(${booking.id})" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">
+                            Feito
+                          </button>
+                        </div>
                       </div>
                     `,
                   )
@@ -1335,6 +1405,7 @@ if (showEditProfileModal) {
     ${createServiceModalHtml} 
     ${myServicesModalHtml}
     ${providerBookingsModalHtml}
+    ${confirmDoneModalHtml}
     ${providerCancelModalHtml}
     ${reopenSlotModalHtml}
     ${providerNotificationsModalHtml}

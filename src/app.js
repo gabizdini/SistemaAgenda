@@ -34,6 +34,8 @@ let showProviderClearNotificationsConfirm = false;
 let showDeleteAccountModal = false;
 let accountToDelete = null;
 let showLogoutConfirmModal = false;
+let showConfirmDoneModal = false;
+let doneBookingId = null;
 let showLandingPage = true;
 
 const savedServices = localStorage.getItem("agendamento_services");

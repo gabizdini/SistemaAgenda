@@ -575,14 +575,19 @@ function renderProviderShopScreen() {
           b.cancelled !== true
       );
 
-      const isUnavailable = isBooked || isBlocked || isClientBooked;
+      const now = new Date();
+      const todayStr = now.toDateString();
+      const timeToMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+      const isPastTime = selectedDate === todayStr && timeToMin(time) < (now.getHours() * 60 + now.getMinutes());
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked || isPastTime;
 
       return `
         <div
             class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
             onclick="${!isUnavailable && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
             style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
-            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
+            title="${isPastTime ? 'Horário já passou' : isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
@@ -654,14 +659,19 @@ function renderProviderShopScreen() {
           b.cancelled !== true
       );
 
-      const isUnavailable = isBooked || isBlocked || isClientBooked;
+      const now = new Date();
+      const todayStr = now.toDateString();
+      const timeToMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+      const isPastTime = selectedDate === todayStr && timeToMin(time) < (now.getHours() * 60 + now.getMinutes());
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked || isPastTime;
 
       return `
         <div
             class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
             onclick="${!isUnavailable && selectedDate ? `window.selectProviderShopTime('${time}')` : ""}"
             style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
-            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
+            title="${isPastTime ? 'Horário já passou' : isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
@@ -793,10 +803,22 @@ function renderProvidersListScreen() {
     render();
   };
 
+  window.dismissCompletionNotification = function (bookingId) {
+    const booking = userBookings.find((b) => b.id === bookingId);
+    if (booking) {
+      booking.completionNotified = true;
+      saveToLocalStorage();
+    }
+    render();
+  };
+
   window.clearAllNotifications = function () {
     userBookings.forEach((b) => {
       if (b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true)) {
         b.notificationRead = true;
+      }
+      if (b.completed === true) {
+        b.completionNotified = true;
       }
     });
     saveToLocalStorage();
@@ -854,7 +876,7 @@ function renderProvidersListScreen() {
 
     if (target === "__all__") {
       bookings.forEach((b) => {
-        if (b.clientId === currentUser.id && b.cancelled !== true) {
+        if (b.clientId === currentUser.id && b.cancelled !== true && !b.completed) {
           b.cancelled = true;
           b.cancelledByClient = true;
           b.cancellationReason = justificativa;
@@ -925,7 +947,7 @@ function renderProvidersListScreen() {
   if (userBookings.length === 0) {
     bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
   } else {
-    const activeBookings = userBookings.filter((b) => !b.cancelled);
+    const activeBookings = userBookings.filter((b) => !b.cancelled && !b.completed);
     if (activeBookings.length === 0) {
       bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
     } else {
@@ -948,7 +970,7 @@ function renderProvidersListScreen() {
 
   let bookingsModalHtml = "";
   if (showBookingsModal) {
-    const activeBookings = userBookings.filter((b) => !b.cancelled);
+    const activeBookings = userBookings.filter((b) => !b.cancelled && !b.completed);
     bookingsModalHtml = `
         <div class="modal-overlay" onclick="window.closeMyBookings()">
             <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;">
@@ -1005,6 +1027,8 @@ function renderProvidersListScreen() {
   let notificationsModalHtml = "";
   if (showNotificationsModal) {
     const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true);
+    const completedUnread = userBookings.filter((b) => b.completed === true && b.completionNotified !== true);
+    const hasAnyNotification = cancelledByProvider.length > 0 || completedUnread.length > 0;
     notificationsModalHtml = `
       <div class="modal-overlay" onclick="window.closeNotificationsModal()">
         <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
@@ -1012,7 +1036,7 @@ function renderProvidersListScreen() {
             <h3><i data-lucide="bell" style="width:18px; height:18px; color:#6C5CE7;"></i> Notificações</h3>
             <div style="display:flex; gap:8px;">
               ${
-                cancelledByProvider.length > 0
+                hasAnyNotification
                   ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
                   : ""
               }
@@ -1021,31 +1045,58 @@ function renderProvidersListScreen() {
           </div>
 
           ${
-            cancelledByProvider.length === 0
+            !hasAnyNotification
               ? '<div class="empty-state"><div class="empty-state-icon">✓</div><p>Nenhuma notificação</p></div>'
               : `<div style="display:flex; flex-direction:column; gap:12px;">
-                  ${cancelledByProvider
-                    .map(
-                      (notification) => `
-                        <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:16px; border-radius:8px;">
-                          <div style="margin-bottom:8px;">
-                            <h4 style="margin:0 0 4px 0; color:#856404;">${notification.serviceName}</h4>
-                            <p style="margin:0; color:#856404; font-size:14px;">
-                              <strong>Prestador:</strong> ${notification.provider}
-                            </p>
-                            <p style="margin:4px 0 0 0; color:#856404; font-size:14px;">
-                              📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
-                            </p>
+                  ${cancelledByProvider.length > 0
+                    ? cancelledByProvider.map(
+                        (notification) => `
+                          <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:16px; border-radius:8px;">
+                            <div style="margin-bottom:8px;">
+                              <h4 style="margin:0 0 4px 0; color:#856404;">${notification.serviceName}</h4>
+                              <p style="margin:0; color:#856404; font-size:14px;">
+                                <strong>Prestador:</strong> ${notification.provider}
+                              </p>
+                              <p style="margin:4px 0 0 0; color:#856404; font-size:14px;">
+                                📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
+                              </p>
+                            </div>
+                            <div style="border-top:1px solid #ffeaa7; padding-top:8px; margin-top:8px;">
+                              <p style="margin:0; color:#856404; font-size:13px; line-height:1.5;">
+                                <strong>Motivo do cancelamento:</strong> ${notification.cancellationReason}
+                              </p>
+                            </div>
                           </div>
-                          <div style="border-top:1px solid #ffeaa7; padding-top:8px; margin-top:8px;">
-                            <p style="margin:0; color:#856404; font-size:13px; line-height:1.5;">
-                              <strong>Motivo do cancelamento:</strong> ${notification.cancellationReason}
-                            </p>
+                        `,
+                      ).join("")
+                    : ""
+                  }
+                  ${completedUnread.length > 0
+                    ? completedUnread.map(
+                        (notification) => `
+                          <div style="background:#d1fae5; border-left:4px solid #10b981; padding:16px; border-radius:8px;">
+                            <div style="margin-bottom:8px;">
+                              <h4 style="margin:0 0 4px 0; color:#065f46;">${notification.serviceName}</h4>
+                              <p style="margin:0; color:#065f46; font-size:14px;">
+                                <strong>Prestador:</strong> ${notification.provider}
+                              </p>
+                              <p style="margin:4px 0 0 0; color:#065f46; font-size:14px;">
+                                📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
+                              </p>
+                            </div>
+                            <div style="border-top:1px solid #a7f3d0; padding-top:8px; margin-top:8px;">
+                              <p style="margin:0; color:#065f46; font-size:13px; line-height:1.5;">
+                                Seu serviço foi concluído com sucesso!
+                              </p>
+                            </div>
+                            <button onclick="window.dismissCompletionNotification(${notification.id})" style="margin-top:8px; padding:4px 10px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px;">
+                              OK
+                            </button>
                           </div>
-                        </div>
-                      `,
-                    )
-                    .join("")}
+                        `,
+                      ).join("")
+                    : ""
+                  }
                 </div>`
           }
         </div>
@@ -1100,10 +1151,10 @@ function renderProvidersListScreen() {
 
   <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i>
 
-  Notificações ${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length})` : ''}
+  Notificações ${(() => { const c = userBookings.filter((b) => (b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true) || (b.completed === true && b.completionNotified !== true)).length; return c > 0 ? `(${c})` : ''; })()}
 </button>
         <button onclick="window.openMyBookings()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
-          <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos(${userBookings.filter((b) => b.cancelled !== true).length})
+          <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos(${userBookings.filter((b) => !b.cancelled && !b.completed).length})
         </button>
         
         <button onclick="window.openLogoutConfirm()" style="width:100%; text-align:left; padding:10px 12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
@@ -1408,14 +1459,18 @@ function renderClientDashboard() {
           b.cancelled !== true
       );
 
-      const isUnavailable = isBooked || isBlocked || isClientBooked;
+      const now = new Date();
+      const todayStr = now.toDateString();
+      const isPastTime = selectedDate === todayStr && timeToMinutes(time) < (now.getHours() * 60 + now.getMinutes());
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked || isPastTime;
 
       return `
         <div
             class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
             onclick="${!isUnavailable && selectedDate ? `window.selectTime('${time}')` : ""}"
             style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
-            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
+            title="${isPastTime ? 'Horário já passou' : isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
@@ -1472,7 +1527,7 @@ window.confirmCancel = function () {
 
   if (target === "__all__") {
     bookings.forEach((b) => {
-      if (b.clientId === currentUser.id) {
+      if (b.clientId === currentUser.id && b.cancelled !== true && !b.completed) {
         b.cancelled = true;
       }
     });
@@ -1511,7 +1566,7 @@ window.confirmCancel = function () {
   if (userBookings.length === 0) {
     bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
   } else {
-    const activeBookings = userBookings.filter((b) => !b.cancelled);
+    const activeBookings = userBookings.filter((b) => !b.cancelled && !b.completed);
     if (activeBookings.length === 0) {
       bookingsHtml = `<div class="empty-state"><div class="empty-state-icon">📅</div><p>Você ainda não tem agendamentos</p></div>`;
     } else {
@@ -1540,7 +1595,7 @@ window.confirmCancel = function () {
     <h3>Meus Agendamentos</h3>
     <div style="display:flex; gap:8px;">
         ${
-          userBookings.filter((b) => b.cancelled !== true).length >= 2
+          userBookings.filter((b) => !b.cancelled && !b.completed).length >= 2
             ? `
             <button onclick="window.cancelAllBookings()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; min-width:120px;">
                 Cancelar todos
@@ -1610,14 +1665,18 @@ window.confirmCancel = function () {
           b.cancelled !== true
       );
 
-      const isUnavailable = isBooked || isBlocked || isClientBooked;
+      const now = new Date();
+      const todayStr = now.toDateString();
+      const isPastTime = selectedDate === todayStr && timeToMinutes(time) < (now.getHours() * 60 + now.getMinutes());
+
+      const isUnavailable = isBooked || isBlocked || isClientBooked || isPastTime;
 
       return `
         <div
             class="time-slot ${selectedTime === time ? "selected" : ""} ${isUnavailable ? "booked" : ""}"
             onclick="${!isUnavailable && selectedDate ? `window.selectTime('${time}')` : ""}"
             style="${isUnavailable ? "background-color:#ef4444;color:white;opacity:0.5;cursor:not-allowed;" : !selectedDate ? "opacity:0.5;cursor:not-allowed;" : ""}"
-            title="${isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
+            title="${isPastTime ? 'Horário já passou' : isClientBooked ? 'Você já tem agendamento neste horário' : isBooked ? 'Horário ocupado neste serviço' : isBlocked ? 'Horário bloqueado' : ''}">
             ${time}
         </div>
     `;
@@ -1674,6 +1733,8 @@ window.confirmCancel = function () {
   let notificationsModalHtml = "";
   if (showNotificationsModal) {
     const cancelledByProvider = userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true);
+    const completedUnread = userBookings.filter((b) => b.completed === true && b.completionNotified !== true);
+    const hasAnyNotification = cancelledByProvider.length > 0 || completedUnread.length > 0;
     notificationsModalHtml = `
       <div class="modal-overlay" onclick="window.closeNotificationsModal()">
         <div class="modal-content" onclick="event.stopPropagation()" style="max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
@@ -1681,7 +1742,7 @@ window.confirmCancel = function () {
             <h3>🔔 Notificações</h3>
             <div style="display:flex; gap:8px;">
               ${
-                cancelledByProvider.length > 0
+                hasAnyNotification
                   ? `<button onclick="window.openClearNotificationsConfirm()" style="padding:8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">Apagar Todas</button>`
                   : ""
               }
@@ -1690,31 +1751,58 @@ window.confirmCancel = function () {
           </div>
 
           ${
-            cancelledByProvider.length === 0
+            !hasAnyNotification
               ? '<div class="empty-state"><div class="empty-state-icon">✓</div><p>Nenhuma notificação</p></div>'
               : `<div style="display:flex; flex-direction:column; gap:12px;">
-                  ${cancelledByProvider
-                    .map(
-                      (notification) => `
-                        <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:16px; border-radius:8px;">
-                          <div style="margin-bottom:8px;">
-                            <h4 style="margin:0 0 4px 0; color:#856404;">${notification.serviceName}</h4>
-                            <p style="margin:0; color:#856404; font-size:14px;">
-                              <strong>Prestador:</strong> ${notification.provider}
-                            </p>
-                            <p style="margin:4px 0 0 0; color:#856404; font-size:14px;">
-                              📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
-                            </p>
+                  ${cancelledByProvider.length > 0
+                    ? cancelledByProvider.map(
+                        (notification) => `
+                          <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:16px; border-radius:8px;">
+                            <div style="margin-bottom:8px;">
+                              <h4 style="margin:0 0 4px 0; color:#856404;">${notification.serviceName}</h4>
+                              <p style="margin:0; color:#856404; font-size:14px;">
+                                <strong>Prestador:</strong> ${notification.provider}
+                              </p>
+                              <p style="margin:4px 0 0 0; color:#856404; font-size:14px;">
+                                📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
+                              </p>
+                            </div>
+                            <div style="border-top:1px solid #ffeaa7; padding-top:8px; margin-top:8px;">
+                              <p style="margin:0; color:#856404; font-size:13px; line-height:1.5;">
+                                <strong>Motivo do cancelamento:</strong> ${notification.cancellationReason}
+                              </p>
+                            </div>
                           </div>
-                          <div style="border-top:1px solid #ffeaa7; padding-top:8px; margin-top:8px;">
-                            <p style="margin:0; color:#856404; font-size:13px; line-height:1.5;">
-                              <strong>Motivo do cancelamento:</strong> ${notification.cancellationReason}
-                            </p>
+                        `,
+                      ).join("")
+                    : ""
+                  }
+                  ${completedUnread.length > 0
+                    ? completedUnread.map(
+                        (notification) => `
+                          <div style="background:#d1fae5; border-left:4px solid #10b981; padding:16px; border-radius:8px;">
+                            <div style="margin-bottom:8px;">
+                              <h4 style="margin:0 0 4px 0; color:#065f46;">${notification.serviceName}</h4>
+                              <p style="margin:0; color:#065f46; font-size:14px;">
+                                <strong>Prestador:</strong> ${notification.provider}
+                              </p>
+                              <p style="margin:4px 0 0 0; color:#065f46; font-size:14px;">
+                                📅 ${new Date(notification.date).toLocaleDateString("pt-BR")} às ${notification.time}
+                              </p>
+                            </div>
+                            <div style="border-top:1px solid #a7f3d0; padding-top:8px; margin-top:8px;">
+                              <p style="margin:0; color:#065f46; font-size:13px; line-height:1.5;">
+                                Seu serviço foi concluído com sucesso!
+                              </p>
+                            </div>
+                            <button onclick="window.dismissCompletionNotification(${notification.id})" style="margin-top:8px; padding:4px 10px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px;">
+                              OK
+                            </button>
                           </div>
-                        </div>
-                      `,
-                    )
-                    .join("")}
+                        `,
+                      ).join("")
+                    : ""
+                  }
                 </div>`
           }
         </div>
@@ -1740,12 +1828,14 @@ window.confirmCancel = function () {
     `;
   }
 
+  const notifCount = userBookings.filter((b) => (b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true) || (b.completed === true && b.completionNotified !== true)).length;
+
   const html = `
     <div style="display:flex; min-height:100vh;">
         <aside style="width:240px; background:#111827; color:white; padding:20px;">
             <div style="margin-bottom:16px;">${window.renderLogo(50)}</div>
             <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-             <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length > 0 ? `(${userBookings.filter((b) => b.cancelled === true && (b.cancelledByProvider === true || b.cancelledByProviderDeleted === true) && b.notificationRead !== true).length})` : ''}
+             <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${notifCount > 0 ? `(${notifCount})` : ''}
             </button>
             <button onclick="window.openBookingsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
             <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos
