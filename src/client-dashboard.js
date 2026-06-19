@@ -528,50 +528,46 @@ function renderProviderShopScreen() {
   function generateCalendar() {
     const today = new Date();
     const year = today.getFullYear();
-    const month = today.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const days = [];
-
-    for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
-    for (let i = 1; i <= lastDay.getDate(); i++)
-      days.push(new Date(year, month, i));
-
+    const currentMonth = today.getMonth();
     const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
-    return `
-        <div style="margin-bottom: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h4>${today.toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}</h4>
-            </div>
+    let html = `<div style="display:flex; flex-wrap:wrap; gap:24px;">`;
+
+    for (let month = currentMonth; month < 12; month++) {
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const days = [];
+
+      for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
+      for (let i = 1; i <= lastDay.getDate(); i++)
+        days.push(new Date(year, month, i));
+
+      html += `
+        <div style="flex:1; min-width:280px;">
+            <h4 style="margin-bottom:8px;">${monthNames[month]} ${year}</h4>
             <div class="calendar-grid">
-                ${weekDays.map((day) => `<div style="text-align: center; font-weight: bold; font-size: 12px; padding: 8px;">${day}</div>`).join("")}
-                ${days
-                  .map((date) => {
-                    if (!date) return "<div></div>";
-
-                    const dateStr = date.toDateString();
-                    const isSelected = selectedDate === dateStr;
-                    const dayOfWeek = date.getDay();
-
-                    const isWorkingDay =
-                      !selectedService?.workDays || selectedService.workDays.length === 0
-                        ? true
-                        : selectedService.workDays.includes(dayOfWeek);
-
-                    const isPast = date < today && date.getDate() !== today.getDate();
-                    const isDisabled = isPast || !isWorkingDay;
-
-                    return `<div class="calendar-day ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}"
-                      onclick="${!isDisabled ? `window.selectProviderShopDate('${dateStr}')` : ""}"
-                      style="${isDisabled ? "background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.5;" : ""}">
-                      ${date.getDate()}
-                    </div>`;
-                  })
-                  .join("")}
+                ${weekDays.map((day) => `<div style="text-align:center; font-weight:bold; font-size:12px; padding:8px;">${day}</div>`).join("")}
+                ${days.map((date) => {
+                  if (!date) return "<div></div>";
+                  const dateStr = date.toDateString();
+                  const isSelected = selectedDate === dateStr;
+                  const dayOfWeek = date.getDay();
+                  const isWorkingDay = !selectedService?.workDays || selectedService.workDays.length === 0 ? true : selectedService.workDays.includes(dayOfWeek);
+                  const isPast = date < today && date.getDate() !== today.getDate();
+                  const isDisabled = isPast || !isWorkingDay;
+                  return `<div class="calendar-day ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}"
+                    onclick="${!isDisabled ? `window.selectProviderShopDate('${dateStr}')` : ""}"
+                    style="${isDisabled ? "background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.5;" : ""}">
+                    ${date.getDate()}
+                  </div>`;
+                }).join("")}
             </div>
-        </div>
-    `;
+        </div>`;
+    }
+
+    html += `</div>`;
+    return html;
   }
 
   function generateTimeSlots() {
@@ -1429,50 +1425,46 @@ function renderClientDashboard() {
   function generateCalendar() {
     const today = new Date();
     const year = today.getFullYear();
-    const month = today.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const days = [];
-
-    for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
-    for (let i = 1; i <= lastDay.getDate(); i++)
-      days.push(new Date(year, month, i));
-
+    const currentMonth = today.getMonth();
     const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
-    return `
-        <div style="margin-bottom: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h4>${today.toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}</h4>
-            </div>
+    let html = `<div style="display:flex; flex-wrap:wrap; gap:24px;">`;
+
+    for (let month = currentMonth; month < 12; month++) {
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const days = [];
+
+      for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
+      for (let i = 1; i <= lastDay.getDate(); i++)
+        days.push(new Date(year, month, i));
+
+      html += `
+        <div style="flex:1; min-width:280px;">
+            <h4 style="margin-bottom:8px;">${monthNames[month]} ${year}</h4>
             <div class="calendar-grid">
-                ${weekDays.map((day) => `<div style="text-align: center; font-weight: bold; font-size: 12px; padding: 8px;">${day}</div>`).join("")}
-                ${days
-  .map((date) => {
-    if (!date) return "<div></div>";
-
-    const dateStr = date.toDateString();
-    const isSelected = selectedDate === dateStr;
-    const dayOfWeek = date.getDay();
-
-    const isWorkingDay =
-      !selectedService?.workDays || selectedService.workDays.length === 0
-        ? true
-        : selectedService.workDays.includes(dayOfWeek);
-
-    const isPast = date < today && date.getDate() !== today.getDate();
-    const isDisabled = isPast || !isWorkingDay;
-
-    return `<div class="calendar-day ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}"
-      onclick="${!isDisabled ? `window.selectDate('${dateStr}')` : ""}"
-      style="${isDisabled ? "background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.5;" : ""}">
-      ${date.getDate()}
-    </div>`;
-  })
-  .join("")}
+                ${weekDays.map((day) => `<div style="text-align:center; font-weight:bold; font-size:12px; padding:8px;">${day}</div>`).join("")}
+                ${days.map((date) => {
+                  if (!date) return "<div></div>";
+                  const dateStr = date.toDateString();
+                  const isSelected = selectedDate === dateStr;
+                  const dayOfWeek = date.getDay();
+                  const isWorkingDay = !selectedService?.workDays || selectedService.workDays.length === 0 ? true : selectedService.workDays.includes(dayOfWeek);
+                  const isPast = date < today && date.getDate() !== today.getDate();
+                  const isDisabled = isPast || !isWorkingDay;
+                  return `<div class="calendar-day ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}"
+                    onclick="${!isDisabled ? `window.selectDate('${dateStr}')` : ""}"
+                    style="${isDisabled ? "background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.5;" : ""}">
+                    ${date.getDate()}
+                  </div>`;
+                }).join("")}
             </div>
-        </div>
-    `;
+        </div>`;
+    }
+
+    html += `</div>`;
+    return html;
   }
 
   function updateTimeSelection() {
