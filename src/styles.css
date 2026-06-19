@@ -723,8 +723,8 @@ aside > div:nth-child(2) p {
   width: 45px !important;
   height: 45px !important;
   border-radius: 50% !important;
-  background: #FFFFFF !important;
-  border: 2px solid #B2BEC3 !important;
+  background: #2D3436 !important;
+  border: 2px solid #555 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -739,8 +739,8 @@ aside > div:nth-child(2) p {
 }
 
 .theme-btn:hover {
-  background: #F4F3FF !important;
-  border-color: #A29BFE !important;
+  background: #1a1a1a !important;
+  border-color: #777 !important;
   transform: scale(1.05) !important;
 }
 
@@ -751,32 +751,32 @@ aside > div:nth-child(2) p {
 .theme-btn .icon {
   width: 28px !important;
   height: 28px !important;
-  color: #636E72 !important;
+  color: #e0e0e0 !important;
   transition: all 0.3s ease !important;
   display: block !important;
 }
 
 .theme-btn:hover .icon {
-  color: #6C5CE7 !important;
+  color: #ffffff !important;
 }
 
-/* Dark mode theme button styles */
+/* Dark mode theme button styles (inverted: light button) */
 html.dark-mode .theme-btn {
-  background: #3A3A4F !important;
-  border-color: #5A5A75 !important;
+  background: #FFFFFF !important;
+  border-color: #B2BEC3 !important;
 }
 
 html.dark-mode .theme-btn:hover {
-  background: #4B4B63 !important;
-  border-color: #6C6C81 !important;
+  background: #F4F3FF !important;
+  border-color: #A29BFE !important;
 }
 
 html.dark-mode .theme-btn .icon {
-  color: #DCDDE1 !important;
+  color: #636E72 !important;
 }
 
 html.dark-mode .theme-btn:hover .icon {
-  color: #8E7CFF !important;
+  color: #6C5CE7 !important;
 }
 
 /* =========================================
