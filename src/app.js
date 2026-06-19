@@ -649,25 +649,20 @@ function renderAuthScreen() {
     }
   }
 
-  function toggleMode() {
+  window.toggleMode = function toggleMode() {
     isLogin = !isLogin;
     renderAuthScreen();
-  }
+  };
 
   const html = `
         <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
             <div style="background: white; border-radius: 24px; padding: 40px; max-width: 450px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-                <button id="backBtn" onclick="window.goToLandingPage()" style="display: flex; align-items: center; gap: 6px; background: var(--neutral-100); color: var(--neutral-800); border: 1px solid var(--neutral-200); padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background var(--transition-base); margin-bottom: 20px;">
+                <button id="backBtn" onclick="${isLogin ? 'window.goToLandingPage()' : 'toggleMode()'}" style="display: flex; align-items: center; gap: 6px; background: var(--neutral-100); color: var(--neutral-800); border: 1px solid var(--neutral-200); padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background var(--transition-base); margin-bottom: 20px;">
                     <span>←</span> Voltar
                 </button>
                 <div style="text-align:center; margin-bottom:8px;">${window.renderLogo(64)}</div>
                 <p style="text-align: center; color: #6b7280; margin-bottom: 32px;">${isLogin ? "Faça login para continuar" : "Crie sua conta gratuitamente"}</p>
                 
-                <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 12px;">
-                    <strong>🧪 Contas para teste:</strong><br>
-                    Cliente: ana@email.com / 123<br>
-                    Prestador: carlos@email.com / 123
-                </div>
                 
                 <form id="authForm">
                     ${
@@ -675,17 +670,17 @@ function renderAuthScreen() {
                         ? `
                         <div style="margin-bottom: 16px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 500;">Nome completo</label>
-                            <input type="text" id="name" placeholder="Digite seu nome" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
+                            <input type="text" id="name" placeholder="Digite seu nome" autocomplete="off" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
                         </div>
                         <div style="margin-bottom: 16px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 500;">Seu username</label>
-                            <input type="text" id="username" placeholder="seu_usuario" autocomplete="off" spellcheck="false" data-lpignore="true" data-form-type="other" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; text-transform: lowercase; transition: border-color 0.3s;">
+                            <input type="text" id="username" placeholder="seu_usuario" autocomplete="off" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
                             <p id="usernameFeedback" style="margin: 8px 0 0; font-size: 13px; font-weight: 600; display: none; min-height: 20px;"></p>
                             <p style="margin: 4px 0 0; color: #6b7280; font-size: 12px;">Use letras, números, ponto, hífen e underscore. Mín. 3 caracteres.</p>
                         </div>
                         <div style="margin-bottom: 16px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 500;">Tipo de conta</label>
-                            <select id="role" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
+                            <select id="role" autocomplete="off" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
                                 <option value="${USER_ROLES.CLIENT}">Cliente</option>
                                 <option value="${USER_ROLES.PROVIDER}">Prestador de Serviço</option>
                             </select>
@@ -695,18 +690,18 @@ function renderAuthScreen() {
                     }
                     <div style="margin-bottom: 16px;">
                         <label style="display: block; margin-bottom: 8px; font-weight: 500;">Email</label>
-                        <input type="email" id="email" placeholder="seu@email.com" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
+                        <input type="email" id="email" placeholder="seu@email.com" autocomplete="off" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
                     </div>
                     <div style="margin-bottom: 16px;">
                         <label style="display: block; margin-bottom: 8px; font-weight: 500;">Senha</label>
-                        <input type="password" id="password" placeholder="Digite sua senha" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
+                        <input type="password" id="password" placeholder="Digite sua senha" autocomplete="new-password" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
                     </div>
                     ${
                       !isLogin
                         ? `
                         <div style="margin-bottom: 24px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 500;">Confirmar senha</label>
-                            <input type="password" id="confirmPassword" placeholder="Confirme sua senha" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
+                            <input type="password" id="confirmPassword" placeholder="Confirme sua senha" autocomplete="new-password" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px;">
                         </div>
                     `
                         : ""
