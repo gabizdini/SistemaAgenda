@@ -248,7 +248,6 @@ function toggleDarkMode() {
   localStorage.setItem("agendamento_darkMode", isDarkMode.toString());
   applyTheme();
   initThemeButton();
-  render();
 }
 
 window.renderLogo = function(height = 40) {

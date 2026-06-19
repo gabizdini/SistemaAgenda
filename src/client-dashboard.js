@@ -1237,10 +1237,10 @@ function renderProvidersListScreen() {
               <button id="providerFilterBtn" onclick="window.toggleProviderFilter()" style="height:100%; padding:12px; background:rgba(255,255,255,0.9); border:1px solid #e5e7eb; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${providerCategoryFilter ? '#6C5CE7' : '#9ca3af'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
               </button>
-              <div id="providerFilterDropdown" style="display:none; position:absolute; top:calc(100% + 4px); right:0; background:white; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:200px; max-height:300px; overflow-y:auto; z-index:100;">
-                <div onclick="window.setProviderCategory('')" style="padding:10px 14px; cursor:pointer; font-size:14px; color:#ef4444; transition:background 0.15s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='transparent'">Remover filtro</div>
+              <div id="providerFilterDropdown" style="display:none; position:absolute; top:calc(100% + 4px); right:0; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.12); min-width:200px; max-height:300px; overflow-y:auto; z-index:100;">
+                <div onclick="window.setProviderCategory('')" class="filter-option remove">Remover filtro</div>
                 ${PROVIDER_CATEGORIES.map(cat => `
-                  <div onclick="window.setProviderCategory('${cat.name.replace(/'/g, "\\'")}')" style="padding:10px 14px; cursor:pointer; font-size:14px; color:#111827; transition:background 0.15s; background:${providerCategoryFilter === cat.name ? '#f3f0ff' : 'transparent'};" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='${providerCategoryFilter === cat.name ? '#f3f0ff' : 'transparent'}">${cat.name}</div>
+                  <div onclick="window.setProviderCategory('${cat.name.replace(/'/g, "\\'")}')" class="filter-option${providerCategoryFilter === cat.name ? ' active' : ''}">${cat.name}</div>
                 `).join("")}
               </div>
             </div>
@@ -1259,7 +1259,7 @@ function renderProvidersListScreen() {
                           (s) => s.providerId === provider.id,
                         );
                         return `
-                          <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,0.08); cursor:pointer; transition:transform 0.2s;">
+                          <div class="provider-card" style="background:rgba(255,255,255,0.95); border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,0.08); cursor:pointer; transition:transform 0.2s;">
                             <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
                               <div style="width:56px; height:56px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:24px; font-weight:700; flex-shrink:0;">
                                 ${

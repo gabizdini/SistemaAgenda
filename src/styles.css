@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    transition: background 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 :root {
@@ -1117,6 +1118,59 @@ div[style*="background:#f8f9fa"]:hover {
   #root > div > main div[style*="display:grid"] {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* ========== PROVIDER FILTER DROPDOWN ========== */
+#providerFilterDropdown {
+  background: white;
+  border: 1px solid #e5e7eb;
+}
+#providerFilterDropdown .filter-option {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #111827;
+  transition: background 0.15s;
+}
+#providerFilterDropdown .filter-option:hover {
+  background: #f3f4f6;
+}
+#providerFilterDropdown .filter-option.active {
+  background: #f3f0ff;
+}
+#providerFilterDropdown .filter-option.remove {
+  color: #ef4444;
+}
+#providerFilterDropdown .filter-option.remove:hover {
+  background: #fef2f2;
+}
+html.dark-mode #providerFilterDropdown {
+  background: #1e1e1e !important;
+  border-color: #333 !important;
+}
+html.dark-mode #providerFilterDropdown .filter-option {
+  color: #e0e0e0 !important;
+}
+html.dark-mode #providerFilterDropdown .filter-option:hover {
+  background: #2a2a2a !important;
+}
+html.dark-mode #providerFilterDropdown .filter-option.active {
+  background: #2d2850 !important;
+  color: #c4b5fd !important;
+}
+html.dark-mode #providerFilterDropdown .filter-option.remove {
+  color: #f87171 !important;
+}
+html.dark-mode #providerFilterDropdown .filter-option.remove:hover {
+  background: #2a1a1a !important;
+}
+html.dark-mode #providerFilterBtn {
+  background: #2a2a2a !important;
+  border-color: #444 !important;
+}
+html.dark-mode .provider-card {
+  background: #2d2d2d !important;
+  border-color: #444 !important;
 }
 
 @media (max-width: 480px) {
