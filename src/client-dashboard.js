@@ -443,6 +443,8 @@ function renderProviderShopScreen() {
     selectedDate = null;
     selectedTime = null;
     showBookingForm = false;
+    providerSearchTerm = "";
+    providerCategoryFilter = "";
     document.body.style.overflow = "auto";
     render();
   };
@@ -531,27 +533,43 @@ function renderProviderShopScreen() {
     render();
   };
 
+  window.nextCalendarMonth = function () {
+    calendarMonth++;
+    if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+    render();
+  };
+  window.prevCalendarMonth = function () {
+    const now = new Date();
+    if (calendarYear > now.getFullYear() || (calendarYear === now.getFullYear() && calendarMonth > now.getMonth())) {
+      calendarMonth--;
+      if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+      render();
+    }
+  };
+
   function generateCalendar() {
     const today = new Date();
-    const year = today.getFullYear();
-    const currentMonth = today.getMonth();
+    const year = calendarYear;
+    const month = calendarMonth;
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const days = [];
+
+    for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
+    for (let i = 1; i <= lastDay.getDate(); i++)
+      days.push(new Date(year, month, i));
+
     const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
     const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+    const canGoPrev = calendarYear > today.getFullYear() || (calendarYear === today.getFullYear() && calendarMonth > today.getMonth());
 
-    let html = `<div style="display:flex; flex-wrap:wrap; gap:24px;">`;
-
-    for (let month = currentMonth; month < 12; month++) {
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      const days = [];
-
-      for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
-      for (let i = 1; i <= lastDay.getDate(); i++)
-        days.push(new Date(year, month, i));
-
-      html += `
-        <div style="flex:1; min-width:280px;">
-            <h4 style="margin-bottom:8px;">${monthNames[month]} ${year}</h4>
+    return `
+        <div style="margin-bottom:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <button onclick="window.prevCalendarMonth()" class="cal-nav-btn${canGoPrev ? '' : ' disabled'}">◀</button>
+                <h4 style="margin:0;">${monthNames[month]} ${year}</h4>
+                <button onclick="window.nextCalendarMonth()" class="cal-nav-btn">▶</button>
+            </div>
             <div class="calendar-grid">
                 ${weekDays.map((day) => `<div style="text-align:center; font-weight:bold; font-size:12px; padding:8px;">${day}</div>`).join("")}
                 ${days.map((date) => {
@@ -569,11 +587,8 @@ function renderProviderShopScreen() {
                   </div>`;
                 }).join("")}
             </div>
-        </div>`;
-    }
-
-    html += `</div>`;
-    return html;
+        </div>
+    `;
   }
 
   function generateTimeSlots() {
@@ -1428,27 +1443,43 @@ function renderClientDashboard() {
     render();
   }
 
+  window.nextCalendarMonth = function () {
+    calendarMonth++;
+    if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+    render();
+  };
+  window.prevCalendarMonth = function () {
+    const now = new Date();
+    if (calendarYear > now.getFullYear() || (calendarYear === now.getFullYear() && calendarMonth > now.getMonth())) {
+      calendarMonth--;
+      if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+      render();
+    }
+  };
+
   function generateCalendar() {
     const today = new Date();
-    const year = today.getFullYear();
-    const currentMonth = today.getMonth();
+    const year = calendarYear;
+    const month = calendarMonth;
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const days = [];
+
+    for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
+    for (let i = 1; i <= lastDay.getDate(); i++)
+      days.push(new Date(year, month, i));
+
     const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
     const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+    const canGoPrev = calendarYear > today.getFullYear() || (calendarYear === today.getFullYear() && calendarMonth > today.getMonth());
 
-    let html = `<div style="display:flex; flex-wrap:wrap; gap:24px;">`;
-
-    for (let month = currentMonth; month < 12; month++) {
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      const days = [];
-
-      for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
-      for (let i = 1; i <= lastDay.getDate(); i++)
-        days.push(new Date(year, month, i));
-
-      html += `
-        <div style="flex:1; min-width:280px;">
-            <h4 style="margin-bottom:8px;">${monthNames[month]} ${year}</h4>
+    return `
+        <div style="margin-bottom:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <button onclick="window.prevCalendarMonth()" class="cal-nav-btn${canGoPrev ? '' : ' disabled'}">◀</button>
+                <h4 style="margin:0;">${monthNames[month]} ${year}</h4>
+                <button onclick="window.nextCalendarMonth()" class="cal-nav-btn">▶</button>
+            </div>
             <div class="calendar-grid">
                 ${weekDays.map((day) => `<div style="text-align:center; font-weight:bold; font-size:12px; padding:8px;">${day}</div>`).join("")}
                 ${days.map((date) => {
@@ -1466,11 +1497,8 @@ function renderClientDashboard() {
                   </div>`;
                 }).join("")}
             </div>
-        </div>`;
-    }
-
-    html += `</div>`;
-    return html;
+        </div>
+    `;
   }
 
   function updateTimeSelection() {

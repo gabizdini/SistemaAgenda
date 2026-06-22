@@ -1060,6 +1060,51 @@ div[style*="background:#f8f9fa"]:hover {
   box-shadow: 0 8px 24px rgba(108,92,231,0.15) !important;
 }
 
+/* ========== CALENDAR NAV BUTTONS ========== */
+.cal-nav-btn {
+  padding: 10px 14px;
+  background: #6C5CE7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.cal-nav-btn:hover {
+  background: #5A4FCF;
+  transform: scale(1.08);
+}
+.cal-nav-btn:active {
+  transform: scale(0.95);
+}
+.cal-nav-btn.disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+.cal-nav-btn.disabled:hover {
+  background: #d1d5db;
+  transform: none;
+}
+html.dark-mode .cal-nav-btn {
+  background: #8E7CFF;
+  color: #1e1e1e;
+}
+html.dark-mode .cal-nav-btn:hover {
+  background: #a99aff;
+}
+html.dark-mode .cal-nav-btn.disabled {
+  background: #374151;
+  color: #6b7280;
+}
+html.dark-mode .cal-nav-btn.disabled:hover {
+  background: #374151;
+}
+
 /* =========================================
    RESPONSIVE - DASHBOARDS
    ========================================= */

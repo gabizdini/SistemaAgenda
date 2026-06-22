@@ -39,6 +39,8 @@ let doneBookingId = null;
 let showLandingPage = true;
 let providerSearchTerm = "";
 let providerCategoryFilter = "";
+let calendarMonth = new Date().getMonth();
+let calendarYear = new Date().getFullYear();
 
 const savedServices = localStorage.getItem("agendamento_services");
 const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");
