@@ -1193,7 +1193,7 @@ function renderProvidersListScreen() {
     <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
       <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
         <div style="margin-bottom:16px;">${window.renderLogo(50)}</div>
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; background:linear-gradient(135deg,rgba(108,92,231,0.05),rgba(162,155,254,0.05)); padding:12px; border-radius:12px;">
+        <div class="sidebar-user-info" onclick="window.openMyProfile()" style="display:flex; align-items:center; gap:12px; margin-bottom:24px; background:linear-gradient(135deg,rgba(108,92,231,0.05),rgba(162,155,254,0.05)); padding:12px; border-radius:12px; cursor:pointer;">
           <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
             ${
               currentUser.profilePhoto
@@ -1210,9 +1210,6 @@ function renderProvidersListScreen() {
             </p>
           </div>
         </div>
-        <button onclick="window.openMyProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
-          <i data-lucide="user" style="width:18px; height:18px; color:#636E72;"></i> Perfil
-        </button>
         <button onclick="window.openNotificationsModal()"
   style="width:100%; display:flex; align-items:center; gap:8px; text-align:left; padding:10px 12px; margin-bottom:10px; background:#f3f4f6; color:#2D3436; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s ease;">
 
@@ -1936,14 +1933,26 @@ window.confirmCancel = function () {
     <div style="display:flex; min-height:100vh;">
         <aside style="width:240px; background:#111827; color:white; padding:20px;">
             <div style="margin-bottom:16px;">${window.renderLogo(50)}</div>
+            <div class="sidebar-user-info" onclick="window.openClientProfile()" style="display:flex; align-items:center; gap:12px; margin-bottom:24px; padding:12px; border-radius:12px; cursor:pointer;">
+              <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
+                ${
+                  currentUser.profilePhoto
+                    ? `<img src="${currentUser.profilePhoto}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover;">`
+                    : `${currentUser.name?.charAt(0)?.toUpperCase() || "C"}`
+                }
+              </div>
+              <div style="min-width:0;">
+                <h2 style="margin:0; font-size:18px; line-height:1.2; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                  ${currentUser.name}
+                </h2>
+                <p style="margin:4px 0 0; color:#cbd5e1; font-size:12px;">Cliente</p>
+              </div>
+            </div>
             <button onclick="window.openNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
              <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${notifCount > 0 ? `(${notifCount})` : ''}
             </button>
             <button onclick="window.openBookingsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#1f2937; color:white; border:none; border-radius:8px; cursor:pointer;">
             <i data-lucide="calendar" style="width:18px; height:18px; color:#636E72;"></i> Meus Agendamentos
-            </button>
-            <button onclick="window.openClientProfile()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-            <i data-lucide="user" style="width:18px; height:18px; color:#636E72;"></i> Perfil
             </button>
             <button onclick="window.openLogoutConfirm()" style="width:100%; text-align:left; padding:10px 12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer;">
             <i data-lucide="door-open" style="width:18px; height:18px; color:#636E72;"></i> Sair

@@ -1304,7 +1304,7 @@ if (showEditProfileModal) {
       <aside style="width:240px; background:#111827; color:white; padding:20px;">
         <div style="margin-bottom:16px;">${window.renderLogo(50)}</div>
 
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+        <div class="sidebar-user-info" onclick="window.openProviderProfile()" style="display:flex; align-items:center; gap:12px; margin-bottom:24px; padding:12px; border-radius:12px; cursor:pointer;">
   <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; flex:0 0 auto; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; font-weight:700;">
     ${
       currentUser.profilePhoto
@@ -1322,10 +1322,6 @@ if (showEditProfileModal) {
     </p>
   </div>
 </div>
-<button onclick="window.openProviderProfile()"
-          style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
-          <i data-lucide="user" style="width:18px; height:18px; color:#636E72;"></i> Perfil
-        </button>
 
         <button onclick="window.openProviderNotificationsModal()" style="width:100%; text-align:left; padding:10px 12px; margin-bottom:10px; background:#374151; color:white; border:none; border-radius:8px; cursor:pointer;">
           <i data-lucide="bell" style="width:18px; height:18px; color:#636E72;"></i> Notificações ${notificationCount > 0 ? "(" + notificationCount + ")" : ""}
