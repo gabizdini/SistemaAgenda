@@ -1124,6 +1124,17 @@ html.dark-mode .cal-nav-btn.disabled:hover {
 /* =========================================
    RESPONSIVE - DASHBOARDS
    ========================================= */
+aside {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+}
+aside .theme-btn {
+  margin-top: auto !important;
+  position: sticky !important;
+  bottom: 10px !important;
+}
 /* Create service modal - flexible elements for zoom */
 .modal-content button[style*="width:36px"][style*="height:36px"] {
   flex-shrink: 0;
