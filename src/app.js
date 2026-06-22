@@ -522,60 +522,119 @@ let isLogin = true;
 // ============================================
 function renderLandingPage() {
   const root = document.getElementById("root");
+  const isDark = isDarkMode;
+
+  const bgGradient = isDark
+    ? "linear-gradient(160deg, #0d0521 0%, #1a0a2e 20%, #2d1b69 45%, #6C5CE7 70%, #1a0a2e 100%)"
+    : "linear-gradient(160deg, #f0e6ff 0%, #dcd6ff 20%, #A29BFE 50%, #6C5CE7 80%, #8E44AD 100%)";
+
+  const navBg = isDark ? "rgba(10, 6, 20, 0.6)" : "rgba(255, 255, 255, 0.2)";
+  const navBorder = isDark ? "rgba(255,255,255,0.08)" : "rgba(108,92,231,0.15)";
+
+  const titleColor = isDark ? "white" : "#3a2fa0";
+  const subtitleColor = isDark ? "rgba(255,255,255,0.85)" : "#5a4fcf";
+  const textColor = isDark ? "rgba(255,255,255,0.6)" : "#4a3fb8";
+  const badgeBg = isDark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.5)";
+  const badgeBorder = isDark ? "rgba(255,255,255,0.15)" : "rgba(108,92,231,0.2)";
+  const badgeText = isDark ? "rgba(255,255,255,0.9)" : "#5a4fcf";
+  const cardBg = isDark ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.45)";
+  const cardBorder = isDark ? "rgba(255,255,255,0.1)" : "rgba(108,92,231,0.15)";
+  const cardText = isDark ? "rgba(255,255,255,0.55)" : "#4a3580";
+  const cardHoverBg = isDark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.65)";
+  const btnInscrevaBg = isDark ? "white" : "#6C5CE7";
+  const btnInscrevaColor = isDark ? "#6C5CE7" : "white";
+  const btnInscrevaShadow = isDark ? "rgba(0,0,0,0.3)" : "rgba(108,92,231,0.4)";
+  const btnLoginBorder = isDark ? "rgba(255,255,255,0.35)" : "rgba(108,92,231,0.4)";
+  const btnLoginColor = isDark ? "white" : "#6C5CE7";
+  const btnLoginHoverBg = isDark ? "rgba(255,255,255,0.1)" : "rgba(108,92,231,0.1)";
+  const btnLoginHoverBorder = isDark ? "rgba(255,255,255,0.5)" : "rgba(108,92,231,0.4)";
 
   const html = `
-    <div style="min-height: 100vh; display: flex; flex-direction: column; background: white;">
-      <!-- HEADER -->
-      <header style="background: white; border-bottom: 1px solid #e5e7eb; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <h1 style="margin: 0;">${window.renderLogo(80)}</h1>
+    <div style="min-height:100vh; display:flex; flex-direction:column; background:${bgGradient}; position:relative; overflow:hidden;">
+
+      <div style="position:absolute; top:-120px; right:-120px; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle, rgba(162,155,254,${isDark ? '0.2' : '0.2'}) 0%, transparent 70%); pointer-events:none;"></div>
+      <div style="position:absolute; bottom:-150px; left:-100px; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(108,92,231,${isDark ? '0.15' : '0.15'}) 0%, transparent 70%); pointer-events:none;"></div>
+
+      <!-- NAVBAR -->
+      <header style="position:relative; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:18px 40px; background:${navBg}; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid ${navBorder};">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="assets/images/logo-GVT.png" alt="Agenda GVT" style="height:36px; width:auto;">
+          <span style="font-size:18px; font-weight:700; color:${isDark ? 'white' : '#6C5CE7'}; letter-spacing:-0.5px;">Agenda GVT</span>
         </div>
-        <button onclick="window.goToLogin()" style="padding: 12px 28px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: transform 0.2s;">Fazer Login</button>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <button onclick="window.toggleLandingTheme()" title="Alternar tema"
+            style="width:45px; height:45px; border-radius:50%; background:${isDark ? '#FFFFFF' : '#2D3436'}; border:2px solid ${isDark ? '#B2BEC3' : '#555'}; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.3s ease; padding:0;"
+            onmouseover="this.style.background='${isDark ? '#F4F3FF' : '#1a1a1a'}'; this.style.borderColor='${isDark ? '#A29BFE' : '#777'}'; this.style.transform='scale(1.05)';"
+            onmouseout="this.style.background='${isDark ? '#FFFFFF' : '#2D3436'}'; this.style.borderColor='${isDark ? '#B2BEC3' : '#555'}'; this.style.transform='scale(1)';">
+            <i data-lucide="${isDark ? 'sun' : 'moon'}" style="width:28px; height:28px; color:${isDark ? '#636E72' : '#e0e0e0'}; transition:all 0.3s ease;"></i>
+          </button>
+          <button onclick="window.goToLogin()" 
+            style="padding:10px 24px; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 100%); color:white; border:none; border-radius:10px; cursor:pointer; font-weight:600; font-size:14px; transition:all 0.3s; box-shadow:0 4px 15px rgba(108,92,231,0.4);"
+            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(108,92,231,0.5)';"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(108,92,231,0.4)';">
+            Login
+          </button>
+        </div>
       </header>
 
-      <!-- CONTEÚDO PRINCIPAL -->
-      <main style="flex: 1; padding: 80px 40px; max-width: 1200px; margin: 0 auto; width: 100%;">
-        <!-- SEÇÃO HERO -->
-        <div style="text-align: center; margin-bottom: 80px;">
-          <h2 style="font-size: 48px; font-weight: 700; color: #2D3436; margin: 0 0 20px 0;">Organize seus agendamentos com facilidade</h2>
-          <p style="font-size: 20px; color: #6b7280; margin: 0 0 40px 0; line-height: 1.6;">Conecte clientes e prestadores de serviço em uma única plataforma intuitiva e segura</p>
-          <button onclick="window.goToSignup()" style="padding: 16px 40px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 16px; transition: transform 0.2s;">Começar Agora</button>
-        </div>
+      <!-- HERO -->
+      <main style="flex:1; display:flex; align-items:center; justify-content:center; position:relative; z-index:5; padding:60px 24px;">
+        <div style="text-align:center; max-width:700px;">
+          <div style="display:inline-block; padding:6px 16px; background:${badgeBg}; border:1px solid ${badgeBorder}; border-radius:50px; margin-bottom:28px; backdrop-filter:blur(10px);">
+            <span style="font-size:13px; color:${badgeText}; font-weight:500; letter-spacing:0.5px;">&#128197; Agende de forma simples e rapida</span>
+          </div>
 
-        <!-- RECURSOS -->
-        <div style="margin-top: 60px;">
-          <h3 style="text-align: center; font-size: 32px; color: #2D3436; margin-bottom: 50px;">O que oferecemos</h3>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
-            <!-- Card 1 -->
-            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;">
+          <h1 style="font-size:clamp(36px, 6vw, 64px); font-weight:800; color:${titleColor}; margin:0 0 20px 0; line-height:1.1; letter-spacing:-1.5px; text-shadow:0 2px 30px ${isDark ? 'rgba(0,0,0,0.3)' : 'rgba(108,92,231,0.15)'};">
+            Agenda GVT
+          </h1>
+          <h2 style="font-size:clamp(18px, 3vw, 26px); font-weight:400; color:${subtitleColor}; margin:0 0 16px 0; line-height:1.4; letter-spacing:-0.3px;">
+            Sistema de Agendamento
+          </h2>
+          <p style="font-size:clamp(15px, 2vw, 18px); color:${textColor}; margin:0 0 44px 0; line-height:1.7; max-width:520px; margin-left:auto; margin-right:auto;">
+            Conecte clientes e prestadores de servico em uma plataforma intuitiva. Gerencie seus horarios, agendamentos e servicos em um so lugar.
+          </p>
 
-              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Agendamento Simplificado</h4>
-              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Sistema intuitivo para agendar e gerenciar compromissos em tempo real</p>
+          <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+            <button onclick="window.goToSignup()"
+              style="padding:16px 40px; background:${btnInscrevaBg}; color:${btnInscrevaColor}; border:none; border-radius:14px; cursor:pointer; font-weight:700; font-size:16px; transition:all 0.3s; box-shadow:0 8px 30px ${btnInscrevaShadow};"
+              onmouseover="this.style.transform='translateY(-3px) scale(1.02)'; this.style.boxShadow='0 12px 40px ${btnInscrevaShadow}';"
+              onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 30px ${btnInscrevaShadow}';">
+              Inscreva-se
+            </button>
+            <button onclick="window.goToLogin()"
+              style="padding:16px 40px; background:transparent; color:${btnLoginColor}; border:2px solid ${btnLoginBorder}; border-radius:14px; cursor:pointer; font-weight:600; font-size:16px; transition:all 0.3s; backdrop-filter:blur(10px);"
+              onmouseover="this.style.background='${btnLoginHoverBg}'; this.style.borderColor='${btnLoginHoverBorder}'; this.style.transform='translateY(-3px)';"
+              onmouseout="this.style.background='transparent'; this.style.borderColor='${btnLoginBorder}'; this.style.transform='translateY(0)';">
+              Ja tenho conta
+            </button>
+          </div>
+
+          <!-- FEATURES -->
+          <div class="landing-features" style="margin-top:72px; text-align:center;">
+            <div style="padding:24px 16px; background:${cardBg}; border:1px solid ${cardBorder}; border-radius:16px; backdrop-filter:blur(10px); transition:all 0.3s;"
+              onmouseover="this.style.background='${cardHoverBg}'; this.style.transform='translateY(-4px)';"
+              onmouseout="this.style.background='${cardBg}'; this.style.transform='translateY(0)';">
+              <div style="font-size:32px; margin-bottom:12px;">&#128198;</div>
+              <h3 style="margin:0 0 8px; color:${isDark ? 'white' : '#6C5CE7'}; font-size:15px; font-weight:600;">Agendamento Facil</h3>
+              <p style="margin:0; color:${cardText}; font-size:13px; line-height:1.5;">Escolha o servico, selecione o dia e horario. Pronto!</p>
             </div>
-            <!-- Card 2 -->
-            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #8E44AD; transition: transform 0.3s;">
-
-              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Conecte Prestadores</h4>
-              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Encontre profissionais qualificados para seus serviços de forma rápida</p>
+            <div style="padding:24px 16px; background:${cardBg}; border:1px solid ${cardBorder}; border-radius:16px; backdrop-filter:blur(10px); transition:all 0.3s;"
+              onmouseover="this.style.background='${cardHoverBg}'; this.style.transform='translateY(-4px)';"
+              onmouseout="this.style.background='${cardBg}'; this.style.transform='translateY(0)';">
+              <div style="font-size:32px; margin-bottom:12px;">&#128101;</div>
+              <h3 style="margin:0 0 8px; color:${isDark ? 'white' : '#6C5CE7'}; font-size:15px; font-weight:600;">Conecte-se</h3>
+              <p style="margin:0; color:${cardText}; font-size:13px; line-height:1.5;">Encontre prestadores de servico perto de voce</p>
             </div>
-            <!-- Card 4 -->
-            <div style="padding: 30px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #6C5CE7; transition: transform 0.3s;">
-
-              <h4 style="font-size: 18px; font-weight: 600; color: #2D3436; margin: 0 0 10px 0;">Gestão de Serviços</h4>
-              <p style="color: #6b7280; margin: 0; line-height: 1.5;">Crie, edite e organize seus serviços com facilidade</p>
+            <div style="padding:24px 16px; background:${cardBg}; border:1px solid ${cardBorder}; border-radius:16px; backdrop-filter:blur(10px); transition:all 0.3s;"
+              onmouseover="this.style.background='${cardHoverBg}'; this.style.transform='translateY(-4px)';"
+              onmouseout="this.style.background='${cardBg}'; this.style.transform='translateY(0)';">
+              <div style="font-size:32px; margin-bottom:12px;">&#128736;</div>
+              <h3 style="margin:0 0 8px; color:${isDark ? 'white' : '#6C5CE7'}; font-size:15px; font-weight:600;">Gerencie Tudo</h3>
+              <p style="margin:0; color:${cardText}; font-size:13px; line-height:1.5;">Organize seus servicos, horarios e clientes</p>
             </div>
           </div>
         </div>
-
-        <!-- CTA FINAL -->
-        <div style="text-align: center; margin-top: 80px; padding: 40px; background: linear-gradient(135deg, #f8f9fa 0%, #f0f1f7 100%); border-radius: 12px;">
-          <h3 style="font-size: 28px; color: #2D3436; margin: 0 0 20px 0;">Pronto para começar?</h3>
-          <p style="color: #6b7280; margin: 0 0 30px 0; font-size: 16px;">Crie sua conta agora e comece a gerenciar seus agendamentos</p>
-          <button onclick="window.goToSignup()" style="padding: 14px 36px; background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px; transition: transform 0.2s;">Cadastre-se Agora</button>
-        </div>
       </main>
-
-
     </div>
   `;
 
@@ -592,6 +651,24 @@ function renderLandingPage() {
     isLogin = false;
     render();
   };
+
+  window.toggleLandingTheme = function() {
+    isDarkMode = !isDarkMode;
+    localStorage.setItem("agendamento_darkMode", isDarkMode.toString());
+    applyTheme();
+
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed; inset:0; z-index:9999; opacity:0; transition:opacity 0.4s ease; pointer-events:none; background:" + (isDarkMode ? "#0d0521" : "#f0e6ff") + ";";
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => { overlay.style.opacity = "1"; });
+    setTimeout(() => {
+      renderLandingPage();
+      requestAnimationFrame(() => { overlay.style.opacity = "0"; });
+      setTimeout(() => { overlay.remove(); }, 400);
+    }, 200);
+  };
+
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 function renderAuthScreen() {
