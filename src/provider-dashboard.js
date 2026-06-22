@@ -186,8 +186,13 @@ function renderProviderProfileScreen() {
             </div>
 
             <div style="background:rgba(255,255,255,0.95); border-radius:16px; padding:20px; box-shadow:0 12px 30px rgba(0,0,0,0.12); border-left:4px solid #10b981; transition:all 0.3s ease;">
-              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Categoria</p>
-              <h3 style="margin:0; color:#2D3436; font-size:16px; font-weight:700;">${currentUser.category || "Não selecionada"}</h3>
+              <p style="margin:0 0 8px; color:#8E44AD; font-size:14px; font-weight:600;">Categorias</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                ${(currentUser.categories || []).length > 0
+                  ? (currentUser.categories || []).map(cat => `<span style="display:inline-block; padding:4px 10px; background:#f0e6ff; color:#6C5CE7; border-radius:20px; font-size:12px; font-weight:600;">${cat}</span>`).join("")
+                  : `<h3 style="margin:0; color:#2D3436; font-size:16px; font-weight:700;">Não selecionada</h3>`
+                }
+              </div>
             </div>
           </div>
         </div>
@@ -279,21 +284,28 @@ function renderProviderProfileScreen() {
         ? `
       <div class="modal-overlay" onclick="window.closeCategoryModal()">
         <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px; width: 90%; border-top:4px solid #6C5CE7;">
-          <h3 style="margin-bottom: 20px; color:#6C5CE7; font-size:20px;">📂 Selecionar Categoria</h3>
+          <h3 style="margin-bottom: 20px; color:#6C5CE7; font-size:20px;">📂 Selecionar Categorias</h3>
 
-          <p style="margin-bottom: 16px; color:#6b7280; font-size:14px;">Escolha a categoria que melhor descreve seus serviços:</p>
+          <p style="margin-bottom: 6px; color:#6b7280; font-size:14px;">Escolha pelo menos 3 categorias que descrevem seus serviços:</p>
+          <p id="catCount" style="margin-bottom:16px; color:${(currentUser.categories || []).length >= 3 ? '#10b981' : '#ef4444'}; font-size:13px; font-weight:600;">${(currentUser.categories || []).length}/3 selecionadas</p>
 
-          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:12px; margin-bottom:24px; max-height:400px; overflow-y:auto;">
-            ${PROVIDER_CATEGORIES.map((category) => `
-              <button type="button" onclick="window.selectCategory(${category.id})"
-                style="padding:16px; border:2px solid ${currentUser.categoryId === category.id ? "#6C5CE7" : "#d1d5db"}; background:${currentUser.categoryId === category.id ? "#f0e6ff" : "white"}; border-radius:12px; cursor:pointer; transition:all 0.2s; text-align:center; font-weight:600;">
+          <div class="category-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:12px; margin-bottom:24px; max-height:400px; overflow-y:auto;">
+            ${PROVIDER_CATEGORIES.map((category) => {
+              const selected = (currentUser.categories || []).includes(category.name);
+              return `
+              <button type="button" onclick="window.toggleCategory('${category.name.replace(/'/g, "\\'")}', ${category.id})"
+                style="padding:16px; border:2px solid ${selected ? "#6C5CE7" : "#d1d5db"}; background:${selected ? "#f0e6ff" : "white"}; border-radius:12px; cursor:pointer; transition:all 0.2s; text-align:center; font-weight:600; position:relative;">
+                ${selected ? `<div class="cat-check" style="position:absolute; top:6px; right:6px; width:20px; height:20px; background:#6C5CE7; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;">✓</div>` : ""}
                 <div style="font-size:24px; margin-bottom:8px;">${category.emoji}</div>
                 <div style="font-size:12px; color:#2D3436;">${category.name}</div>
-              </button>
-            `).join("")}
+              </button>`;
+            }).join("")}
           </div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <button onclick="window.saveCategories()" style="padding:10px 20px; background:${(currentUser.categories || []).length >= 3 ? '#10b981' : '#d1d5db'}; color:white; border:none; border-radius:8px; cursor:${(currentUser.categories || []).length >= 3 ? 'pointer' : 'not-allowed'}; font-weight:600; transition:all 0.2s;">
+              Salvar
+            </button>
             <button onclick="window.closeCategoryModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;">
               Fechar
             </button>
@@ -368,23 +380,62 @@ window.closeCategoryModal = function () {
   render();
 };
 
-window.selectCategory = function (categoryId) {
-  const category = PROVIDER_CATEGORIES.find((c) => c.id === categoryId);
-  if (category) {
-    currentUser.category = category.name;
-    currentUser.categoryId = categoryId;
-
-    const userIndex = users.findIndex((u) => u.id === currentUser.id);
-    if (userIndex !== -1) {
-      users[userIndex].category = category.name;
-      users[userIndex].categoryId = categoryId;
-    }
-
-    saveToLocalStorage();
-    showToast("Categoria atualizada com sucesso!", "success");
-    showCategoryModal = false;
-    render();
+window.toggleCategory = function (categoryName, categoryId) {
+  if (!currentUser.categories) currentUser.categories = [];
+  const idx = currentUser.categories.indexOf(categoryName);
+  if (idx >= 0) {
+    currentUser.categories.splice(idx, 1);
+  } else {
+    currentUser.categories.push(categoryName);
   }
+
+  const userIndex = users.findIndex((u) => u.id === currentUser.id);
+  if (userIndex !== -1) {
+    users[userIndex].categories = [...currentUser.categories];
+  }
+
+  const count = currentUser.categories.length;
+  const countEl = document.getElementById("catCount");
+  if (countEl) {
+    countEl.textContent = `${count}/3 selecionadas`;
+    countEl.style.color = count >= 3 ? "#10b981" : "#ef4444";
+  }
+
+  const saveBtn = document.querySelector('.modal-content button[onclick="window.saveCategories()"]');
+  if (saveBtn) {
+    saveBtn.style.background = count >= 3 ? "#10b981" : "#d1d5db";
+    saveBtn.style.cursor = count >= 3 ? "pointer" : "not-allowed";
+  }
+
+  const selected = currentUser.categories.includes(categoryName);
+  document.querySelectorAll(".modal-content .category-grid button").forEach((btn) => {
+    const btnName = btn.querySelector("div:last-child")?.textContent?.trim();
+    if (btnName === categoryName) {
+      btn.style.borderColor = selected ? "#6C5CE7" : "#d1d5db";
+      btn.style.background = selected ? "#f0e6ff" : "white";
+      const existing = btn.querySelector(".cat-check");
+      if (selected && !existing) {
+        const check = document.createElement("div");
+        check.className = "cat-check";
+        check.style.cssText = "position:absolute; top:6px; right:6px; width:20px; height:20px; background:#6C5CE7; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;";
+        check.textContent = "✓";
+        btn.appendChild(check);
+      } else if (!selected && existing) {
+        existing.remove();
+      }
+    }
+  });
+};
+
+window.saveCategories = function () {
+  if ((currentUser.categories || []).length < 3) {
+    showToast("Selecione pelo menos 3 categorias!", "error");
+    return;
+  }
+  saveToLocalStorage();
+  showToast("Categorias atualizadas com sucesso!", "success");
+  showCategoryModal = false;
+  render();
 };
 
 window.saveProfileChanges = function () {
@@ -1147,7 +1198,7 @@ if (showReopenSlotModal && slotToReopen) {
         </p>
         
         <div style="display:flex; gap:12px; justify-content:flex-end;">
-          <button onclick="window.declineReopenSlot()" style="padding:8px 16px; background:#e5e7eb; border:none; border-radius:8px; cursor:pointer;">
+          <button onclick="window.declineReopenSlot()" style="padding:8px 16px; background:#e5e7eb; color:#374151; border:none; border-radius:8px; cursor:pointer; font-weight:600;">
             Não
           </button>
           <button onclick="window.confirmReopenSlot()" style="padding:8px 16px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer;">

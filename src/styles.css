@@ -1121,6 +1121,40 @@ html.dark-mode .cal-nav-btn.disabled:hover {
   background: #374151;
 }
 
+/* ========== CALENDAR SLIDE ANIMATION ========== */
+#calendarContainer {
+  overflow: hidden;
+  position: relative;
+}
+.cal-slide-out-left {
+  animation: calSlideOutLeft 0.2s ease-in forwards;
+}
+.cal-slide-in-right {
+  animation: calSlideInRight 0.2s ease-out forwards;
+}
+.cal-slide-out-right {
+  animation: calSlideOutRight 0.2s ease-in forwards;
+}
+.cal-slide-in-left {
+  animation: calSlideInLeft 0.2s ease-out forwards;
+}
+@keyframes calSlideOutLeft {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-30px); opacity: 0; }
+}
+@keyframes calSlideInRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes calSlideOutRight {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(30px); opacity: 0; }
+}
+@keyframes calSlideInLeft {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 /* =========================================
    RESPONSIVE - DASHBOARDS
    ========================================= */

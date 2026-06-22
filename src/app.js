@@ -221,6 +221,16 @@ if (savedUsers) {
 if (savedBookings) bookings = JSON.parse(savedBookings);
 if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
 
+// Migrar categorias antigas (string) para novo formato (array)
+users.forEach(u => {
+  if (!u.categories) {
+    u.categories = u.category ? [u.category] : [];
+  }
+});
+if (currentUser && !currentUser.categories) {
+  currentUser.categories = currentUser.category ? [currentUser.category] : [];
+}
+
 function isTimeBooked(time) {
   if (!selectedService || !selectedDate) return false;
   return bookings.some(
@@ -1152,6 +1162,21 @@ function generateLoaderCalendar() {
 // ============================================
 
 // Garantir que abra na tela de login e com loader toda vez que recarregar a página
+window._slideCalendar = function (direction, htmlFn) {
+  const container = document.getElementById("calendarContainer");
+  if (!container) { htmlFn(); return; }
+  const inner = container.querySelector("div");
+  if (!inner) { htmlFn(); return; }
+  const outClass = direction === "next" ? "cal-slide-out-left" : "cal-slide-out-right";
+  const inClass = direction === "next" ? "cal-slide-in-right" : "cal-slide-in-left";
+  inner.classList.add(outClass);
+  setTimeout(() => {
+    htmlFn();
+    const newInner = container.querySelector("div");
+    if (newInner) newInner.classList.add(inClass);
+  }, 180);
+};
+
 window.addEventListener("DOMContentLoaded", function () {
   localStorage.removeItem("agendamento_currentUser"); // força abrir no login
   currentUser = null;

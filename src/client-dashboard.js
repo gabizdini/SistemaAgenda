@@ -17,9 +17,9 @@ function applyProviderFilters() {
     const name = card.querySelector("h3")?.textContent?.toLowerCase() || "";
     const username = card.querySelector("p")?.textContent?.toLowerCase() || "";
     const catEl = card.querySelector(".provider-category");
-    const category = catEl?.textContent?.toLowerCase() || "";
+    const categoryText = catEl?.textContent?.toLowerCase() || "";
     const matchesSearch = !term || name.includes(term) || username.includes(term);
-    const matchesCategory = !providerCategoryFilter || category === providerCategoryFilter.toLowerCase();
+    const matchesCategory = !providerCategoryFilter || categoryText.includes(providerCategoryFilter.toLowerCase());
     card.style.display = matchesSearch && matchesCategory ? "" : "none";
   });
 }
@@ -559,17 +559,24 @@ function renderProviderShopScreen() {
     render();
   };
 
+  function _refreshCalendar() {
+    var el = document.getElementById("calendarContainer");
+    if (!el) return;
+    var html = generateCalendar();
+    el.innerHTML = html.replace(/<div id="calendarContainer">|<\/div>$/g, "");
+  }
+
   window.nextCalendarMonth = function () {
     calendarMonth++;
     if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
-    render();
+    window._slideCalendar("next", _refreshCalendar);
   };
   window.prevCalendarMonth = function () {
     const now = new Date();
     if (calendarYear > now.getFullYear() || (calendarYear === now.getFullYear() && calendarMonth > now.getMonth())) {
       calendarMonth--;
       if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
-      render();
+      window._slideCalendar("prev", _refreshCalendar);
     }
   };
 
@@ -590,7 +597,7 @@ function renderProviderShopScreen() {
     const canGoPrev = calendarYear > today.getFullYear() || (calendarYear === today.getFullYear() && calendarMonth > today.getMonth());
 
     return `
-        <div style="margin-bottom:16px;">
+        <div id="calendarContainer"><div style="margin-bottom:16px;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                 <button onclick="window.prevCalendarMonth()" class="cal-nav-btn${canGoPrev ? '' : ' disabled'}">◀</button>
                 <h4 style="margin:0;">${monthNames[month]} ${year}</h4>
@@ -613,7 +620,7 @@ function renderProviderShopScreen() {
                   </div>`;
                 }).join("")}
             </div>
-        </div>
+        </div></div>
     `;
   }
 
@@ -813,7 +820,7 @@ function renderProviderShopScreen() {
           <div>
             <h2 style="margin:0 0 8px; color:#111827; font-size:24px;">${provider.name}</h2>
             <p style="margin:0 0 4px; color:#6C5CE7; font-weight:600;">@${provider.username || provider.email.split('@')[0]}</p>
-            <p style="margin:4px 0; color:#6b7280;">${provider.category || "Prestador de serviços"}</p>
+            <p style="margin:4px 0; color:#6b7280;">${(provider.categories || []).length > 0 ? (provider.categories || []).join(", ") : (provider.category || "Prestador de serviços")}</p>
             <p style="margin:0; color:#10b981; font-weight:600;">${providerServices.length} serviço(s) disponível(is)</p>
           </div>
         </div>
@@ -1288,7 +1295,13 @@ function renderProvidersListScreen() {
 
           ${
             (() => {
-              const filtered = providers.filter(p => (!providerSearchTerm || p.name.toLowerCase().includes(providerSearchTerm.toLowerCase()) || (p.username && p.username.toLowerCase().includes(providerSearchTerm.toLowerCase()))) && (!providerCategoryFilter || p.category === providerCategoryFilter));
+              const filtered = providers.filter(p => {
+                const matchesSearch = !providerSearchTerm || p.name.toLowerCase().includes(providerSearchTerm.toLowerCase()) || (p.username && p.username.toLowerCase().includes(providerSearchTerm.toLowerCase()));
+                const cats = p.categories || [];
+                const hasCategory = cats.length > 0 ? cats.includes(providerCategoryFilter) : (p.category === providerCategoryFilter);
+                const matchesCategory = !providerCategoryFilter || hasCategory;
+                return matchesSearch && matchesCategory;
+              });
               return filtered.length === 0
                 ? '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>Nenhum prestador encontrado</p></div>'
                 : `<div id="providerGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px;">
@@ -1311,7 +1324,7 @@ function renderProvidersListScreen() {
                               <div style="min-width:0;">
                                 <h3 style="margin:0; color:#111827; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${provider.name}</h3>
                                 <p style="margin:4px 0 0; color:#6C5CE7; font-size:12px; font-weight:600;">@${provider.username || provider.email.split('@')[0]}</p>
-                                <p class="provider-category" style="margin:2px 0 0; color:#6b7280; font-size:12px;">${provider.category || "Prestador"}</p>
+                                <p class="provider-category" style="margin:2px 0 0; color:#6b7280; font-size:12px;">${(provider.categories || []).length > 0 ? (provider.categories || []).join(", ") : (provider.category || "Prestador")}</p>
                               </div>
                             </div>
                             <p style="margin:0 0 12px; color:#6b7280; font-size:14px;">📋 ${providerServices.length} serviço(s)</p>
@@ -1469,14 +1482,24 @@ function renderClientDashboard() {
   window.nextCalendarMonth = function () {
     calendarMonth++;
     if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
-    render();
+    window._slideCalendar("next", function () {
+      var el = document.getElementById("calendarContainer");
+      if (!el) return;
+      var html = generateCalendar();
+      el.innerHTML = html.replace(/<div id="calendarContainer">|<\/div>$/g, "");
+    });
   };
   window.prevCalendarMonth = function () {
     const now = new Date();
     if (calendarYear > now.getFullYear() || (calendarYear === now.getFullYear() && calendarMonth > now.getMonth())) {
       calendarMonth--;
       if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
-      render();
+      window._slideCalendar("prev", function () {
+        var el = document.getElementById("calendarContainer");
+        if (!el) return;
+        var html = generateCalendar();
+        el.innerHTML = html.replace(/<div id="calendarContainer">|<\/div>$/g, "");
+      });
     }
   };
 
@@ -1497,7 +1520,7 @@ function renderClientDashboard() {
     const canGoPrev = calendarYear > today.getFullYear() || (calendarYear === today.getFullYear() && calendarMonth > today.getMonth());
 
     return `
-        <div style="margin-bottom:16px;">
+        <div id="calendarContainer"><div style="margin-bottom:16px;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                 <button onclick="window.prevCalendarMonth()" class="cal-nav-btn${canGoPrev ? '' : ' disabled'}">◀</button>
                 <h4 style="margin:0;">${monthNames[month]} ${year}</h4>
@@ -1520,7 +1543,7 @@ function renderClientDashboard() {
                   </div>`;
                 }).join("")}
             </div>
-        </div>
+        </div></div>
     `;
   }
 
