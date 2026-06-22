@@ -1170,8 +1170,7 @@ if (showProviderCancelModal && providerBookingToCancel) {
           <textarea 
             id="cancelJustificativa"
             placeholder="Motivo do cancelamento..."
-            style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-family: sans-serif; font-size: 14px; resize: vertical; min-height: 100px; box-sizing: border-box;">
-          </textarea>
+            style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-family: sans-serif; font-size: 14px; resize: vertical; min-height: 100px; box-sizing: border-box;"></textarea>
         </div>
         
         <div style="display:flex; gap:12px; justify-content:flex-end;">
