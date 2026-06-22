@@ -36,6 +36,24 @@ function renderProviderProfileScreen() {
     render();
   };
 
+  window.pickProfilePhoto = function () {
+    const input = document.getElementById("providerPhotoInput");
+    if (input) input.click();
+  };
+
+  window.handleProfilePhotoUpload = function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      window.openCropModal(ev.target.result, function (cropped) {
+        window.selectProfilePhoto(cropped);
+      });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
   const html = `
     <div style="display:flex; min-height:100vh; background:linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #A29BFE 100%);">
       <aside style="width:240px; background:white; color:#2D3436; padding:20px; box-shadow:0 8px 32px rgba(108,92,231,0.2);">
@@ -133,6 +151,14 @@ function renderProviderProfileScreen() {
                   <img src="${photo}" alt="Opção de foto" style="width:100%; height:100%; object-fit:cover;">
                 </button>
               `).join("")}
+              <button type="button" onclick="window.pickProfilePhoto()"
+                style="width:90px; height:90px; padding:0; border:2px dashed #d1d5db; border-radius:16px; cursor:pointer; background:#f9fafb; transition:all 0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;"
+                onmouseover="this.style.borderColor='#6C5CE7'; this.style.background='#f3f0ff';"
+                onmouseout="this.style.borderColor='#d1d5db'; this.style.background='#f9fafb';">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span style="font-size:9px; color:#6C5CE7; font-weight:600;">Enviar foto</span>
+              </button>
+              <input type="file" id="providerPhotoInput" accept="image/*" onchange="window.handleProfilePhotoUpload(event)" style="display:none;">
             </div>
           `
               : ""

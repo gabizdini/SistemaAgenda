@@ -41,6 +41,12 @@ let providerSearchTerm = "";
 let providerCategoryFilter = "";
 let calendarMonth = new Date().getMonth();
 let calendarYear = new Date().getFullYear();
+let showCropModal = false;
+let cropImageSrc = "";
+let cropZoom = 1;
+let cropX = 0;
+let cropY = 0;
+let cropCallback = null;
 
 const savedServices = localStorage.getItem("agendamento_services");
 const savedBlockedSlots = localStorage.getItem("agendamento_blockedSlots");
@@ -815,6 +821,226 @@ function renderAuthScreen() {
 }
 
 // ============================================
+// IMAGE CROP MODAL
+// ============================================
+
+window.openCropModal = function (src, callback) {
+  cropImageSrc = src;
+  cropX = 0;
+  cropY = 0;
+  cropCallback = callback;
+  showCropModal = true;
+  document.body.style.overflow = "hidden";
+
+  const tmpImg = new Image();
+  tmpImg.onload = function () {
+    const frameSize = _cropFrameSize;
+    const minZoom = Math.max(frameSize / tmpImg.naturalWidth, frameSize / tmpImg.naturalHeight);
+    cropZoom = minZoom;
+    render();
+    const range = document.getElementById("cropZoomRange");
+    if (range) {
+      range.min = minZoom.toFixed(4);
+      range.value = cropZoom;
+    }
+    const label = document.getElementById("cropZoomLabel");
+    if (label) label.textContent = Math.round(cropZoom * 100) + "%";
+  };
+  tmpImg.src = src;
+};
+
+window.closeCropModal = function () {
+  if (_cropDragging || _cropJustDragged) return;
+  showCropModal = false;
+  cropImageSrc = "";
+  cropCallback = null;
+  document.body.style.overflow = "auto";
+  render();
+};
+
+window._cropImgLoaded = function () {
+  clampCropPosition();
+  renderCropImage();
+};
+
+window.setCropZoom = function (val) {
+  const range = document.getElementById("cropZoomRange");
+  const minZoom = range ? parseFloat(range.min) : 0.5;
+  cropZoom = Math.max(minZoom, parseFloat(val));
+  const label = document.getElementById("cropZoomLabel");
+  if (label) label.textContent = Math.round(cropZoom * 100) + "%";
+  clampCropPosition();
+  renderCropImage();
+};
+
+window.confirmCrop = function () {
+  const frame = document.getElementById("cropFrame");
+  if (!frame) return;
+  const canvas = document.createElement("canvas");
+  const size = 400;
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+
+  const img = document.getElementById("cropImg");
+  if (!img) return;
+
+  const frameRect = frame.getBoundingClientRect();
+  const imgRect = img.getBoundingClientRect();
+
+  const scale = img.naturalWidth / imgRect.width;
+  const sx = (frameRect.left - imgRect.left) * scale;
+  const sy = (frameRect.top - imgRect.top) * scale;
+  const sWidth = frameRect.width * scale;
+  const sHeight = frameRect.height * scale;
+
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, size, size);
+
+  const result = canvas.toDataURL("image/png");
+  showCropModal = false;
+  cropImageSrc = "";
+  document.body.style.overflow = "auto";
+  if (cropCallback) cropCallback(result);
+  cropCallback = null;
+  render();
+};
+
+let _cropDragging = false;
+let _cropJustDragged = false;
+let _cropDragStartX = 0;
+let _cropDragStartY = 0;
+let _cropStartX = 0;
+let _cropStartY = 0;
+const _cropFrameSize = 200;
+
+window.startCropDrag = function (e) {
+  _cropDragging = true;
+  const touch = e.touches ? e.touches[0] : e;
+  _cropDragStartX = touch.clientX;
+  _cropDragStartY = touch.clientY;
+  _cropStartX = cropX;
+  _cropStartY = cropY;
+  const frame = document.getElementById("cropFrame");
+  if (frame) frame.style.cursor = "grabbing";
+  e.preventDefault();
+  e.stopPropagation();
+};
+
+window.onCropDrag = function (e) {
+  if (!_cropDragging) return;
+  const touch = e.touches ? e.touches[0] : e;
+  let newX = _cropStartX + (touch.clientX - _cropDragStartX);
+  let newY = _cropStartY + (touch.clientY - _cropDragStartY);
+
+  const img = document.getElementById("cropImg");
+  if (img) {
+    const imgW = img.naturalWidth || img.width;
+    const imgH = img.naturalHeight || img.height;
+    const frame = document.getElementById("cropFrame");
+    const frameW = frame ? frame.offsetWidth : _cropFrameSize;
+    const frameH = frame ? frame.offsetHeight : _cropFrameSize;
+    const scaledW = imgW * cropZoom;
+    const scaledH = imgH * cropZoom;
+    const minX = -Math.max(0, (scaledW - frameW) / 2);
+    const maxX = Math.max(0, (scaledW - frameW) / 2);
+    const minY = -Math.max(0, (scaledH - frameH) / 2);
+    const maxY = Math.max(0, (scaledH - frameH) / 2);
+    newX = Math.max(minX, Math.min(maxX, newX));
+    newY = Math.max(minY, Math.min(maxY, newY));
+  }
+
+  cropX = newX;
+  cropY = newY;
+  renderCropImage();
+  e.preventDefault();
+};
+
+window.endCropDrag = function () {
+  if (_cropDragging) _cropJustDragged = true;
+  _cropDragging = false;
+  const frame = document.getElementById("cropFrame");
+  if (frame) frame.style.cursor = "grab";
+  setTimeout(() => { _cropJustDragged = false; }, 100);
+};
+
+function renderCropImage() {
+  const img = document.getElementById("cropImg");
+  if (img) {
+    img.style.transform = `translate(calc(-50% + ${cropX}px), calc(-50% + ${cropY}px)) scale(${cropZoom})`;
+  }
+}
+
+function clampCropPosition() {
+  const img = document.getElementById("cropImg");
+  if (!img) return;
+  const imgW = img.naturalWidth || img.width;
+  const imgH = img.naturalHeight || img.height;
+  const frame = document.getElementById("cropFrame");
+  const frameW = frame ? frame.offsetWidth : _cropFrameSize;
+  const frameH = frame ? frame.offsetHeight : _cropFrameSize;
+  const scaledW = imgW * cropZoom;
+  const scaledH = imgH * cropZoom;
+  const minX = -Math.max(0, (scaledW - frameW) / 2);
+  const maxX = Math.max(0, (scaledW - frameW) / 2);
+  const minY = -Math.max(0, (scaledH - frameH) / 2);
+  const maxY = Math.max(0, (scaledH - frameH) / 2);
+  cropX = Math.max(minX, Math.min(maxX, cropX));
+  cropY = Math.max(minY, Math.min(maxY, cropY));
+}
+
+function getCropModalHtml() {
+  if (!showCropModal) return "";
+  return `
+    <div class="modal-overlay" onclick="window.closeCropModal()" style="z-index:2000;">
+      <div class="modal-content" onclick="event.stopPropagation()" style="max-width:400px; width:90%; text-align:center;">
+        <h3 style="margin-bottom:16px;">Recortar foto</h3>
+        <div id="cropFrame" onclick="event.stopPropagation()" style="width:200px; height:200px; border-radius:50%; overflow:hidden; border:3px solid #6C5CE7; margin:0 auto 16px; position:relative; background:#1e1e1e; cursor:grab;">
+          <img id="cropImg" src="${cropImageSrc}" draggable="false"
+            onload="window._cropImgLoaded()"
+            style="position:absolute; top:50%; left:50%; transform:translate(calc(-50% + ${cropX}px), calc(-50% + ${cropY}px)) scale(${cropZoom}); transform-origin:center center; max-width:none; user-select:none; pointer-events:none;">
+        </div>
+        <div style="margin-bottom:16px;">
+          <input type="range" id="cropZoomRange" min="0.05" max="3" step="0.05" value="${cropZoom}"
+            oninput="window.setCropZoom(this.value)"
+            style="width:100%; accent-color:#6C5CE7;">
+          <p id="cropZoomLabel" style="margin:4px 0 0; font-size:13px; color:#6b7280;">${Math.round(cropZoom * 100)}%</p>
+        </div>
+        <p style="font-size:12px; color:#9ca3af; margin-bottom:16px;">Arraste a imagem para posicionar</p>
+        <div style="display:flex; gap:12px; justify-content:center;">
+          <button onclick="window.closeCropModal()" style="padding:10px 20px; background:#ECEFF1; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; color:#636E72; font-weight:600;">Cancelar</button>
+          <button onclick="window.confirmCrop()" style="padding:10px 20px; background:#6C5CE7; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600;">Aplicar</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function appendCropModal() {
+  const old = document.getElementById("cropModalContainer");
+  if (old) old.remove();
+  const html = getCropModalHtml();
+  if (!html) return;
+  const div = document.createElement("div");
+  div.id = "cropModalContainer";
+  div.innerHTML = html;
+  document.body.appendChild(div);
+}
+
+function setupCropDrag() {
+  const frame = document.getElementById("cropFrame");
+  if (!frame) return;
+  frame.addEventListener("mousedown", window.startCropDrag);
+  frame.addEventListener("touchstart", window.startCropDrag, { passive: false });
+  document.addEventListener("mousemove", window.onCropDrag);
+  document.addEventListener("touchmove", window.onCropDrag, { passive: false });
+  document.addEventListener("mouseup", window.endCropDrag);
+  document.addEventListener("touchend", window.endCropDrag);
+}
+
+// ============================================
 // RENDER PRINCIPAL COM LOADER
 // ============================================
 
@@ -876,10 +1102,14 @@ function render() {
       hideLoader();
       showPage();
       initThemeButton();
+      appendCropModal();
+      setupCropDrag();
     }, 600);
   } else {
     showPage();
     initThemeButton();
+    appendCropModal();
+    setupCropDrag();
   }
 }
 
