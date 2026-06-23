@@ -283,30 +283,30 @@ function renderProviderProfileScreen() {
       showCategoryModal
         ? `
       <div class="modal-overlay" onclick="window.closeCategoryModal()">
-        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px; width: 90%; border-top:4px solid #6C5CE7;">
-          <h3 style="margin-bottom: 20px; color:#6C5CE7; font-size:20px;">📂 Selecionar Categorias</h3>
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px; width: 90%; border-top:4px solid #6C5CE7; background:${isDarkMode ? '#1E1E2F' : 'white'};">
+          <h3 style="margin-bottom: 20px; color:${isDarkMode ? '#B3A9FF' : '#6C5CE7'}; font-size:20px;">📂 Selecionar Categorias</h3>
 
-          <p style="margin-bottom: 6px; color:#6b7280; font-size:14px;">Escolha pelo menos 3 categorias que descrevem seus serviços:</p>
-          <p id="catCount" style="margin-bottom:16px; color:${(currentUser.categories || []).length >= 3 ? '#10b981' : '#ef4444'}; font-size:13px; font-weight:600;">${(currentUser.categories || []).length}/3 selecionadas</p>
+          <p style="margin-bottom: 6px; color:${isDarkMode ? '#A4B0BE' : '#6b7280'}; font-size:14px;">Escolha ate 3 categorias que descrevem seus servicos:</p>
+          <p id="catCount" style="margin-bottom:16px; color:${(currentUser.categories || []).length >= 3 ? '#10b981' : isDarkMode ? '#B3A9FF' : '#6C5CE7'}; font-size:13px; font-weight:600;">${(currentUser.categories || []).length}/3 selecionadas</p>
 
           <div class="category-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:12px; margin-bottom:24px; max-height:400px; overflow-y:auto;">
             ${PROVIDER_CATEGORIES.map((category) => {
               const selected = (currentUser.categories || []).includes(category.name);
               return `
-              <button type="button" onclick="window.toggleCategory('${category.name.replace(/'/g, "\\'")}', ${category.id})"
-                style="padding:16px; border:2px solid ${selected ? "#6C5CE7" : "#d1d5db"}; background:${selected ? "#f0e6ff" : "white"}; border-radius:12px; cursor:pointer; transition:all 0.2s; text-align:center; font-weight:600; position:relative;">
+              <button type="button" onclick="window.toggleCategory('${category.name.replace(/'/g, "\\'")}', ${category.id}, event)"
+                style="padding:16px; border:2px solid ${selected ? "#6C5CE7" : isDarkMode ? '#3A3A4F' : '#d1d5db'}; background:${selected ? (isDarkMode ? '#3d2a6e' : '#f0e6ff') : (isDarkMode ? '#2B2B3C' : 'white')}; border-radius:12px; cursor:pointer; transition:all 0.2s; text-align:center; font-weight:600; position:relative;">
                 ${selected ? `<div class="cat-check" style="position:absolute; top:6px; right:6px; width:20px; height:20px; background:#6C5CE7; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;">✓</div>` : ""}
                 <div style="font-size:24px; margin-bottom:8px;">${category.emoji}</div>
-                <div style="font-size:12px; color:#2D3436;">${category.name}</div>
+                <div style="font-size:12px; color:${isDarkMode ? '#F1F2F6' : '#2D3436'};">${category.name}</div>
               </button>`;
             }).join("")}
           </div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button onclick="window.saveCategories()" style="padding:10px 20px; background:${(currentUser.categories || []).length >= 3 ? '#10b981' : '#d1d5db'}; color:white; border:none; border-radius:8px; cursor:${(currentUser.categories || []).length >= 3 ? 'pointer' : 'not-allowed'}; font-weight:600; transition:all 0.2s;">
+            <button onclick="window.saveCategories()" style="padding:10px 20px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;">
               Salvar
             </button>
-            <button onclick="window.closeCategoryModal()" style="padding:10px 20px; background:#ECEFF1; color:#636E72; border:1px solid #B2BEC3; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;">
+            <button onclick="window.closeCategoryModal()" style="padding:10px 20px; background:${isDarkMode ? '#3A3A4F' : '#ECEFF1'}; color:${isDarkMode ? '#A4B0BE' : '#636E72'}; border:1px solid ${isDarkMode ? '#5A5A75' : '#B2BEC3'}; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.2s;">
               Fechar
             </button>
           </div>
@@ -380,12 +380,16 @@ window.closeCategoryModal = function () {
   render();
 };
 
-window.toggleCategory = function (categoryName, categoryId) {
+window.toggleCategory = function (categoryName, categoryId, event) {
   if (!currentUser.categories) currentUser.categories = [];
   const idx = currentUser.categories.indexOf(categoryName);
   if (idx >= 0) {
     currentUser.categories.splice(idx, 1);
   } else {
+    if (currentUser.categories.length >= 3) {
+      showToast("Voce ja selecionou o maximo de 3 categorias!", "error");
+      return;
+    }
     currentUser.categories.push(categoryName);
   }
 
@@ -398,40 +402,29 @@ window.toggleCategory = function (categoryName, categoryId) {
   const countEl = document.getElementById("catCount");
   if (countEl) {
     countEl.textContent = `${count}/3 selecionadas`;
-    countEl.style.color = count >= 3 ? "#10b981" : "#ef4444";
-  }
-
-  const saveBtn = document.querySelector('.modal-content button[onclick="window.saveCategories()"]');
-  if (saveBtn) {
-    saveBtn.style.background = count >= 3 ? "#10b981" : "#d1d5db";
-    saveBtn.style.cursor = count >= 3 ? "pointer" : "not-allowed";
+    countEl.style.color = count >= 3 ? "#10b981" : isDarkMode ? "#B3A9FF" : "#6C5CE7";
   }
 
   const selected = currentUser.categories.includes(categoryName);
-  document.querySelectorAll(".modal-content .category-grid button").forEach((btn) => {
-    const btnName = btn.querySelector("div:last-child")?.textContent?.trim();
-    if (btnName === categoryName) {
-      btn.style.borderColor = selected ? "#6C5CE7" : "#d1d5db";
-      btn.style.background = selected ? "#f0e6ff" : "white";
-      const existing = btn.querySelector(".cat-check");
-      if (selected && !existing) {
-        const check = document.createElement("div");
-        check.className = "cat-check";
-        check.style.cssText = "position:absolute; top:6px; right:6px; width:20px; height:20px; background:#6C5CE7; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;";
-        check.textContent = "✓";
-        btn.appendChild(check);
-      } else if (!selected && existing) {
-        existing.remove();
-      }
-    }
-  });
+  const btn = event.currentTarget;
+  const unselectedBg = isDarkMode ? "#2B2B3C" : "white";
+  const unselectedBorder = isDarkMode ? "#3A3A4F" : "#d1d5db";
+  const selectedBg = isDarkMode ? "#3d2a6e" : "#f0e6ff";
+  btn.style.borderColor = selected ? "#6C5CE7" : unselectedBorder;
+  btn.style.background = selected ? selectedBg : unselectedBg;
+  const existing = btn.querySelector(".cat-check");
+  if (selected && !existing) {
+    const check = document.createElement("div");
+    check.className = "cat-check";
+    check.style.cssText = "position:absolute;top:6px;right:6px;width:20px;height:20px;background:#6C5CE7;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;";
+    check.textContent = "✓";
+    btn.appendChild(check);
+  } else if (!selected && existing) {
+    existing.remove();
+  }
 };
 
 window.saveCategories = function () {
-  if ((currentUser.categories || []).length < 3) {
-    showToast("Selecione pelo menos 3 categorias!", "error");
-    return;
-  }
   saveToLocalStorage();
   showToast("Categorias atualizadas com sucesso!", "success");
   showCategoryModal = false;
