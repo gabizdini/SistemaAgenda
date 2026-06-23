@@ -556,7 +556,7 @@ function renderLandingPage() {
       <div style="position:absolute; bottom:-150px; left:-100px; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(108,92,231,${isDark ? '0.15' : '0.15'}) 0%, transparent 70%); pointer-events:none;"></div>
 
       <!-- NAVBAR -->
-      <header style="position:relative; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:18px 40px; background:${navBg}; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid ${navBorder};">
+      <header style="position:sticky; top:0; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:18px 40px; background:${navBg}; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid ${navBorder};">
         <div style="display:flex; align-items:center; gap:10px;">
           <img src="assets/images/logo-GVT.png" alt="Agenda GVT" style="height:36px; width:auto;">
           <span style="font-size:18px; font-weight:700; color:${isDark ? 'white' : '#6C5CE7'}; letter-spacing:-0.5px;">Agenda GVT</span>

@@ -1163,6 +1163,13 @@ aside {
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+aside + main {
+  margin-left: 240px;
 }
 aside .theme-btn {
   margin-top: auto !important;
@@ -1241,6 +1248,7 @@ aside .theme-btn {
   /* Main content: less padding */
   #root > div > main {
     padding: 20px !important;
+    margin-left: 180px !important;
   }
 
   /* Grids: single column */
@@ -1358,5 +1366,6 @@ html.dark-mode .provider-card {
 
   #root > div > main {
     padding: 14px !important;
+    margin-left: 140px !important;
   }
 }
